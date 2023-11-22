@@ -1,7 +1,7 @@
 "use client"
 import { FaHamburger } from "react-icons/fa"
 import { BiSolidDrink } from "react-icons/bi";
-import ContainerProduct from "./containerProducts";
+import ContainerProduct from "../components/containerProducts.js";
 import { useState } from "react";
 
 export default function SelectMenu() {

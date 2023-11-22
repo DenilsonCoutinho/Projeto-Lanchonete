@@ -1,6 +1,6 @@
 import './globals.css'
 import { Open_Sans } from 'next/font/google'
-import { CartProvider} from '@/context/cartContext'
+import { CartProvider } from '@/context/cartContext'
 const openSans = Open_Sans({ subsets: ['latin'] })
 
 export const metadata = {
@@ -12,10 +12,12 @@ export default function RootLayout({ children }) {
 
   return (
     <html lang="en">
-        
-      <CartProvider>
-        <body className={openSans.className}>{children}</body>
-      </CartProvider>
+
+      <body className={openSans.className}>
+        <CartProvider>
+          {children}
+        </CartProvider>
+      </body>
     </html>
   )
 }

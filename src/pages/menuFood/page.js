@@ -1,4 +1,4 @@
-import SelectMenu from "./components/selectMenu";
+import SelectMenu from "../menuFood/components/selectMenu.js";
 
 export default function MenuFood() {
     return (

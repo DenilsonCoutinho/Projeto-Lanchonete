@@ -1,11 +1,11 @@
 "use client"
 
 import Image from "next/image"
-import listFood from "../../../listFood/listFood"
+import listFood from "../../../listFood/listFood.js"
 import { useEffect, useState } from "react"
 import { FaShoppingBag } from "react-icons/fa"
-import { useCart } from "@/context/cartContext"
-import Cart from "@/components/cart"
+import { useCart } from "../../../context/cartContext"
+import Cart from "../../../components/cart"
 
 export default function ContainerProduct({ items }) {
     const { setCartActive, itensCart, loading, setLoading } = useCart()
