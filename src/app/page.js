@@ -1,4 +1,5 @@
 "use client"
+import ContainerProduct from '@/components/containerProducts.js'
 import Header from '../components/header.js'
 
 import MenuFood from '../pages/menuFood/page.js'
@@ -10,7 +11,8 @@ export default function Home() {
       <Header />
       <Presentation />
       <ServicePage />
-      <MenuFood />
+      {/* <MenuFood /> */}
+      <ContainerProduct/>
     </main>
   )
 }

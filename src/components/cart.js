@@ -4,9 +4,9 @@ import { useCart } from "../context/cartContext"
 import { useEffect, useState } from "react"
 import { FaMotorcycle, FaTrash } from "react-icons/fa6";
 
-export default function Cart({ orders }) {
+export default function Cart() {
 
-    const { setCartActive, cartActive, itensCart, setItensCart, loading, setLoading } = useCart()
+    const { setCartActive, cartActive, setItensCart, loading, setLoading } = useCart()
     const [cartItensAnimate, setcartItensAnimate] = useState(false)
     async function animationCart() {
         if (cartActive) {
@@ -133,7 +133,7 @@ export default function Cart({ orders }) {
             <div id="cartItens" className={`${cartItensAnimate ? "translate-x-0" : "translate-x-[999px]"} p-5 duration-150 bg-[#fff] h-full w-full relative z-[9999] `}>
                 <div className="max-w-[1000px] m-auto">
                     <button onClick={() => { setCartActive(false); setcartItensAnimate(false); setLoading(false) }} className="bg-white shadow-3xl rounded-xl text-CollorDefault py-1 px-3">fechar</button>
-                    <h1 className="text-black font-semibold pt-5">Seu carrinho:</h1>
+                    <h1 className="text-black font-semibold pt-5"> Seu carrinho:</h1>
                     <div className="overflow-hidden 2xl:h-[430px] xl:h-[340px] md:h-[320px] overflow-y-auto myScroll shadow-innerShadow rounded-lg p-2">
                         {
                             fortmatedItens?.map((items) => {

@@ -1,20 +1,38 @@
 "use client"
-
 import Image from "next/image"
-import listFood from "../../../listFood/listFood.js"
+import listFood from "../listFood/listFood"
 import { useEffect, useState } from "react"
-import { FaShoppingBag } from "react-icons/fa"
-import { useCart } from "../../../context/cartContext"
-import Cart from "../../../components/cart"
+import { FaHamburger, FaShoppingBag } from "react-icons/fa"
+import { useCart } from "../context/cartContext.js"
+import Cart from "./cart"
+import { BiSolidDrink } from "react-icons/bi"
 
 export default function ContainerProduct({ items }) {
     const { setCartActive, itensCart, loading, setLoading } = useCart()
     const [addCart, setAddCart] = useState()
     const [attCart, setAttCart] = useState([])
     const [somaToHTML, setsomaToHTML] = useState()
+    const menuOptions = [
+        {
+            id: 1,
+            icon: <FaHamburger />,
+            name: "Burguers",
+            toFilter: "burguer"
+        }
+        ,
+        {
+            id: 2,
+            icon: <BiSolidDrink />,
+            name: "Bebidas",
+            toFilter: "drink"
+        },
+
+    ]
+    const [buttonSelected, setButtonSelected] = useState(1)
+    const [identifyProduct, setIdentifyProduct] = useState()
 
     const foodToFilter = listFood.filter((food) => {
-        return items?.toFilter ? food.type === items.toFilter : food.type === 'burguer'
+        return identifyProduct?.toFilter ? food.type === identifyProduct.toFilter : food.type === 'burguer'
     })
 
     function moreQuantityFood(item) {
@@ -108,6 +126,24 @@ export default function ContainerProduct({ items }) {
 
     return (
         <div>
+            <div className="pt-28 max-w-[1200px] m-auto">
+                <p className="text-CollorSecondaryDefault uppercase tracking-wide text-center font-semibold">Cardápio</p>
+                <h1 className="text-CollorDefault   text-center font-bold text-3xl">Nosso Cardápio</h1>
+                <div>
+            <div className="pt-20 max-w-[1000px] flex justify-center m-auto">
+                <div className="flex flex-row items-center gap-4">
+                    {
+                        menuOptions.map((item, i) => {
+                            return <button key={item.id} onClick={() => { setButtonSelected(item.id); setIdentifyProduct(item) }} className={`flex items-center py-2 px-2 gap-2 ${buttonSelected === item.id ? 'bg-CollorSecondaryDefault' : 'bg-white'} shadow-3xl rounded-2xl`}>
+                                <p>{item.icon}</p>
+                                <p>{item.name}</p>
+                            </button>
+                        })
+                    }
+                </div>
+            </div>
+        </div>
+            </div>
             <Cart />
             <button onClick={() => { setCartActive(true); setLoading(true) }} className='fixed z-10 select-none right-10 bottom-10 bg-CollorSecondaryDefault rounded-full p-3'>
                 <FaShoppingBag className='text-CollorDefault text-4xl' />
