@@ -1,11 +1,9 @@
-import { FaPhone, FaShoppingBag } from "react-icons/fa";
+import { FaPhone } from "react-icons/fa";
 import hamburguer_Presentation from '../../assets/presentation/hamburguerPresentation.png'
 import Image from "next/image";
-import { useCart } from "@/context/cartContext";
 
 export default function Presentation() {
    
-
     return (
         <div className="max-w-[1000px] m-auto pt-28 flex gap-10 items-center px-2">
            
