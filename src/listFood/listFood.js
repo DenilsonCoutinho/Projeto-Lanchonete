@@ -4,7 +4,7 @@ import hamburguer_3 from '../assets/hamburguer - Product/L3LYN5Y4MRG6BB47MNHEEXD
 import hamburguer_4 from '../assets/hamburguer - Product/receita-ceboloni-bacon.jpg'
 import hamburguer_5 from '../assets/hamburguer - Product/Hamburguer-Caseiro-scaled.jpg'
 
-export const listFood =   [
+ const listFood =   [
     {
         id:1,
         img: hamburguer_1,
@@ -65,3 +65,4 @@ export const listFood =   [
 
     }
 ]
+export default listFood;

@@ -1,25 +1,28 @@
 "use client"
 
 import Image from "next/image"
-import { listFood } from "../../../listFood/listFood"
+import listFood from "../../../listFood/listFood"
 import { useEffect, useState } from "react"
 import { FaShoppingBag } from "react-icons/fa"
 import { useCart } from "@/context/cartContext"
 import Cart from "@/components/cart"
+
 export default function ContainerProduct({ items }) {
-    const { setCartActive, cartActive, itensCart, loading, setItensCart, setLoading } = useCart()
+    const { setCartActive, itensCart, loading, setLoading } = useCart()
     const [addCart, setAddCart] = useState()
     const [attCart, setAttCart] = useState([])
-    const [loadingInternal, setLoadingInternal] = useState(false)
+    const [somaToHTML, setsomaToHTML] = useState()
 
     const foodToFilter = listFood.filter((food) => {
         return items?.toFilter ? food.type === items.toFilter : food.type === 'burguer'
     })
+
     function moreQuantityFood(item) {
         let qtdHtml = document.getElementById(`qtd_Food-${item.id}`)
         let qtdHtmlToNumber = parseInt(qtdHtml.innerHTML)
         qtdHtml.innerHTML = qtdHtmlToNumber + 1
     }
+
     function lessQuantityFood(item) {
         let qtdHtml = document.getElementById(`qtd_Food-${item.id}`)
         let qtdHtmlToNumber = parseInt(qtdHtml.innerHTML)
@@ -32,7 +35,7 @@ export default function ContainerProduct({ items }) {
     useEffect(() => {
         let clickOn = document.getElementById(`itemFood-${1}`)
         clickOn?.click()
-        localStorage.setItem('foodService', JSON.stringify([]))
+        // localStorage.setItem('foodService', JSON.stringify([]))
     }, [])
 
     async function prevFood() {
@@ -40,14 +43,14 @@ export default function ContainerProduct({ items }) {
         await new Promise(resolve => setTimeout(resolve, 100))
         setAttCart(itensCart)
         await new Promise(resolve => setTimeout(resolve, 100))
-        setLoading(true)
-
-        console.log(attCart)
+        setLoading(false)
     }
     useEffect(() => {
-
         prevFood()
+        pickOrderTot()
+
     }, [loading])
+
     let toCartOrder = []
 
     function formatArrayToCart(item) {
@@ -63,31 +66,33 @@ export default function ContainerProduct({ items }) {
         }
         if (qtdHtmlToNumber > 0) {
             toCartOrder.push(newArray)
-            // setToCartOrder((toCartOrder) => [...toCartOrder, newArray])
         }
     }
-    let getQtd = JSON.parse(localStorage.getItem('foodService'))
+    function pickOrderTot() {
 
-    let qtdToCart = getQtd?.map((i) => {
-        return i?.qtd
-    })
-    const soma = qtdToCart?.reduce((acumulador, valorAtual) => {
-        return acumulador + valorAtual;
-    }, 0);
+        let getQtd = JSON.parse(localStorage.getItem('foodService'))
 
+        let qtdToCart = getQtd?.map((i) => {
+            return i?.qtd
+        })
+        let soma = qtdToCart?.reduce((acumulador, valorAtual) => {
+            return acumulador + valorAtual;
+        }, 0);
+        setsomaToHTML(soma)
+
+    }
     async function toCart(item) {
         let qtdNow = document.getElementById(`qtd_Food-${item?.id}`)
         let qtdNowToInt = parseInt(qtdNow.innerHTML)
         let lastIndex = toCartOrder[toCartOrder.length - 1]
         let qtdFoodHtml = document.getElementById(`qtd_order`)
-        if (lastIndex?.qtd > 0) {
-
+        if (qtdNowToInt > 0) {
             attCart.push(lastIndex);
-            setLoadingInternal(true)
+            setLoading(true)
             await new Promise((resolve) => setTimeout(resolve, 100))
             localStorage.setItem('foodService', JSON.stringify(attCart));
             let itenStorage = JSON.parse(localStorage.getItem('foodService'))
-            setLoadingInternal(false)
+            setLoading(false)
             let qtdToCart = itenStorage?.map((item) => {
                 return item?.qtd
             })
@@ -96,7 +101,6 @@ export default function ContainerProduct({ items }) {
             }, 0);
             qtdFoodHtml.innerHTML = soma
             qtdNow.innerHTML = 0
-
             return
         }
 
@@ -104,15 +108,15 @@ export default function ContainerProduct({ items }) {
 
     return (
         <div>
-            <Cart orders={attCart} />
+            <Cart />
             <button onClick={() => { setCartActive(true); setLoading(true) }} className='fixed z-10 select-none right-10 bottom-10 bg-CollorSecondaryDefault rounded-full p-3'>
                 <FaShoppingBag className='text-CollorDefault text-4xl' />
-                <div id="qtd_order" className='bg-white w-6 shadow-3xl -top-2 right-0 h-6 absolute rounded-full'>{soma || 0}</div>
+                <div id="qtd_order" className='bg-white w-6 shadow-3xl -top-2 right-0 h-6 absolute rounded-full'>{somaToHTML || 0}</div>
             </button>
             <div className="max-w-[1000px] m-auto pt-20">
                 <div className="flex flex-wrap lg:justify-start justify-center gap-10 items-center">
                     {
-                        foodToFilter.map((item, i) => {
+                        foodToFilter?.map((item, i) => {
                             return <div id={`itemFood-${item.id}`} onClick={() => { setAddCart(item) }} key={item.id} className={`${addCart?.id === item.id ? 'bg-CollorSecondaryDefault duration-200 ease-in-out' : 'bg-white'} select-none rounded-2xl p-2 shadow-3xl w-[200px] h-[280px] cursor-pointer`}>
                                 <div className="w-40 m-auto pb-10">
                                     <Image src={item.img} height={200} width={200} alt={item.name} className=" rounded-2xl select-none  " />

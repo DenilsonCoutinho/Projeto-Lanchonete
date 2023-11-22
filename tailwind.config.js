@@ -12,7 +12,7 @@ module.exports = {
         'CollorSecondaryDefault': '#FCB040',
       },
       boxShadow: {
-        'innerShadow': 'inset 1px 2px 5px 5px rgba(0,0,0,0.63) ',
+        'innerShadow': '0px 0px 8px 0px rgba(0,0,0,0.43) inset ',
         '3xl': '0px 0px 15px 0px rgba(0, 0, 0, 0.2)',
         '7xl': '0px 0px 15px 0px rgba(0,0,0,0.4)',
       },
