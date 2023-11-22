@@ -2,7 +2,6 @@
 import ContainerProduct from '@/components/containerProducts.js'
 import Header from '../components/header.js'
 
-import MenuFood from '../pages/menuFood/page.js'
 import Presentation from '../pages/presentation/page.js'
 import ServicePage from '../pages/servicesPage/page.js'
 export default function Home() {
@@ -11,7 +10,6 @@ export default function Home() {
       <Header />
       <Presentation />
       <ServicePage />
-      {/* <MenuFood /> */}
       <ContainerProduct/>
     </main>
   )
