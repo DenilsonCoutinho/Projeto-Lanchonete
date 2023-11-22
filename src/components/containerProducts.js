@@ -8,10 +8,11 @@ import Cart from "./cart"
 import { BiSolidDrink } from "react-icons/bi"
 
 export default function ContainerProduct({ items }) {
-    const { setCartActive, itensCart, loading, setLoading } = useCart()
+    const { setCartActive, itensCart, loading, setLoading, setcartItensAnimate } = useCart()
     const [addCart, setAddCart] = useState()
     const [attCart, setAttCart] = useState([])
     const [somaToHTML, setsomaToHTML] = useState()
+    const [internalloading, setInternalloading] = useState(false)
     const menuOptions = [
         {
             id: 1,
@@ -34,6 +35,7 @@ export default function ContainerProduct({ items }) {
     const foodToFilter = listFood.filter((food) => {
         return identifyProduct?.toFilter ? food.type === identifyProduct.toFilter : food.type === 'burguer'
     })
+
 
     function moreQuantityFood(item) {
         let qtdHtml = document.getElementById(`qtd_Food-${item.id}`)
@@ -65,7 +67,6 @@ export default function ContainerProduct({ items }) {
     }
     useEffect(() => {
         prevFood()
-        pickOrderTot()
 
     }, [loading])
 
@@ -84,32 +85,36 @@ export default function ContainerProduct({ items }) {
         }
         if (qtdHtmlToNumber > 0) {
             toCartOrder.push(newArray)
+
         }
     }
-    function pickOrderTot() {
+    useEffect(() => {
 
         let getQtd = JSON.parse(localStorage.getItem('foodService'))
-
         let qtdToCart = getQtd?.map((i) => {
             return i?.qtd
         })
+
         let soma = qtdToCart?.reduce((acumulador, valorAtual) => {
             return acumulador + valorAtual;
         }, 0);
         setsomaToHTML(soma)
+    }, [loading])
 
-    }
     async function toCart(item) {
-        let qtdNow = document.getElementById(`qtd_Food-${item?.id}`)
-        let qtdNowToInt = parseInt(qtdNow.innerHTML)
         let lastIndex = toCartOrder[toCartOrder.length - 1]
+        console.log(toCartOrder)
+
         let qtdFoodHtml = document.getElementById(`qtd_order`)
-        if (qtdNowToInt > 0) {
-            attCart.push(lastIndex);
-            setLoading(true)
+        if (lastIndex?.qtd > 0) {
+            console.log(lastIndex)
+
             await new Promise((resolve) => setTimeout(resolve, 100))
+            attCart?.push(lastIndex);
+            setLoading(true)
             localStorage.setItem('foodService', JSON.stringify(attCart));
             let itenStorage = JSON.parse(localStorage.getItem('foodService'))
+            console.log(itenStorage)
             setLoading(false)
             let qtdToCart = itenStorage?.map((item) => {
                 return item?.qtd
@@ -117,8 +122,10 @@ export default function ContainerProduct({ items }) {
             const soma = qtdToCart?.reduce((acumulador, valorAtual) => {
                 return acumulador + valorAtual;
             }, 0);
+            console.log(soma)
+
             qtdFoodHtml.innerHTML = soma
-            qtdNow.innerHTML = 0
+
             return
         }
 
@@ -130,22 +137,22 @@ export default function ContainerProduct({ items }) {
                 <p className="text-CollorSecondaryDefault uppercase tracking-wide text-center font-semibold">Cardápio</p>
                 <h1 className="text-CollorDefault   text-center font-bold text-3xl">Nosso Cardápio</h1>
                 <div>
-            <div className="pt-20 max-w-[1000px] flex justify-center m-auto">
-                <div className="flex flex-row items-center gap-4">
-                    {
-                        menuOptions.map((item, i) => {
-                            return <button key={item.id} onClick={() => { setButtonSelected(item.id); setIdentifyProduct(item) }} className={`flex items-center py-2 px-2 gap-2 ${buttonSelected === item.id ? 'bg-CollorSecondaryDefault' : 'bg-white'} shadow-3xl rounded-2xl`}>
-                                <p>{item.icon}</p>
-                                <p>{item.name}</p>
-                            </button>
-                        })
-                    }
+                    <div className="pt-20 max-w-[1000px] flex justify-center m-auto">
+                        <div className="flex flex-row items-center gap-4">
+                            {
+                                menuOptions.map((item, i) => {
+                                    return <button key={item.id} onClick={() => { setButtonSelected(item.id); setIdentifyProduct(item) }} className={`flex items-center py-2 px-2 gap-2 ${buttonSelected === item.id ? 'bg-CollorSecondaryDefault' : 'bg-white'} shadow-3xl rounded-2xl`}>
+                                        <p>{item.icon}</p>
+                                        <p>{item.name}</p>
+                                    </button>
+                                })
+                            }
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-            </div>
             <Cart />
-            <button onClick={() => { setCartActive(true); setLoading(true) }} className='fixed z-10 select-none right-10 bottom-10 bg-CollorSecondaryDefault rounded-full p-3'>
+            <button onClick={() => { setCartActive(true); setcartItensAnimate(true); setLoading(true) }} className='fixed z-10 select-none right-10 bottom-10 bg-CollorSecondaryDefault rounded-full p-3'>
                 <FaShoppingBag className='text-CollorDefault text-4xl' />
                 <div id="qtd_order" className='bg-white w-6 shadow-3xl -top-2 right-0 h-6 absolute rounded-full'>{somaToHTML || 0}</div>
             </button>
@@ -153,7 +160,7 @@ export default function ContainerProduct({ items }) {
                 <div className="flex flex-wrap lg:justify-start justify-center gap-10 items-center">
                     {
                         foodToFilter?.map((item, i) => {
-                            return <div id={`itemFood-${item.id}`} onClick={() => { setAddCart(item) }} key={item.id} className={`${addCart?.id === item.id ? 'bg-CollorSecondaryDefault duration-200 ease-in-out' : 'bg-white'} select-none rounded-2xl p-2 shadow-3xl w-[200px] h-[280px] cursor-pointer`}>
+                            return <div alt={item.id} id={`itemFood-${item.id}`} onClick={() => { setAddCart(item) }} key={item.id} className={`${addCart?.id === item.id ? 'bg-CollorSecondaryDefault duration-200 ease-in-out' : 'bg-white'} select-none rounded-2xl p-2 shadow-3xl w-[200px] h-[280px] cursor-pointer`}>
                                 <div className="w-40 m-auto pb-10">
                                     <Image src={item.img} height={200} width={200} alt={item.name} className=" rounded-2xl select-none  " />
                                 </div>
@@ -172,7 +179,7 @@ export default function ContainerProduct({ items }) {
                                                 +
                                             </button>
                                         </div>
-                                        <button onClick={() => { formatArrayToCart(item); toCart(item) }} className={`${addCart?.id === item.id ? 'bg-white' : 'bg-CollorSecondaryDefault'} bg-CollorSecondaryDefault rounded-2xl p-1`}>
+                                        <button onClick={() => { formatArrayToCart(item);; toCart(item) }} className={`${addCart?.id === item.id ? 'bg-white' : 'bg-CollorSecondaryDefault'} bg-CollorSecondaryDefault rounded-2xl p-1`}>
                                             <FaShoppingBag className={`${addCart?.id === item.id ? 'text-black' : 'text-CollorSecondaryDefault'}`} />
                                         </button>
                                     </div>

@@ -6,12 +6,10 @@ import { FaMotorcycle, FaTrash } from "react-icons/fa6";
 
 export default function Cart() {
 
-    const { setCartActive, cartActive, setItensCart, loading, setLoading } = useCart()
-    const [cartItensAnimate, setcartItensAnimate] = useState(false)
+    const { setCartActive, cartActive, setItensCart, loading, setLoading,setcartItensAnimate,cartItensAnimate} = useCart()
     async function animationCart() {
         if (cartActive) {
-            await new Promise((resolve) => setTimeout(resolve, 200))
-            setcartItensAnimate(true)
+                setcartItensAnimate(true)
             document.body.style.overflow = 'hidden';
         } else {
             if (typeof window !== 'undefined') {
@@ -154,7 +152,7 @@ export default function Cart() {
                                             <div className="flex items-center gap-5">
                                                 <div className="flex items-center">
                                                     <button onClick={() => lessQuantityFood(items)} className={`lg:rounded-l-2xl rounded-l-xl  flex justify-center items-center border 'border-CollorSecondaryDefault'   lg:w-10 sm:w-7 w-6  lg:h-6 sm:h-7 h-5`}>
-                                                        {items.qtd > 1 ? '-' : <div><p className="lg:flex hidden ">-</p><FaTrash  className="text-[10px] lg:hidden flex  text-red-500"/></div>}
+                                                        {items.qtd > 1 ? '-' : <div><p className="lg:flex hidden ">-</p><FaTrash className="text-[10px] lg:hidden flex  text-red-500" /></div>}
                                                     </button>
                                                     <div id={`qtd_Food-Cart${items?.id}`} className={` border lg:text-base text-xs flex justify-center items-center border-CollorSecondaryDefault'  lg:w-10 sm:w-7 w-6 lg:h-6  sm:h-7 h-5`}>
                                                         {items?.qtd}
