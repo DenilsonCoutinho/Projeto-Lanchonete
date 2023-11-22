@@ -1,15 +1,17 @@
 "use client"
 
 import Image from "next/image"
-import { listFood } from "../listFood/listFood"
+import { listFood } from "../../../listFood/listFood"
 import { useEffect, useState } from "react"
 import { FaShoppingBag } from "react-icons/fa"
 import { useCart } from "@/context/cartContext"
 import Cart from "@/components/cart"
 export default function ContainerProduct({ items }) {
-    const { setCartActive, itensCart } = useCart()
+    const { setCartActive, cartActive, itensCart, loading, setItensCart, setLoading } = useCart()
     const [addCart, setAddCart] = useState()
     const [attCart, setAttCart] = useState([])
+    const [loadingInternal, setLoadingInternal] = useState(false)
+
     const foodToFilter = listFood.filter((food) => {
         return items?.toFilter ? food.type === items.toFilter : food.type === 'burguer'
     })
@@ -30,14 +32,28 @@ export default function ContainerProduct({ items }) {
     useEffect(() => {
         let clickOn = document.getElementById(`itemFood-${1}`)
         clickOn?.click()
-
+        localStorage.setItem('foodService', JSON.stringify([]))
     }, [])
+
+    async function prevFood() {
+        setLoading(true)
+        await new Promise(resolve => setTimeout(resolve, 100))
+        setAttCart(itensCart)
+        await new Promise(resolve => setTimeout(resolve, 100))
+        setLoading(true)
+
+        console.log(attCart)
+    }
+    useEffect(() => {
+
+        prevFood()
+    }, [loading])
     let toCartOrder = []
+
     function formatArrayToCart(item) {
         let qtdHtml = document.getElementById(`qtd_Food-${item?.id}`)
         let qtdHtmlToNumber = parseInt(qtdHtml?.innerHTML)
         let newArray = {
-            ...item,
             id: item.id,
             name: item.name,
             img: item.img,
@@ -45,45 +61,51 @@ export default function ContainerProduct({ items }) {
             originalPrice: item.price,
             qtd: parseInt(qtdHtmlToNumber),
         }
-        if (newArray.price > 0) {
+        if (qtdHtmlToNumber > 0) {
             toCartOrder.push(newArray)
+            // setToCartOrder((toCartOrder) => [...toCartOrder, newArray])
         }
     }
     let getQtd = JSON.parse(localStorage.getItem('foodService'))
 
     let qtdToCart = getQtd?.map((i) => {
-        return i.qtd
+        return i?.qtd
     })
     const soma = qtdToCart?.reduce((acumulador, valorAtual) => {
         return acumulador + valorAtual;
     }, 0);
-    function toCart() {
-        let lastIndex = toCartOrder[toCartOrder.length - 1];
-        let qtdHtml = document.getElementById(`qtd_Food-${addCart?.id}`)
+
+    async function toCart(item) {
+        let qtdNow = document.getElementById(`qtd_Food-${item?.id}`)
+        let qtdNowToInt = parseInt(qtdNow.innerHTML)
+        let lastIndex = toCartOrder[toCartOrder.length - 1]
         let qtdFoodHtml = document.getElementById(`qtd_order`)
-        if (lastIndex?.qtd > 0 && parseInt(qtdHtml.innerHTML) > 0) {
+        if (lastIndex?.qtd > 0) {
+
             attCart.push(lastIndex);
+            setLoadingInternal(true)
+            await new Promise((resolve) => setTimeout(resolve, 100))
             localStorage.setItem('foodService', JSON.stringify(attCart));
-            const itenStorage = JSON.parse(localStorage.getItem('foodService'))
+            let itenStorage = JSON.parse(localStorage.getItem('foodService'))
+            setLoadingInternal(false)
             let qtdToCart = itenStorage?.map((item) => {
                 return item?.qtd
             })
             const soma = qtdToCart?.reduce((acumulador, valorAtual) => {
                 return acumulador + valorAtual;
             }, 0);
-
             qtdFoodHtml.innerHTML = soma
-            qtdHtml.innerHTML = 0
+            qtdNow.innerHTML = 0
+
             return
         }
 
     }
 
-
     return (
         <div>
             <Cart orders={attCart} />
-            <button onClick={() => setCartActive(true)} className='fixed z-10 select-none right-10 bottom-10 bg-CollorSecondaryDefault rounded-full p-3'>
+            <button onClick={() => { setCartActive(true); setLoading(true) }} className='fixed z-10 select-none right-10 bottom-10 bg-CollorSecondaryDefault rounded-full p-3'>
                 <FaShoppingBag className='text-CollorDefault text-4xl' />
                 <div id="qtd_order" className='bg-white w-6 shadow-3xl -top-2 right-0 h-6 absolute rounded-full'>{soma || 0}</div>
             </button>
@@ -91,7 +113,7 @@ export default function ContainerProduct({ items }) {
                 <div className="flex flex-wrap lg:justify-start justify-center gap-10 items-center">
                     {
                         foodToFilter.map((item, i) => {
-                            return <div id={`itemFood-${item.id}`} onClick={() => { setAddCart(item); formatArrayToCart(item) }} key={item.id} className={`${addCart?.id === item.id ? 'bg-CollorSecondaryDefault duration-200 ease-in-out' : 'bg-white'} select-none rounded-2xl p-2 shadow-3xl w-[200px] h-[280px] cursor-pointer`}>
+                            return <div id={`itemFood-${item.id}`} onClick={() => { setAddCart(item) }} key={item.id} className={`${addCart?.id === item.id ? 'bg-CollorSecondaryDefault duration-200 ease-in-out' : 'bg-white'} select-none rounded-2xl p-2 shadow-3xl w-[200px] h-[280px] cursor-pointer`}>
                                 <div className="w-40 m-auto pb-10">
                                     <Image src={item.img} height={200} width={200} alt={item.name} className=" rounded-2xl select-none  " />
                                 </div>
@@ -110,7 +132,7 @@ export default function ContainerProduct({ items }) {
                                                 +
                                             </button>
                                         </div>
-                                        <button onClick={() => toCart()} className={`${addCart?.id === item.id ? 'bg-white' : 'bg-CollorSecondaryDefault'} bg-CollorSecondaryDefault rounded-2xl p-1`}>
+                                        <button onClick={() => { formatArrayToCart(item); toCart(item) }} className={`${addCart?.id === item.id ? 'bg-white' : 'bg-CollorSecondaryDefault'} bg-CollorSecondaryDefault rounded-2xl p-1`}>
                                             <FaShoppingBag className={`${addCart?.id === item.id ? 'text-black' : 'text-CollorSecondaryDefault'}`} />
                                         </button>
                                     </div>
