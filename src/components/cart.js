@@ -26,7 +26,7 @@ export default function Cart() {
     useEffect(() => {
         const itemsLocaStorage = JSON.parse(localStorage.getItem('foodService'))
         localStorage.setItem('foodService', JSON.stringify(itemsLocaStorage))
-        setItensCart([...itemsLocaStorage])
+        setItensCart(itemsLocaStorage)
     }, [loading])
 
     let itenStorage = []

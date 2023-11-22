@@ -5,7 +5,7 @@ import { IoIosMenu } from "react-icons/io";
 import { useCart } from '@/context/cartContext';
 
 export default function Header() {
-    const { itensCart, setItensCart, setCartActive } = useCart()
+    const {setCartActive } = useCart()
 
     return (
         <>
