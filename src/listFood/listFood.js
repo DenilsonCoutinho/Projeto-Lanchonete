@@ -16,7 +16,7 @@ import hamburguer_5 from '../assets/hamburguer - Product/Hamburguer-Caseiro-scal
         id:2,
         img: hamburguer_2,
         name: 'Mediterranean Sunshine Burger',
-        price: 200,
+        price: 20.53,
         type:'burguer'
 
     }
@@ -25,7 +25,7 @@ import hamburguer_5 from '../assets/hamburguer - Product/Hamburguer-Caseiro-scal
         id:3,
         img: hamburguer_3,
         name: 'Vegan Tropical Bliss Burger',
-        price: 200,
+        price: 32.44,
         type:'burguer'
 
     }
@@ -34,7 +34,7 @@ import hamburguer_5 from '../assets/hamburguer - Product/Hamburguer-Caseiro-scal
         id:4,
         img: hamburguer_4,
         name: 'Asian Fusion Delight Burger',
-        price: 200,
+        price: 27.70,
         type:'burguer'
 
     }
@@ -43,7 +43,7 @@ import hamburguer_5 from '../assets/hamburguer - Product/Hamburguer-Caseiro-scal
         id:5,
         img: hamburguer_5,
         name: 'Gourmet Coffee Infusion Burger',
-        price: 200,
+        price: 17.90,
         type:'burguer'
 
     }

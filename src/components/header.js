@@ -1,12 +1,31 @@
+'use client'
 import Image from 'next/image'
 import Logo from '../assets/logotipo-personalizado-mesa.jpg'
-import { FaHamburger, FaShoppingBag } from 'react-icons/fa'
+import { FaShoppingBag } from 'react-icons/fa'
 import { IoIosMenu } from "react-icons/io";
 import { useCart } from '@/context/cartContext';
+import { useState } from 'react';
+import { MdClose } from "react-icons/md";
 
 export default function Header() {
-    const {setCartActive } = useCart()
+    const { setCartActive, itensCart } = useCart()
+    const [HeaderActive, setHeaderActive] = useState(false)
+    const [headerActiveAnimation, setHeaderActiveAnimation] = useState(false)
 
+    async function animationCart() {
+        if (HeaderActive) {
+            await new Promise((resolve => setTimeout(resolve, 100)))
+            setHeaderActiveAnimation(true)
+            document.body.style.overflow = 'hidden';
+        } else {
+            if (typeof window !== 'undefined') {
+
+                document.body.style.overflow = 'auto';
+            }
+        }
+        
+    }
+    animationCart()
     return (
         <>
             <div className='All_Menu_Pc md:flex hidden'>
@@ -33,9 +52,17 @@ export default function Header() {
                     <div className='shadow-3xl rounded-full w-20 h-20 overflow-hidden'>
                         <Image src={Logo} />
                     </div>
-                    <IoIosMenu className='text-3xl' onClick={() => setCartActive(true)} />
+                    {
+                        HeaderActive ?
+                            <MdClose onClick={() => {setHeaderActive(false);setHeaderActiveAnimation(false)}} className='text-3xl'/>
+                            :
+                            <IoIosMenu className='text-3xl' onClick={() => setHeaderActive(true)} />
+                    }
                 </div>
             </div>
+            {HeaderActive && <div className={`bg-red-500 z-[9999] h-full w-full duration-150 fixed ${headerActiveAnimation ? 'translate-x-0' : 'translate-x-full'}`}>
+
+            </div>}
         </>
     )
 }

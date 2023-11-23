@@ -3,24 +3,14 @@ import Image from "next/image"
 import { useCart } from "../context/cartContext"
 import { useEffect, useState } from "react"
 import { FaMotorcycle, FaTrash } from "react-icons/fa6";
+import { useScreenSize } from "@/context/screenSizeContext";
+import { MdRemoveShoppingCart } from "react-icons/md";
 
-export default function Cart() {
+export default function Cart({ cartOn }) {
 
-    const { setCartActive, cartActive, setItensCart, loading, setLoading,setcartItensAnimate,cartItensAnimate} = useCart()
-    async function animationCart() {
-        if (cartActive) {
-                setcartItensAnimate(true)
-            document.body.style.overflow = 'hidden';
-        } else {
-            if (typeof window !== 'undefined') {
+    const { setCartActive, cartActive, setItensCart, loading, setLoading, cartItensAnimate, setcartItensAnimate } = useCart()
 
-                document.body.style.overflow = 'auto';
-            }
-        }
-    }
-
-    animationCart()
-
+    const { screenY } = useScreenSize()
     useEffect(() => {
         const itemsLocaStorage = JSON.parse(localStorage.getItem('foodService'))
         localStorage.setItem('foodService', JSON.stringify(itemsLocaStorage))
@@ -126,24 +116,24 @@ export default function Cart() {
     }
 
     return (
-        cartActive && <div className="h-full  fixed z-[9999] right-0 top-0 left-0">
-            <div id="cartItens" className={`${cartItensAnimate ? "translate-x-0" : "translate-x-[999px]"} p-5 duration-150 bg-[#fff] h-full w-full relative z-[9999] `}>
+        cartActive && <div div className="h-full  fixed z-[9999] right-0 top-0 left-0" >
+            <div id="cartItens" className={`${cartItensAnimate ? "translate-x-0" : "translate-x-full"} p-5 duration-150 bg-[#fff] h-full w-full relative z-[9999] `}>
                 <div className="max-w-[1000px] m-auto">
-                    <button onClick={() => { setCartActive(false); setcartItensAnimate(false); setLoading(false) }} className="bg-white shadow-3xl rounded-xl text-CollorDefault py-1 px-3">fechar</button>
+                    <button onClick={() => { setLoading(false); setCartActive(false) }} className="bg-white shadow-3xl rounded-xl text-CollorDefault py-1 px-3">fechar</button>
                     <h1 className="text-black font-semibold pt-5"> Seu carrinho:</h1>
-                    <div className="overflow-hidden 2xl:h-[430px] xl:h-[340px] md:h-[320px] h-[320px] overflow-y-auto myScroll shadow-innerShadow rounded-lg p-2">
-                        {
+                    <div style={{ height: screenY - 230 }} className={`overflow-hidden 2xl:h-[430px] md:h-[340px] h-[320px] overflow-y-auto myScroll shadow-innerShadow rounded-lg p-2`}>
+                        {fortmatedItens.length > 0 ?
                             fortmatedItens?.map((items) => {
                                 return (
                                     <div key={items?.id} className="pt-5 ">
-                                        <div className="flex items-center justify-between">
+                                        {<div className="flex items-center justify-between">
                                             <div className="flex items-center lg:gap-5 gap-2">
                                                 <Image src={items?.img} alt={items?.name} width={100} className="lg:rounded-3xl rounded-xl lg:w-28 md:w-24 w-20" />
                                                 -
                                                 <div className="flex flex-col items-start">
                                                     <div className="flex items-center gap-2">
 
-                                                        <h1 className="text-CollorDefault md:w-80 w-24 lg:text-base text-xs">{items?.name}</h1>
+                                                        <h1 className="text-CollorDefault md:w-80 w-20 lg:text-base text-xs">{items?.name}</h1>
                                                     </div>
                                                     <p className=" text-CollorSecondaryDefault lg:text-base text-xs">{items?.price?.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
                                                 </div>
@@ -165,21 +155,27 @@ export default function Cart() {
                                                 }
                                             </div>
                                         </div>
+
+                                        }
                                         <hr className="mt-10" />
                                     </div>
                                 )
                             })
+                            :
+                            <div style={{ height: screenY - 250 }} className={`2xl:text-3xl xl:text-xl md:text-lg text-center  min-h-[-800px] m-auto flex justify-center items-center text-gray-400`}> <MdRemoveShoppingCart />Seu carrinho está vazio</div>
                         }
                     </div>
                     {
 
-                        <div className="flex lg:flex-col flex-row items-end lg:gap-0  gap-4">
-                            <div className="flex flex-col">
+                        <div className="flex flex-col lg:items-end items-start lg:gap-0  gap-4">
+                            <div className="flex flex-col lg:items-end items-start">
                                 <p className="text-gray-500 text-sm">Subtotal: {sumTotPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
                                 <p className=" text-gray-400 text-sm flex items-center gap-1"><FaMotorcycle className="text-gray-400 text-base" />Entrega: + {delivery.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
-                                <p className="font-medium lg?text-xl text-base py-2">Total: <span className="font-extrabold text-CollorSecondaryDefault">{totPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</span></p>
+                                <p className="font-medium lg?text-xl text-base pt-2">Total: <span className="font-extrabold text-CollorSecondaryDefault">{totPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</span></p>
                             </div>
+                            <div className="flex items-center gap-2">
                             <button className="bg-CollorSecondaryDefault rounded-2xl text-white py-2 px-3">Continuar</button>
+                        </div>
                         </div>
                     }
                 </div>

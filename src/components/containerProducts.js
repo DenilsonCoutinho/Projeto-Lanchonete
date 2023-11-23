@@ -8,7 +8,7 @@ import Cart from "./cart"
 import { BiSolidDrink } from "react-icons/bi"
 
 export default function ContainerProduct({ items }) {
-    const { setCartActive, itensCart, loading, setLoading, setcartItensAnimate } = useCart()
+    const { setCartActive, itensCart, loading, setLoading } = useCart()
     const [addCart, setAddCart] = useState()
     const [attCart, setAttCart] = useState([])
     const [somaToHTML, setsomaToHTML] = useState()
@@ -38,7 +38,7 @@ export default function ContainerProduct({ items }) {
     useEffect(() => {
         let clickOn = document.getElementById(`itemFood-${1}`)
         clickOn?.click()
-        localStorage.setItem('foodService', JSON.stringify([]))
+        // localStorage.setItem('foodService', JSON.stringify([]))
         setiternalLoading(true)
     }, [])
 
@@ -63,7 +63,6 @@ export default function ContainerProduct({ items }) {
 
         let qtdHtmlMore = document.getElementById(`qtd_Food-${addCart?.id}`)
         let qtdAddCart = document.getElementById(`qtd_Orders-${addCart?.id}`)
-        let iconCart = document.getElementById(`iconCart-${addCart?.id}`)
         if (parseInt(qtdHtmlMore?.innerHTML) > 0) {
             qtdAddCart.style.transition = '0.3s'
             qtdAddCart.style.background = '#fff	'
@@ -83,10 +82,6 @@ export default function ContainerProduct({ items }) {
         await new Promise(resolve => setTimeout(resolve, 100))
         qtdHtmlMore.innerHTML = qtdHtmlMoreToNumber + 1
         setiternalLoading(false)
-        console.log(qtdHtmlMore.innerHTML)
-
-
-
     }
 
     async function lessQuantityFood(item) {
@@ -120,7 +115,7 @@ export default function ContainerProduct({ items }) {
             id: item.id,
             name: item.name,
             img: item.img,
-            price: parseInt(item.price) * parseInt(qtdHtmlToNumber),
+            price: item.price * parseInt(qtdHtmlToNumber),
             originalPrice: item.price,
             qtd: parseInt(qtdHtmlToNumber),
         }
@@ -129,7 +124,6 @@ export default function ContainerProduct({ items }) {
 
         }
     }
-
 
     async function toCart(item) {
         setiternalLoading(true)
@@ -141,6 +135,7 @@ export default function ContainerProduct({ items }) {
 
             await new Promise((resolve) => setTimeout(resolve, 100))
             attCart?.push(lastIndex);
+            console.log(attCart)
             setLoading(true)
             localStorage.setItem('foodService', JSON.stringify(attCart));
             let itenStorage = JSON.parse(localStorage.getItem('foodService'))
@@ -163,6 +158,7 @@ export default function ContainerProduct({ items }) {
 
     return (
         <div>
+            <Cart  />
             <div className="pt-28 max-w-[1200px] m-auto">
                 <p className="text-CollorSecondaryDefault uppercase tracking-wide text-center font-semibold">Cardápio</p>
                 <h1 className="text-CollorDefault   text-center font-bold text-3xl">Nosso Cardápio</h1>
@@ -181,8 +177,7 @@ export default function ContainerProduct({ items }) {
                     </div>
                 </div>
             </div>
-            <Cart />
-            <button onClick={() => { setCartActive(true); setcartItensAnimate(true); setLoading(true) }} className='fixed z-10 select-none md:right-10 right-3 bottom-10 bg-CollorSecondaryDefault border border-white shadow-xl rounded-full p-3'>
+            <button onClick={() => { setLoading(true);setCartActive(true) }} className='fixed z-10 select-none md:right-10 right-3 bottom-10 bg-CollorSecondaryDefault border border-white shadow-xl rounded-full p-3'>
                 <FaShoppingBag className='text-CollorDefault lg:text-4xl text-3xl' />
                 <div id="qtd_order" className='bg-white w-6 shadow-3xl -top-2 right-0 h-6 absolute rounded-full'>{somaToHTML || 0}</div>
             </button>
