@@ -6,9 +6,11 @@ import { FaHamburger, FaShoppingBag } from "react-icons/fa"
 import { useCart } from "../context/cartContext.js"
 import Cart from "./cart"
 import { BiSolidDrink } from "react-icons/bi"
+import { useScreenSize } from "@/context/screenSizeContext"
 
 export default function ContainerProduct({ items }) {
-    const { setCartActive, itensCart, loading, setLoading } = useCart()
+    const { setCartActive, itensCart, loading, setLoading , setbody} = useCart()
+    const { screenY } = useScreenSize()
     const [addCart, setAddCart] = useState()
     const [attCart, setAttCart] = useState([])
     const [somaToHTML, setsomaToHTML] = useState()
@@ -177,7 +179,7 @@ export default function ContainerProduct({ items }) {
                     </div>
                 </div>
             </div>
-            <button onClick={() => { setLoading(true);setCartActive(true) }} className='fixed z-10 select-none md:right-10 right-3 bottom-10 bg-CollorSecondaryDefault border border-white shadow-xl rounded-full p-3'>
+            <button onClick={() => { setLoading(true);setCartActive(true);setbody(true) }} className='fixed z-10 select-none md:right-10 right-3 bottom-10 bg-CollorSecondaryDefault border border-white shadow-xl rounded-full p-3'>
                 <FaShoppingBag className='text-CollorDefault lg:text-4xl text-3xl' />
                 <div id="qtd_order" className='bg-white w-6 shadow-3xl -top-2 right-0 h-6 absolute rounded-full'>{somaToHTML || 0}</div>
             </button>

@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { MdClose } from "react-icons/md";
 
 export default function Header() {
-    const { setCartActive, itensCart } = useCart()
+    const { setCartActive, itensCart ,cartActive} = useCart()
     const [HeaderActive, setHeaderActive] = useState(false)
     const [headerActiveAnimation, setHeaderActiveAnimation] = useState(false)
 

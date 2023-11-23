@@ -9,15 +9,12 @@ export function CartProvider({ children }) {
     const [loading, setLoading] = useState(false)
     const [cartActive, setCartActive] = useState(false)
     const [cartItensAnimate, setcartItensAnimate] = useState(false)
+    const [body, setbody] = useState(0)
     useEffect(() => {
         async function updateBodyOverflow() {
             if (cartActive === true) {
                 setcartItensAnimate(true);
-                await new Promise((resolve) => setTimeout(resolve, 1000))
-                document.body.style.overflow = 'hidden';
-            } else {
-                // Lógica para quando o carrinho não está ativo
-            }
+            } 
         }
         updateBodyOverflow()
     }, [cartActive]);
@@ -28,7 +25,8 @@ export function CartProvider({ children }) {
         cartActive,
         setCartActive,
         loading, setLoading,
-        cartItensAnimate, setcartItensAnimate
+        cartItensAnimate, setcartItensAnimate,
+        body, setbody
     }}>
         {children}
     </CartContext.Provider>

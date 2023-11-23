@@ -8,7 +8,7 @@ import { MdRemoveShoppingCart } from "react-icons/md";
 
 export default function Cart({ cartOn }) {
 
-    const { setCartActive, cartActive, setItensCart, loading, setLoading, cartItensAnimate, setcartItensAnimate } = useCart()
+    const { setCartActive, cartActive, setItensCart, loading, setLoading, cartItensAnimate, setbody, body } = useCart()
 
     const { screenY } = useScreenSize()
     useEffect(() => {
@@ -16,7 +16,17 @@ export default function Cart({ cartOn }) {
         localStorage.setItem('foodService', JSON.stringify(itemsLocaStorage))
         setItensCart(itemsLocaStorage)
     }, [loading])
+    function withouScroll() {
+        if (body) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            if (typeof window !== 'undefined') {
 
+                document.body.style.overflow = 'auto';
+            }
+        }
+    }
+    withouScroll()
     let itenStorage = []
     if (typeof window !== 'undefined') {
         let itensStorage = JSON.parse(localStorage.getItem('foodService'))
@@ -119,7 +129,7 @@ export default function Cart({ cartOn }) {
         cartActive && <div div className="h-full  fixed z-[9999] right-0 top-0 left-0" >
             <div id="cartItens" className={`${cartItensAnimate ? "translate-x-0" : "translate-x-full"} p-5 duration-150 bg-[#fff] h-full w-full relative z-[9999] `}>
                 <div className="max-w-[1000px] m-auto">
-                    <button onClick={() => { setLoading(false); setCartActive(false) }} className="bg-white shadow-3xl rounded-xl text-CollorDefault py-1 px-3">fechar</button>
+                    <button onClick={() => { setLoading(false); setCartActive(false); setbody(false) }} className="bg-white shadow-3xl rounded-xl text-CollorDefault py-1 px-3">fechar</button>
                     <h1 className="text-black font-semibold pt-5"> Seu carrinho:</h1>
                     <div style={{ height: screenY - 230 }} className={`overflow-hidden 2xl:h-[430px] md:h-[340px] h-[320px] overflow-y-auto myScroll shadow-innerShadow rounded-lg p-2`}>
                         {fortmatedItens.length > 0 ?
@@ -174,8 +184,8 @@ export default function Cart({ cartOn }) {
                                 <p className="font-medium lg?text-xl text-base pt-2">Total: <span className="font-extrabold text-CollorSecondaryDefault">{totPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</span></p>
                             </div>
                             <div className="flex items-center gap-2">
-                            <button className="bg-CollorSecondaryDefault rounded-2xl text-white py-2 px-3">Continuar</button>
-                        </div>
+                                <button className="bg-CollorSecondaryDefault rounded-2xl text-white py-2 px-3">Continuar</button>
+                            </div>
                         </div>
                     }
                 </div>

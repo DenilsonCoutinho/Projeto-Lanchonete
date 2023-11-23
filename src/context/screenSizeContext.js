@@ -5,6 +5,7 @@ const ScreenContext = createContext()
 export default function ScreenSizeContext({ children }) {
     const [screenX, setScreenX] = useState(0);
     const [screenY, setScreenY] = useState(0);
+    
     useEffect(() => {
         setScreenX(window.innerWidth)
         setScreenY(window.innerHeight)
@@ -21,7 +22,8 @@ export default function ScreenSizeContext({ children }) {
     }, [])
     return <ScreenContext.Provider value={{
         screenX, setScreenX,
-        screenY, setScreenY
+        screenY, setScreenY,
+       
     }}>
         {children}
     </ScreenContext.Provider>
