@@ -174,9 +174,9 @@ export default function Cart() {
                     {
 
                         <div className="flex lg:flex-col flex-row items-end lg:gap-0  gap-4">
-                            <div className="flex flex-col items-">
+                            <div className="flex flex-col">
                                 <p className="text-gray-500 text-sm">Subtotal: {sumTotPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
-                                <p className=" text-gray-400 text-sm flex items-center gap-2"><FaMotorcycle className="text-gray-400 text-base" />Entrega: + {delivery.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
+                                <p className=" text-gray-400 text-sm flex items-center gap-1"><FaMotorcycle className="text-gray-400 text-base" />Entrega: + {delivery.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
                                 <p className="font-medium lg?text-xl text-base py-2">Total: <span className="font-extrabold text-CollorSecondaryDefault">{totPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</span></p>
                             </div>
                             <button className="bg-CollorSecondaryDefault rounded-2xl text-white py-2 px-3">Continuar</button>

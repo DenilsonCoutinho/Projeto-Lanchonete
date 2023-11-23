@@ -171,7 +171,7 @@ export default function ContainerProduct({ items }) {
                         <div className="flex flex-row items-center gap-4">
                             {
                                 menuOptions.map((item, i) => {
-                                    return <button key={item.id} onClick={() => { setButtonSelected(item.id); setIdentifyProduct(item) }} className={`flex items-center py-2 px-2 gap-2 ${buttonSelected === item.id ? 'bg-CollorSecondaryDefault' : 'bg-white'} shadow-3xl rounded-2xl`}>
+                                    return <button key={item.id} onClick={() => { setButtonSelected(item.id); setIdentifyProduct(item) }} className={`flex items-center removeBlue py-2 px-2  gap-2 ${buttonSelected === item.id ? 'bg-CollorSecondaryDefault' : 'bg-white'} shadow-3xl rounded-2xl`}>
                                         <p>{item.icon}</p>
                                         <p>{item.name}</p>
                                     </button>
@@ -182,15 +182,15 @@ export default function ContainerProduct({ items }) {
                 </div>
             </div>
             <Cart />
-            <button onClick={() => { setCartActive(true); setcartItensAnimate(true); setLoading(true) }} className='fixed z-10 select-none right-10 bottom-10 bg-CollorSecondaryDefault rounded-full p-3'>
-                <FaShoppingBag className='text-CollorDefault text-4xl' />
+            <button onClick={() => { setCartActive(true); setcartItensAnimate(true); setLoading(true) }} className='fixed z-10 select-none md:right-10 right-3 bottom-10 bg-CollorSecondaryDefault border border-white shadow-xl rounded-full p-3'>
+                <FaShoppingBag className='text-CollorDefault lg:text-4xl text-3xl' />
                 <div id="qtd_order" className='bg-white w-6 shadow-3xl -top-2 right-0 h-6 absolute rounded-full'>{somaToHTML || 0}</div>
             </button>
             <div className="max-w-[1000px] m-auto pt-20">
                 <div className="flex flex-wrap lg:justify-start justify-center gap-10 items-center">
                     {
                         foodToFilter?.map((item, i) => {
-                            return <div alt={item.id} id={`itemFood-${item.id}`} onClick={() => { setAddCart(item) }} key={item.id} className={`${addCart?.id === item.id ? 'bg-CollorSecondaryDefault duration-200 ease-in-out' : 'bg-white'} select-none rounded-2xl p-2 shadow-3xl w-[200px] h-[280px] cursor-pointer`}>
+                            return <div alt={item.id} id={`itemFood-${item.id}`} onClick={() => { setAddCart(item) }} key={item.id} className={`${addCart?.id === item.id ? 'bg-CollorSecondaryDefault removeBlue duration-200 ease-in-out' : 'bg-white'} select-none rounded-2xl p-2 shadow-3xl w-[200px] h-[280px] cursor-pointer`}>
                                 <div className="w-40 m-auto pb-5">
                                     <Image src={item.img} height={200} width={200} alt={item.name} className=" rounded-2xl select-none  " />
                                 </div>
