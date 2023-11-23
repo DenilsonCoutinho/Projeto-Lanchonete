@@ -39,7 +39,7 @@ export default function ContainerProduct({ items }) {
     useEffect(() => {
         let clickOn = document.getElementById(`itemFood-${1}`)
         clickOn?.click()
-        // localStorage.setItem('foodService', JSON.stringify([]))
+        localStorage.setItem('foodService', JSON.stringify([]))
         setiternalLoading(true)
     }, [])
 
