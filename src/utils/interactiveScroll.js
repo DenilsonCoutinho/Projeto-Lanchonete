@@ -1,5 +1,6 @@
+'use client'
+import useTriggerContext from '@/context/triggerContext'
 import React, { useEffect, useState } from 'react'
-import useTriggerContext from '../context/triggerContext'
 
 export function InteractiveScroll() {
 

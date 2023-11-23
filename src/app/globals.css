@@ -48,7 +48,14 @@ body {
   transform: translate(300px);
   opacity: 0;
 }
+.modal {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
 
+.fade-in {
+  opacity: 1;
+}
 .animatedElementLeft {
   transition: 1s;
   transform: translate(-300px);

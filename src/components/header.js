@@ -4,11 +4,11 @@ import Logo from '../assets/logotipo-personalizado-mesa.jpg'
 import { FaShoppingBag } from 'react-icons/fa'
 import { IoIosMenu } from "react-icons/io";
 import { useCart } from '@/context/cartContext';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MdClose } from "react-icons/md";
 
 export default function Header() {
-    const { setCartActive, itensCart ,cartActive} = useCart()
+    const { setCartActive,loading } = useCart()
     const [HeaderActive, setHeaderActive] = useState(false)
     const [headerActiveAnimation, setHeaderActiveAnimation] = useState(false)
 
@@ -23,8 +23,22 @@ export default function Header() {
                 document.body.style.overflow = 'auto';
             }
         }
-        
+
     }
+
+    useEffect(() => {
+        const itemsLocaStorage = JSON.parse(localStorage.getItem('foodService'))
+        localStorage.setItem('foodService', JSON.stringify(itemsLocaStorage))
+        let qtd = document.getElementById('qtd_Header')
+        let qtdToInt = parseInt(qtd.innerHTML)
+        let pickLength = itemsLocaStorage.map((item) => {
+            return item?.qtd
+        })
+        const soma = pickLength?.reduce((acumulador, valorAtual) => {
+            return acumulador + valorAtual;
+        }, 0);
+        qtdToInt = qtd.innerHTML = soma
+    }, [loading])
     animationCart()
     return (
         <>
@@ -39,29 +53,50 @@ export default function Header() {
                         <p className='text-CollorDefault'>Cardápio</p>
                         <p className='text-CollorDefault'>Depoimentos</p>
                     </div>
-                    <div className='bg-white px-3 py-3 shadow-3xl rounded-3xl flex items-center gap-2'>
+                    <button onClick={() => setCartActive(true)} className='bg-white removeBlue px-3 py-3 shadow-3xl rounded-3xl flex items-center gap-2'>
                         <p className='text-CollorDefault'> Meu Carrinho</p>
-                        <div className='bg-CollorSecondaryDefault rounded-2xl p-1'>
+                        <div className='bg-CollorSecondaryDefault rounded-2xl p-1 relative'>
+                            <div id='qtd_Header' className='h-4 w-4 bg-red-600 absolute flex items-center justify-center text-white text-xs rounded-full -top-2 -right-2'>{0}</div>
                             <FaShoppingBag className='text-CollorDefault' />
                         </div>
-                    </div>
+                    </button>
                 </div>
             </div>
-            <div className='md:hidden flex'>
+            <div className='md:hidden flex fixed w-full shadow-2xl'>
                 <div className='bg-white px-3 h-28 flex justify-between items-center w-full'>
                     <div className='shadow-3xl rounded-full w-20 h-20 overflow-hidden'>
                         <Image src={Logo} />
                     </div>
                     {
                         HeaderActive ?
-                            <MdClose onClick={() => {setHeaderActive(false);setHeaderActiveAnimation(false)}} className='text-3xl'/>
+                            <MdClose onClick={() => { setHeaderActive(false); setHeaderActiveAnimation(false) }} className='text-3xl' />
                             :
                             <IoIosMenu className='text-3xl' onClick={() => setHeaderActive(true)} />
                     }
                 </div>
             </div>
-            {HeaderActive && <div className={`bg-red-500 z-[9999] h-full w-full duration-150 fixed ${headerActiveAnimation ? 'translate-x-0' : 'translate-x-full'}`}>
+            {HeaderActive && <div className={` bg-white flex items-start pt-10 mt-28 justify-center border-t z-[9999] h-full w-full duration-150 fixed  ${headerActiveAnimation ? 'translate-x-0' : 'translate-x-full'}`}>
+                <div className='flex flex-col items-center gap-10'>
+                    <div onClick={() => setCartActive(true)} className='bg-white px-3 py-3 shadow-3xl rounded-3xl flex items-center gap-2'>
+                        <p className='text-CollorDefault'> Meu Carrinho</p>
+                        <div className='bg-CollorSecondaryDefault rounded-2xl p-1'>
+                            <FaShoppingBag className='text-CollorDefault' />
+                        </div>
+                    </div>
+                    <h1 className='text-CollorDefault text-xl'>
+                        Reservas
+                    </h1>
+                    <h1 className='text-CollorDefault text-xl'>
+                        Serviços
+                    </h1>
+                    <h1 className='text-CollorDefault text-xl'>
+                        Cardápio
+                    </h1>
+                    <h1 className='text-CollorDefault text-xl'>
+                        Depoimentos
+                    </h1>
 
+                </div>
             </div>}
         </>
     )

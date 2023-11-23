@@ -1,16 +1,15 @@
 "use client"
-import Image from "next/image"
-import listFood from "../listFood/listFood"
 import { useEffect, useState } from "react"
-import { FaHamburger, FaShoppingBag } from "react-icons/fa"
-import { useCart } from "../context/cartContext.js"
+import listFood from "../listFood/listFood"
 import Cart from "./cart"
+import Image from "next/image"
+import { useCart } from "../context/cartContext.js"
 import { BiSolidDrink } from "react-icons/bi"
-import { useScreenSize } from "@/context/screenSizeContext"
+import { FaHamburger, FaShoppingBag } from "react-icons/fa"
+import { useSpring, animated } from 'react-spring';
 
 export default function ContainerProduct({ items }) {
-    const { setCartActive, itensCart, loading, setLoading , setbody} = useCart()
-    const { screenY } = useScreenSize()
+    const { setCartActive, itensCart, loading, setLoading, setbody } = useCart()
     const [addCart, setAddCart] = useState()
     const [attCart, setAttCart] = useState([])
     const [somaToHTML, setsomaToHTML] = useState()
@@ -152,21 +151,53 @@ export default function ContainerProduct({ items }) {
             qtdFoodHtml.innerHTML = soma
             qtdHtmlMore.innerHTML = 0
             setiternalLoading(false)
-
+            openModal()
             return
         }
-
     }
 
+    const TemporizedModal = ({ content, timeout, onClose }) => {
+        const [visible, setVisible] = useState(true);
+
+        const fade = useSpring({
+            opacity: visible ? 1 : 0,
+            config: { duration: 400 },
+            onRest: () => {
+                if (!visible) {
+                    onClose();
+                }
+            },
+        });
+        setTimeout(() => {
+            setVisible(false);
+        }, timeout);
+
+        return <animated.div style={fade}>{content}</animated.div>;
+    };
+    const [modalOpen, setModalOpen] = useState(false);
+
+    const openModal = () => {
+        setModalOpen(true);
+    }
     return (
         <div>
-            <Cart  />
+            <div className="z-[9999] bg-green-400 fixed  flex flex-col gap-4 lg:right-6 right-3  lg:top-5 top-14  rounded-2xl py-2 ">
+
+                {modalOpen && (
+                    <TemporizedModal
+                        content={<h2 className="font-medium px-10 text-white">Item adicionado a sacola</h2>}
+                        timeout={400} // Mesmo tempo especificado anteriormente
+                        onClose={() => setModalOpen(false)}
+                    />
+                )}
+            </div>
+            <Cart />
             <div className="pt-28 max-w-[1200px] m-auto">
                 <p className="text-CollorSecondaryDefault uppercase tracking-wide text-center font-semibold">Cardápio</p>
-                <h1 className="text-CollorDefault   text-center font-bold text-3xl">Nosso Cardápio</h1>
+                <h1 className="text-CollorDefault text-center font-bold text-3xl">Nosso Cardápio</h1>
                 <div>
                     <div className="pt-20 max-w-[1000px] flex justify-center m-auto">
-                        <div className="flex flex-row items-center gap-4">
+                        <div id="filter" className="flex flex-row items-center gap-4">
                             {
                                 menuOptions.map((item, i) => {
                                     return <button key={item.id} onClick={() => { setButtonSelected(item.id); setIdentifyProduct(item) }} className={`flex items-center removeBlue py-2 px-2  gap-2 ${buttonSelected === item.id ? 'bg-CollorSecondaryDefault' : 'bg-white'} shadow-3xl rounded-2xl`}>
@@ -179,12 +210,12 @@ export default function ContainerProduct({ items }) {
                     </div>
                 </div>
             </div>
-            <button onClick={() => { setLoading(true);setCartActive(true);setbody(true) }} className='fixed z-10 select-none md:right-10 right-3 bottom-10 bg-CollorSecondaryDefault border border-white shadow-xl rounded-full p-3'>
+            <button onClick={() => { setLoading(true); setCartActive(true); setbody(true) }} className='fixed z-10 select-none md:right-10 right-3 bottom-10 bg-CollorSecondaryDefault border border-white shadow-xl rounded-full p-3'>
                 <FaShoppingBag className='text-CollorDefault lg:text-4xl text-3xl' />
                 <div id="qtd_order" className='bg-white w-6 shadow-3xl -top-2 right-0 h-6 absolute rounded-full'>{somaToHTML || 0}</div>
             </button>
             <div className="max-w-[1000px] m-auto pt-20">
-                <div className="flex flex-wrap lg:justify-start justify-center gap-10 items-center">
+                <div  className="flex flex-wrap lg:justify-start justify-center gap-10 items-center">
                     {
                         foodToFilter?.map((item, i) => {
                             return <div alt={item.id} id={`itemFood-${item.id}`} onClick={() => { setAddCart(item) }} key={item.id} className={`${addCart?.id === item.id ? 'bg-CollorSecondaryDefault removeBlue duration-200 ease-in-out' : 'bg-white'} select-none rounded-2xl p-2 shadow-3xl w-[200px] h-[280px] cursor-pointer`}>
@@ -196,7 +227,7 @@ export default function ContainerProduct({ items }) {
                                 {
                                     addCart?.id === item.id && <div className="flex flex-col items-start gap-2">
                                         <div className="flex items-center">
-                                            <button onClick={() => lessQuantityFood(item)} className={`rounded-l-2xl  flex justify-center bg-white items-center border-gray-300  w-10 h-6`}>
+                                            <button onClick={() => lessQuantityFood(item)} className={`rounded-l-2xl  flex justify-center bg-white items-center border-gray-4  w-10 h-6`}>
                                                 -
                                             </button>
                                             <div id={`qtd_Food-${item.id}`} className={` bg-white border-l border-r border-gray-300 flex justify-center items-center w-10 h-6`}>
