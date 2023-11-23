@@ -299,13 +299,13 @@ export default function Cart({ cartOn }) {
                                 <div className="">
                                     <h1 className="text-CollorDefault font-medium">Resumo do pedido:</h1>
 
-                                    {<div style={{ height: screenY - 290 }} className={`overflow-hidden  overflow-y-auto myScroll shadow-innerShadow rounded-lg p-10`}>
+                                    {<div style={{ height: screenY - 350 }} className={`overflow-hidden  overflow-y-auto myScroll shadow-innerShadow rounded-lg p-10`}>
                                         {itensCart.map((items) => {
 
                                             return <>
                                                 <div className="flex items-center justify-between">
                                                     <div className="flex items-center lg:gap-5 gap-2">
-                                                        <Image src={items?.img} alt={items?.name} width={100} className="lg:rounded-3xl rounded-xl lg:w-28 md:w-24 w-14" />
+                                                        <Image key={items?.id} src={items?.img} alt={items?.name} width={100} className="lg:rounded-3xl rounded-xl lg:w-28 md:w-24 w-14" />
                                                         -
                                                         <div className="flex flex-col items-start">
                                                             <div className="flex items-center gap-2">
@@ -326,16 +326,20 @@ export default function Cart({ cartOn }) {
                                         }
                                     </div>}
                                     <div className="">
-                                        <div className="flex flex-row gap-3 items-start">
-                                            <div className="bg-CollorSecondaryDefault pt-1 rounded-xl p-1">
-                                            <FaMapLocationDot className="text-4xl" />
-                                            </div>
-                                            <div className="flex flex-col">
-                                                <h1 className="font-semibold text-CollorDefault">{adress}, {number} ,{neighborhood}</h1>
-                                                <h1 className="font-medium text-gray-400 text-sm">{city} / {cep}</h1>
+                                        <div className="flex flex-col">
+                                            <h1 className="lg:text-xl font-semibold">Local de entrega:</h1>
+
+                                            <div className="flex flex-row gap-3 items-start  pt-2">
+                                                <div className="bg-CollorSecondaryDefault pt-1 rounded-xl p-1">
+                                                    <FaMapLocationDot className="lg:text-4xl text-3xl" />
+                                                </div>
+                                                <div className="flex flex-col">
+                                                    <h1 className="font-semibold text-CollorDefault lg:text-base text-sm">{adress}, {number} ,{neighborhood}</h1>
+                                                    <h1 className="font-medium text-gray-400 text-sm">{city} / {cep}</h1>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div className="border-b w-full py-1"></div>
+                                        <div className="border-b w-full py-4"></div>
                                         <div className="flex flex-col lg:items-end items-start lg:gap-0  gap-4">
                                             <div className="flex flex-col lg:items-end items-start">
                                                 <p className="text-gray-500 text-sm">Subtotal: {sumTotPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>

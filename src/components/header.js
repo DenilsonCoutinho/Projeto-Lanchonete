@@ -45,7 +45,7 @@ export default function Header() {
             <div className='All_Menu_Pc md:flex hidden'>
                 <div className='flex items-center justify-between max-w-[1000px] m-auto lg:gap-20 gap-10 pt-5'>
                     <div className='shadow-3xl rounded-full w-20 h-20 overflow-hidden'>
-                        <Image src={Logo} />
+                        <Image alt=' logo' src={Logo} />
                     </div>
                     <div className='flex items-center  lg:gap-14 gap-7 '>
                         <p className='text-CollorDefault'>Reservas</p>
