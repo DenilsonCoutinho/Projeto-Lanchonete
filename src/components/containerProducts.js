@@ -12,7 +12,6 @@ export default function ContainerProduct({ items }) {
     const [addCart, setAddCart] = useState()
     const [attCart, setAttCart] = useState([])
     const [somaToHTML, setsomaToHTML] = useState()
-    const [internalloading, setInternalloading] = useState(false)
     const menuOptions = [
         {
             id: 1,
@@ -38,9 +37,9 @@ export default function ContainerProduct({ items }) {
 
 
     function moreQuantityFood(item) {
-        let qtdHtml = document.getElementById(`qtd_Food-${item.id}`)
-        let qtdHtmlToNumber = parseInt(qtdHtml.innerHTML)
-        qtdHtml.innerHTML = qtdHtmlToNumber + 1
+        let qtdHtmlMore = document.getElementById(`qtd_Food-${item.id}`)
+        let qtdHtmlMoreToNumber = parseInt(qtdHtmlMore.innerHTML)
+        qtdHtmlMore.innerHTML = qtdHtmlMoreToNumber + 1
     }
 
     function lessQuantityFood(item) {
@@ -103,11 +102,9 @@ export default function ContainerProduct({ items }) {
 
     async function toCart(item) {
         let lastIndex = toCartOrder[toCartOrder.length - 1]
-        console.log(toCartOrder)
-
+        let qtdHtmlMore = document.getElementById(`qtd_Food-${item.id}`)
         let qtdFoodHtml = document.getElementById(`qtd_order`)
-        if (lastIndex?.qtd > 0) {
-            console.log(lastIndex)
+        if (parseInt(qtdHtmlMore.innerHTML) > 0) {
 
             await new Promise((resolve) => setTimeout(resolve, 100))
             attCart?.push(lastIndex);
@@ -122,10 +119,9 @@ export default function ContainerProduct({ items }) {
             const soma = qtdToCart?.reduce((acumulador, valorAtual) => {
                 return acumulador + valorAtual;
             }, 0);
-            console.log(soma)
 
             qtdFoodHtml.innerHTML = soma
-
+            qtdHtmlMore.innerHTML = 0
             return
         }
 
