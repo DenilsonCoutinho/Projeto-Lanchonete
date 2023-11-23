@@ -132,7 +132,7 @@ export default function Cart() {
                 <div className="max-w-[1000px] m-auto">
                     <button onClick={() => { setCartActive(false); setcartItensAnimate(false); setLoading(false) }} className="bg-white shadow-3xl rounded-xl text-CollorDefault py-1 px-3">fechar</button>
                     <h1 className="text-black font-semibold pt-5"> Seu carrinho:</h1>
-                    <div className="overflow-hidden 2xl:h-[430px] xl:h-[340px] md:h-[320px] overflow-y-auto myScroll shadow-innerShadow rounded-lg p-2">
+                    <div className="overflow-hidden 2xl:h-[430px] xl:h-[340px] md:h-[320px] h-[320px] overflow-y-auto myScroll shadow-innerShadow rounded-lg p-2">
                         {
                             fortmatedItens?.map((items) => {
                                 return (
