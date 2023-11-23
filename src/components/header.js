@@ -31,7 +31,7 @@ export default function Header() {
         localStorage.setItem('foodService', JSON.stringify(itemsLocaStorage))
         let qtd = document.getElementById('qtd_Header')
         let qtdToInt = parseInt(qtd.innerHTML)
-        let pickLength = itemsLocaStorage.map((item) => {
+        let pickLength = itemsLocaStorage?.map((item) => {
             return item?.qtd
         })
         const soma = pickLength?.reduce((acumulador, valorAtual) => {
