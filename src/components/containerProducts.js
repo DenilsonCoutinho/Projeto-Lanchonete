@@ -12,6 +12,7 @@ export default function ContainerProduct({ items }) {
     const [addCart, setAddCart] = useState()
     const [attCart, setAttCart] = useState([])
     const [somaToHTML, setsomaToHTML] = useState()
+    const [iternalLoading, setiternalLoading] = useState(false)
     const menuOptions = [
         {
             id: 1,
@@ -34,28 +35,73 @@ export default function ContainerProduct({ items }) {
     const foodToFilter = listFood.filter((food) => {
         return identifyProduct?.toFilter ? food.type === identifyProduct.toFilter : food.type === 'burguer'
     })
-
-
-    function moreQuantityFood(item) {
-        let qtdHtmlMore = document.getElementById(`qtd_Food-${item.id}`)
-        let qtdHtmlMoreToNumber = parseInt(qtdHtmlMore.innerHTML)
-        qtdHtmlMore.innerHTML = qtdHtmlMoreToNumber + 1
-    }
-
-    function lessQuantityFood(item) {
-        let qtdHtml = document.getElementById(`qtd_Food-${item.id}`)
-        let qtdHtmlToNumber = parseInt(qtdHtml.innerHTML)
-        if (qtdHtmlToNumber > 0) {
-            qtdHtml.innerHTML = qtdHtmlToNumber - 1
-        } else {
-            qtdHtmlToNumber = 0
-        }
-    }
     useEffect(() => {
         let clickOn = document.getElementById(`itemFood-${1}`)
         clickOn?.click()
         localStorage.setItem('foodService', JSON.stringify([]))
+        setiternalLoading(true)
     }, [])
+
+    useEffect(() => {
+        prevFood()
+
+    }, [loading])
+
+    useEffect(() => {
+        let getQtd = JSON.parse(localStorage.getItem('foodService'))
+        let qtdToCart = getQtd?.map((i) => {
+            return i?.qtd
+        })
+
+        let soma = qtdToCart?.reduce((acumulador, valorAtual) => {
+            return acumulador + valorAtual;
+        }, 0);
+        setsomaToHTML(soma)
+    }, [loading])
+
+    useEffect(() => {
+
+        let qtdHtmlMore = document.getElementById(`qtd_Food-${addCart?.id}`)
+        let qtdAddCart = document.getElementById(`qtd_Orders-${addCart?.id}`)
+        let iconCart = document.getElementById(`iconCart-${addCart?.id}`)
+        if (parseInt(qtdHtmlMore?.innerHTML) > 0) {
+            qtdAddCart.style.transition = '0.3s'
+            qtdAddCart.style.background = '#fff	'
+            qtdAddCart.style.boxShadow = ''
+            document.getElementById(`qtd_Orders-${addCart?.id}`).disabled = false;
+
+        } else if (parseInt(qtdHtmlMore?.innerHTML) < 1) {
+            document.getElementById(`qtd_Orders-${addCart?.id}`).disabled = true;
+            qtdAddCart.style.background = '#FCB040	'
+        }
+    }, [iternalLoading])
+
+    async function moreQuantityFood(item) {
+        let qtdHtmlMore = document.getElementById(`qtd_Food-${item.id}`)
+        let qtdHtmlMoreToNumber = parseInt(qtdHtmlMore.innerHTML)
+        setiternalLoading(true)
+        await new Promise(resolve => setTimeout(resolve, 100))
+        qtdHtmlMore.innerHTML = qtdHtmlMoreToNumber + 1
+        setiternalLoading(false)
+        console.log(qtdHtmlMore.innerHTML)
+
+
+
+    }
+
+    async function lessQuantityFood(item) {
+        let qtdHtml = document.getElementById(`qtd_Food-${item.id}`)
+        let qtdHtmlToNumber = parseInt(qtdHtml.innerHTML)
+        console.log(qtdHtmlToNumber)
+        if (qtdHtmlToNumber > 0) {
+            setiternalLoading(true)
+            await new Promise(resolve => setTimeout(resolve, 100))
+            qtdHtml.innerHTML = qtdHtmlToNumber - 1
+            setiternalLoading(false)
+        } else {
+            qtdHtmlToNumber = 0
+        }
+    }
 
     async function prevFood() {
         setLoading(true)
@@ -64,10 +110,6 @@ export default function ContainerProduct({ items }) {
         await new Promise(resolve => setTimeout(resolve, 100))
         setLoading(false)
     }
-    useEffect(() => {
-        prevFood()
-
-    }, [loading])
 
     let toCartOrder = []
 
@@ -87,23 +129,14 @@ export default function ContainerProduct({ items }) {
 
         }
     }
-    useEffect(() => {
 
-        let getQtd = JSON.parse(localStorage.getItem('foodService'))
-        let qtdToCart = getQtd?.map((i) => {
-            return i?.qtd
-        })
-
-        let soma = qtdToCart?.reduce((acumulador, valorAtual) => {
-            return acumulador + valorAtual;
-        }, 0);
-        setsomaToHTML(soma)
-    }, [loading])
 
     async function toCart(item) {
+        setiternalLoading(true)
         let lastIndex = toCartOrder[toCartOrder.length - 1]
         let qtdHtmlMore = document.getElementById(`qtd_Food-${item.id}`)
         let qtdFoodHtml = document.getElementById(`qtd_order`)
+
         if (parseInt(qtdHtmlMore.innerHTML) > 0) {
 
             await new Promise((resolve) => setTimeout(resolve, 100))
@@ -111,7 +144,6 @@ export default function ContainerProduct({ items }) {
             setLoading(true)
             localStorage.setItem('foodService', JSON.stringify(attCart));
             let itenStorage = JSON.parse(localStorage.getItem('foodService'))
-            console.log(itenStorage)
             setLoading(false)
             let qtdToCart = itenStorage?.map((item) => {
                 return item?.qtd
@@ -122,6 +154,8 @@ export default function ContainerProduct({ items }) {
 
             qtdFoodHtml.innerHTML = soma
             qtdHtmlMore.innerHTML = 0
+            setiternalLoading(false)
+
             return
         }
 
@@ -157,26 +191,27 @@ export default function ContainerProduct({ items }) {
                     {
                         foodToFilter?.map((item, i) => {
                             return <div alt={item.id} id={`itemFood-${item.id}`} onClick={() => { setAddCart(item) }} key={item.id} className={`${addCart?.id === item.id ? 'bg-CollorSecondaryDefault duration-200 ease-in-out' : 'bg-white'} select-none rounded-2xl p-2 shadow-3xl w-[200px] h-[280px] cursor-pointer`}>
-                                <div className="w-40 m-auto pb-10">
+                                <div className="w-40 m-auto pb-5">
                                     <Image src={item.img} height={200} width={200} alt={item.name} className=" rounded-2xl select-none  " />
                                 </div>
                                 <h1 className="text-sm h-10">{item.name.substring(0, 25)}</h1>
                                 <h1 className={`text-sm font-bold h-10  ${addCart?.id === item.id ? 'border-black' : 'text-CollorSecondaryDefault'}`}>{item.price.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</h1>
                                 {
-                                    addCart?.id === item.id && <div className="flex items-center gap-2">
+                                    addCart?.id === item.id && <div className="flex flex-col items-start gap-2">
                                         <div className="flex items-center">
-                                            <button onClick={() => lessQuantityFood(item)} className={`rounded-l-2xl  flex justify-center items-center border ${addCart?.id === item.id ? 'border-black' : 'border-CollorSecondaryDefault'}  w-10 h-6`}>
+                                            <button onClick={() => lessQuantityFood(item)} className={`rounded-l-2xl  flex justify-center bg-white items-center border-gray-300  w-10 h-6`}>
                                                 -
                                             </button>
-                                            <div id={`qtd_Food-${item.id}`} className={` border flex justify-center items-center ${addCart?.id === item.id ? 'border-black' : 'border-CollorSecondaryDefault'} w-10 h-6`}>
+                                            <div id={`qtd_Food-${item.id}`} className={` bg-white border-l border-r border-gray-300 flex justify-center items-center w-10 h-6`}>
                                                 {0}
                                             </div>
-                                            <button onClick={() => moreQuantityFood(item)} className={` flex justify-center items-center rounded-r-2xl border w-10 h-6  ${addCart?.id === item.id ? 'border-black' : 'border-CollorSecondaryDefault'}`}>
+                                            <button onClick={() => moreQuantityFood(item)} className={`bg-white flex justify-center items-center rounded-r-2xl border-gray-300 w-10 h-6 `}>
                                                 +
                                             </button>
                                         </div>
-                                        <button onClick={() => { formatArrayToCart(item);; toCart(item) }} className={`${addCart?.id === item.id ? 'bg-white' : 'bg-CollorSecondaryDefault'} bg-CollorSecondaryDefault rounded-2xl p-1`}>
-                                            <FaShoppingBag className={`${addCart?.id === item.id ? 'text-black' : 'text-CollorSecondaryDefault'}`} />
+                                        <button id={`qtd_Orders-${item.id}`} onClick={() => { formatArrayToCart(item); toCart(item) }} className={` w-40 flex items-center gap-2 rounded-2xl px-2 `}>
+                                            <FaShoppingBag id={`iconCart-${item.id}`} className={`${addCart?.id === item.id ? 'text-black' : 'text-CollorSecondaryDefault'}`} />
+                                            <p>Adicionar</p>
                                         </button>
                                     </div>
                                 }

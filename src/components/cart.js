@@ -125,7 +125,6 @@ export default function Cart() {
         }
     }
 
-
     return (
         cartActive && <div className="h-full  fixed z-[9999] right-0 top-0 left-0">
             <div id="cartItens" className={`${cartItensAnimate ? "translate-x-0" : "translate-x-[999px]"} p-5 duration-150 bg-[#fff] h-full w-full relative z-[9999] `}>
@@ -139,7 +138,7 @@ export default function Cart() {
                                     <div key={items?.id} className="pt-5 ">
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center lg:gap-5 gap-2">
-                                                <Image src={items?.img} alt={items?.name} width={100} className="lg:rounded-3xl rounded-xl xl:w-24 w-14" />
+                                                <Image src={items?.img} alt={items?.name} width={100} className="lg:rounded-3xl rounded-xl lg:w-28 md:w-24 w-20" />
                                                 -
                                                 <div className="flex flex-col items-start">
                                                     <div className="flex items-center gap-2">
@@ -150,8 +149,8 @@ export default function Cart() {
                                                 </div>
                                             </div>
                                             <div className="flex items-center gap-5">
-                                                <div className="flex items-center">
-                                                    <button onClick={() => lessQuantityFood(items)} className={`lg:rounded-l-2xl rounded-l-xl  flex justify-center items-center border 'border-CollorSecondaryDefault'   lg:w-10 sm:w-7 w-6  lg:h-6 sm:h-7 h-5`}>
+                                                <div className="flex items-center rounded-2xl shadow-md">
+                                                    <button onClick={() => lessQuantityFood(items)} className={`lg:rounded-l-2xl  rounded-l-xl  flex justify-center items-center border 'border-CollorSecondaryDefault'   lg:w-10 sm:w-7 w-6  lg:h-6 sm:h-7 h-5`}>
                                                         {items.qtd > 1 ? '-' : <div><p className="lg:flex hidden ">-</p><FaTrash className="text-[10px] lg:hidden flex  text-red-500" /></div>}
                                                     </button>
                                                     <div id={`qtd_Food-Cart${items?.id}`} className={` border lg:text-base text-xs flex justify-center items-center border-CollorSecondaryDefault'  lg:w-10 sm:w-7 w-6 lg:h-6  sm:h-7 h-5`}>
