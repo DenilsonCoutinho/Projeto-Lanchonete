@@ -37,7 +37,7 @@ export default function Header() {
         const soma = pickLength?.reduce((acumulador, valorAtual) => {
             return acumulador + valorAtual;
         }, 0);
-        qtdToInt = qtd.innerHTML = soma
+        qtdToInt = qtd.innerHTML = soma || 0
     }, [loading])
     animationCart()
     return (
