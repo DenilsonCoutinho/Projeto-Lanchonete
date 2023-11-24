@@ -167,7 +167,7 @@ export default function Cart({ cartOn }) {
 
 
     async function toWhatsapp() {
-        let text = `olá! gostaria de fazer um pedido:`
+        let text = `olá! gostaria de fazer um pedido`
         const items = itensToFormat?.map((i) => ({
             id: i.id,
             img: i.img,
@@ -193,9 +193,10 @@ export default function Cart({ cartOn }) {
             i.style.display = 'none'
             window.location.href = `https://wa.me/+5548991109700?text=${encodeURI(text)}`
             localStorage.setItem('foodService', JSON.stringify([]))
-            setInternalLoading(false)
             i.style.display = 'flex'
         }
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        setInternalLoading(false)
     }
 
     return (
