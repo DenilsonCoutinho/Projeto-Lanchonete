@@ -30,14 +30,15 @@ export default function Cart({ cartOn }) {
         setItensToFormat(itemsLocaStorage)
     }, [loading])
     function withouScroll() {
-        if (body) {
-            // document.body.style.overflow = 'hidden';
-        } else {
-            if (typeof window !== 'undefined') {
+        if (typeof window !== 'undefined') {
+            if (body) {
+                document.body.style.overflow = 'hidden';
+            } else {
                 document.body.style.overflow = 'auto';
             }
         }
     }
+
     withouScroll()
     let itenStorage = []
     if (typeof window !== 'undefined') {
