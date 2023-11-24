@@ -198,6 +198,7 @@ export default function Cart({ cartOn }) {
         }
         localStorage.setItem('foodService', JSON.stringify([]))
         await new Promise(resolve => setTimeout(resolve, 1000));
+        setCartActive(false)
         setInternalLoading(false)
     }
 
