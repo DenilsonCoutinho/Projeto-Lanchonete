@@ -167,7 +167,7 @@ export default function Cart({ cartOn }) {
 
 
     async function toWhatsapp() {
-        let text = `olá! gostaria de fazer um pedido`
+        let text = `Olá! gostaria de fazer um pedido:\n`
         const items = itensToFormat?.map((i) => ({
             id: i.id,
             img: i.img,
@@ -175,11 +175,13 @@ export default function Cart({ cartOn }) {
             price: i.price,
             qtd: i.qtd,
         }));
-        let orders = items.map((item) => `*x${item.qtd}* ${item.name}....R$${item.price}`).join('\n');
+        let orders = items.map((item) => `*x${item.qtd}* ${item.name}....R$${item.price}`).join('\n\n');
         text += `\n*Itens do pedido:*\n${orders}\n`
         text += `\n*Endereço de entrega:*`
-        text += `\n${adress},${number},${neighborhood}`
-        text += `\n${city},${cep},${complement} \n`
+        text += `\n${adress},${number},\n${neighborhood},${city}`
+        text += `\nCEP:${cep} / Complemento:${complement}
+        
+        \n`
         text += `\n*Total (com entrega):R$ ${totPrice}*`
         setInternalLoading(true)
         await new Promise(resolve => setTimeout(resolve, 1))
@@ -192,9 +194,9 @@ export default function Cart({ cartOn }) {
             await new Promise(resolve => setTimeout(resolve, 4000));
             i.style.display = 'none'
             window.location.href = `https://wa.me/+5548991109700?text=${encodeURI(text)}`
-            localStorage.setItem('foodService', JSON.stringify([]))
             i.style.display = 'flex'
         }
+        localStorage.setItem('foodService', JSON.stringify([]))
         await new Promise(resolve => setTimeout(resolve, 1000));
         setInternalLoading(false)
     }
