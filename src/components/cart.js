@@ -34,7 +34,6 @@ export default function Cart({ cartOn }) {
             document.body.style.overflow = 'hidden';
         } else {
             if (typeof window !== 'undefined') {
-
                 document.body.style.overflow = 'auto';
             }
         }
@@ -195,8 +194,11 @@ export default function Cart({ cartOn }) {
             i.style.display = 'none'
             window.location.href = `https://wa.me/+5548991109700?text=${encodeURI(text)}`
             i.style.display = 'flex'
+            document.body.style.overflow = 'auto';
         }
         localStorage.setItem('foodService', JSON.stringify([]))
+        document.body.style.overflow = 'auto';
+        setNextStep(1)
         await new Promise(resolve => setTimeout(resolve, 3000));
         setCartActive(false)
         setInternalLoading(false)
