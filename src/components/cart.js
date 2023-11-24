@@ -31,7 +31,7 @@ export default function Cart({ cartOn }) {
     }, [loading])
     function withouScroll() {
         if (body) {
-            document.body.style.overflow = 'hidden';
+            // document.body.style.overflow = 'hidden';
         } else {
             if (typeof window !== 'undefined') {
                 document.body.style.overflow = 'auto';
