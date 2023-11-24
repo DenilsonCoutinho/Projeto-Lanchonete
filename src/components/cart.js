@@ -212,7 +212,7 @@ export default function Cart({ cartOn }) {
                         <div className="flex items-center">
                             <button onClick={() => setNextStep(1)} className="h-8 w-8 rounded-full flex items-center justify-center shadow-3xl bg-CollorSecondaryDefault text-black">1</button>
                             <div className="border-b border-CollorSecondaryDefault w-5"></div>
-                            <div onClick={() => setNextStep(2)} className={`h-8 w-8 rounded-full flex items-center justify-center shadow-3xl ${nextStep === 2 || nextStep > 2 ? "bg-CollorSecondaryDefault" : "bg-white"} text-black`}>2</div>
+                            <div onClick={() => setNextStep(itensCart.length > 0 ? 2 : 1)} className={`h-8 w-8 rounded-full flex items-center cursor-pointer justify-center shadow-3xl ${nextStep === 2 || nextStep > 2 ? "bg-CollorSecondaryDefault" : "bg-white"} text-black`}>2</div>
                             <div className={`${nextStep === 3 ? "border-CollorSecondaryDefault border" : "border-b border-black "} w-5`}></div>
                             <div className={`h-8 w-8 rounded-full flex items-center justify-center shadow-3xl ${nextStep === 3 ? "bg-CollorSecondaryDefault" : "bg-white"}  text-black`}>3</div>
                         </div>
@@ -271,7 +271,7 @@ export default function Cart({ cartOn }) {
                                 <p className="font-medium lg?text-xl text-base pt-2">Total: <span className="font-extrabold text-CollorSecondaryDefault">{totPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</span></p>
                             </div>
                             <div className="flex items-center gap-2">
-                                <button onClick={() => setNextStep(2)} className="bg-CollorSecondaryDefault rounded-2xl text-white py-2 px-3">Continuar</button>
+                                <button onClick={() => setNextStep(itensCart.length > 0 ? 2 : 1)} className="bg-CollorSecondaryDefault rounded-2xl text-white py-2 px-3">Continuar</button>
                             </div>
                         </div>
                     </div> :
