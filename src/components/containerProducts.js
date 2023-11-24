@@ -165,7 +165,7 @@ export default function ContainerProduct({ items }) {
 
         const fade = useSpring({
             opacity: visible ? 1 : 0,
-            config: { duration: 400 },
+            config: { duration: 600 },
             onRest: () => {
                 if (!visible) {
                     onClose();
@@ -190,7 +190,7 @@ export default function ContainerProduct({ items }) {
                 {modalOpen && (
                     <TemporizedModal
                         content={<h2 className="font-medium px-10 text-white">Item adicionado a sacola</h2>}
-                        timeout={400} // Mesmo tempo especificado anteriormente
+                        timeout={600} // Mesmo tempo especificado anteriormente
                         onClose={() => setModalOpen(false)}
                     />
                 )}
