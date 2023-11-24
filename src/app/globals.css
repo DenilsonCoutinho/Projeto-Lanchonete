@@ -16,7 +16,7 @@ body {
 }
 
 .animatedElmentBottomNow {
-  transition: 0.5s;
+  transition: 0.3s;
   opacity: 0;
   transform: translateY(300px);
 }
@@ -38,9 +38,10 @@ body {
 }
 
 .animatedElmentBottom {
-  transition: 0.5s;
+  transition: 0.3s;
   opacity: 0;
   transform: translateY(300px);
+  transition-timing-function: ease-in-out
 }
 
 .animatedElementRight {

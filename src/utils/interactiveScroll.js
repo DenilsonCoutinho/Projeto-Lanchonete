@@ -15,7 +15,7 @@ export function InteractiveScroll() {
         if (window !== undefined) {
             document.querySelectorAll(".animatedElementUpNow").forEach(element => {
                 if (element.getClientRects()[0]) {
-                    element.getBoundingClientRect()?.top
+                    // element.getBoundingClientRect()?.top
                     element.style.transform = "translateY(0px)"
                     element.style.opacity = 1
                     qtdElement = qtdElement + 0.1
@@ -30,7 +30,7 @@ export function InteractiveScroll() {
         let qtdElement = 0
         if (window !== undefined) {
             document.querySelectorAll(".animatedElmentBottom").forEach(element => {
-                if (element.getClientRects()[0]?.y <= window.innerHeight) {
+                if (element.getClientRects()[0]?.y <= window.innerHeight / 0.8) {
                     element.getBoundingClientRect()?.top
                     element.style.transform = "translateY(0px)"
                     element.style.opacity = 1

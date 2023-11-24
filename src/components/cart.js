@@ -29,17 +29,17 @@ export default function Cart({ cartOn }) {
         setItensCart(itemsLocaStorage)
         setItensToFormat(itemsLocaStorage)
     }, [loading])
-    function withouScroll() {
-        if (typeof window !== 'undefined') {
-            if (body) {
-                document.body.style.overflow = 'hidden';
-            } else {
-                document.body.style.overflow = 'auto';
-            }
-        }
-    }
+    // function withouScroll() {
+    //     if (typeof window !== 'undefined') {
+    //         if (body) {
+    //             document.body.style.overflow = 'hidden';
+    //         } else {
+    //             document.body.style.overflow = 'auto';
+    //         }
+    //     }
+    // }
 
-    withouScroll()
+    // withouScroll()
     let itenStorage = []
     if (typeof window !== 'undefined') {
         let itensStorage = JSON.parse(localStorage.getItem('foodService'))
@@ -175,14 +175,14 @@ export default function Cart({ cartOn }) {
             price: i.price,
             qtd: i.qtd,
         }));
-        let orders = items.map((item) => `*x${item.qtd}* ${item.name}....R$${item.price}`).join('\n\n');
+        let orders = items.map((item) => `*x${item.qtd}* ${item.name}....${item.price.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}`).join('\n\n');
         text += `\n*Itens do pedido:*\n${orders}\n`
         text += `\n*Endereço de entrega:*`
         text += `\n${adress},${number},\n${neighborhood},${city}`
         text += `\nCEP:${cep} / Complemento:${complement}
         
         \n`
-        text += `\n*Total (com entrega):R$ ${totPrice}*`
+        text += `\n*Total (com entrega):R$ ${totPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}*`
         setInternalLoading(true)
         await new Promise(resolve => setTimeout(resolve, 1))
         let setAnimation = window.document.querySelectorAll('.animationOn')
@@ -195,10 +195,8 @@ export default function Cart({ cartOn }) {
             i.style.display = 'none'
             window.location.href = `https://wa.me/+5548991109700?text=${encodeURI(text)}`
             i.style.display = 'flex'
-            document.body.style.overflow = 'auto';
         }
         localStorage.setItem('foodService', JSON.stringify([]))
-        document.body.style.overflow = 'auto';
         setNextStep(1)
         await new Promise(resolve => setTimeout(resolve, 3000));
         setCartActive(false)

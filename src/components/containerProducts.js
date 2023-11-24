@@ -197,16 +197,16 @@ export default function ContainerProduct({ items }) {
             </div>
 
             <div className="pt-28 max-w-[1200px] m-auto">
-                <p className="text-CollorSecondaryDefault uppercase tracking-wide text-center font-semibold">Cardápio</p>
-                <h1 className="text-CollorDefault text-center font-bold text-3xl">Nosso Cardápio</h1>
+                <p className="text-CollorSecondaryDefault uppercase tracking-wide text-center font-semibold animatedElmentBottom">Cardápio</p>
+                <h1 className="text-CollorDefault text-center font-bold text-3xl animatedElmentBottom">Nosso Cardápio</h1>
                 <div>
                     <div className="pt-20 max-w-[1000px] flex justify-center m-auto">
                         <div id="filter" className="flex flex-row items-center gap-4">
                             {
                                 menuOptions.map((item, i) => {
-                                    return <button key={item.id} onClick={() => { setButtonSelected(item.id); setIdentifyProduct(item) }} className={`flex items-center removeBlue py-2 px-2  gap-2 ${buttonSelected === item.id ? 'bg-CollorSecondaryDefault' : 'bg-white'} shadow-3xl rounded-2xl`}>
-                                        <p>{item.icon}</p>
-                                        <p>{item.name}</p>
+                                    return <button key={item.id} onClick={() => { setButtonSelected(item.id); setIdentifyProduct(item) }} className={` flex items-center removeBlue py-2 px-2  gap-2 ${buttonSelected === item.id ? 'bg-CollorSecondaryDefault' : 'bg-white'} shadow-3xl rounded-2xl`}>
+                                        <p className="animatedElmentBottom text-black">{item.icon}</p>
+                                        <p className="animatedElmentBottom text-black">{item.name}</p>
                                     </button>
                                 })
                             }
