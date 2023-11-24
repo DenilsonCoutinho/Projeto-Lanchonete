@@ -39,7 +39,8 @@ export default function ContainerProduct({ items }) {
     useEffect(() => {
         let clickOn = document.getElementById(`itemFood-${1}`)
         clickOn?.click()
-        localStorage.setItem('foodService', JSON.stringify([]))
+        const itemsLocaStorage = JSON.parse(localStorage.getItem('foodService'))
+        localStorage.setItem('foodService', JSON.stringify(itemsLocaStorage || []))
         setiternalLoading(true)
     }, [])
 
@@ -215,7 +216,7 @@ export default function ContainerProduct({ items }) {
                 <div id="qtd_order" className='bg-white w-6 shadow-3xl -top-2 right-0 h-6 absolute rounded-full'>{somaToHTML || 0}</div>
             </button>
             <div className="max-w-[1000px] m-auto pt-20">
-                <div  className="flex flex-wrap lg:justify-start justify-center gap-10 items-center">
+                <div className="flex flex-wrap lg:justify-start justify-center gap-10 items-center">
                     {
                         foodToFilter?.map((item, i) => {
                             return <div alt={item.id} id={`itemFood-${item.id}`} onClick={() => { setAddCart(item) }} key={item.id} className={`${addCart?.id === item.id ? 'bg-CollorSecondaryDefault removeBlue duration-200 ease-in-out' : 'bg-white'} select-none rounded-2xl p-2 shadow-3xl w-[200px] h-[280px] cursor-pointer`}>
