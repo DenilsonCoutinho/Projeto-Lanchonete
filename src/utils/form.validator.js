@@ -3,7 +3,6 @@ export function validateFields(fields) {
     const errors = []
 
     fields.forEach((field) => {
-        console.log(field.name)
         if (field?.required) {
             switch (field?.type) {
                 case 'string':

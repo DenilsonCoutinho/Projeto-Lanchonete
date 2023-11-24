@@ -7,9 +7,11 @@ import { useCart } from "../context/cartContext.js"
 import { BiSolidDrink } from "react-icons/bi"
 import { FaHamburger, FaShoppingBag } from "react-icons/fa"
 import { useSpring, animated } from 'react-spring';
+import { useScreenSize } from "@/context/screenSizeContext"
 
 export default function ContainerProduct({ items }) {
     const { setCartActive, itensCart, setItensCart, loading, setLoading, setbody } = useCart()
+    const { screenX } = useScreenSize()
     const [addCart, setAddCart] = useState()
     const [attCart, setAttCart] = useState([])
     const [somaToHTML, setsomaToHTML] = useState()
@@ -73,8 +75,9 @@ export default function ContainerProduct({ items }) {
 
         } else if (parseInt(qtdHtmlMore?.innerHTML) < 1) {
             document.getElementById(`qtd_Orders-${addCart?.id}`).disabled = true;
-            qtdAddCart.style.background = '#FCB040	'
+            qtdAddCart.style.background = 'transparent'
         }
+
     }, [iternalLoading])
 
     async function moreQuantityFood(item) {
@@ -183,7 +186,7 @@ export default function ContainerProduct({ items }) {
     return (
         <>
             <Cart />
-            <div className="z-[9999] bg-green-400 fixed  flex flex-col gap-4 lg:right-6 right-3  lg:top-5 top-14  rounded-2xl py-2 ">
+            <div className="z-[99999] bg-green-400 fixed  flex flex-col gap-4 lg:right-6 right-3  lg:top-5 top-14  rounded-2xl py-2 ">
                 {modalOpen && (
                     <TemporizedModal
                         content={<h2 className="font-medium px-10 text-white">Item adicionado a sacola</h2>}
@@ -215,35 +218,48 @@ export default function ContainerProduct({ items }) {
                 <FaShoppingBag className='text-CollorDefault lg:text-4xl text-3xl' />
                 <div id="qtd_order" className='bg-red-600 text-white w-6 shadow-3xl -top-2 right-0 h-6 absolute rounded-full'>{somaToHTML || 0}</div>
             </button>
-            <div className="max-w-[1000px] m-auto pt-20">
-                <div className="flex flex-wrap lg:justify-start justify-center gap-10 items-center">
+            <div className="max-w-[1200px] px-2 m-auto py-20">
+                <div className="flex flex-wrap  justify-center gap-10 items-center">
                     {
                         foodToFilter?.map((item, i) => {
-                            return <div alt={item.id} id={`itemFood-${item.id}`} onClick={() => { setAddCart(item) }} key={item.id} className={`${addCart?.id === item.id ? 'bg-CollorSecondaryDefault removeBlue duration-200 ease-in-out' : 'bg-white'} select-none rounded-2xl p-2 shadow-3xl w-[200px] h-[280px] cursor-pointer`}>
-                                <div className="w-40 m-auto pb-5">
-                                    <Image src={item.img} height={200} width={200} alt={item.name} className=" rounded-2xl select-none  " />
-                                </div>
-                                <h1 className="text-sm h-10">{item.name.substring(0, 25)}</h1>
-                                <h1 className={`text-sm font-bold h-10  ${addCart?.id === item.id ? 'border-black' : 'text-CollorSecondaryDefault'}`}>{item.price.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</h1>
-                                {
-                                    addCart?.id === item.id && <div className="flex flex-col items-start gap-2">
-                                        <div className="flex items-center">
-                                            <button onClick={() => lessQuantityFood(item)} className={`rounded-l-2xl  flex justify-center bg-white items-center border-gray-4  w-10 h-6`}>
-                                                -
-                                            </button>
-                                            <div id={`qtd_Food-${item.id}`} className={` bg-white border-l border-r border-gray-300 flex justify-center items-center w-10 h-6`}>
-                                                {0}
+                            return <div className="relative">
+                                <div alt={item.id} id={`itemFood-${item.id}`} onClick={() => { setAddCart(item) }} key={item.id} className={`${addCart?.id === item.id ? 'bg-CollorSecondaryDefault removeBlue duration-200 ease-in-out' : 'bg-white'} flex flex-col justify-x items-start select-none rounded-xl p-2 shadow-3xl md:w-[450px]   md:h-[190px] `}>
+                                    <div className="flex items-start gap-2">
+                                        <div className={`md:w-28 w-48 overflow-hidden m-auto ${item.type === "drink" ? 'w-36 bg-white rounded-lg' : ''}  pb-5`}>
+                                            <Image src={item.img} alt={item.name} width={item.type === "drink" ? 120 : 160} height={200} className="cursor-pointer rounded-xl  select-none  " />
+                                        </div>
+                                        <div className="flex flex-col items-start gap-1 ">
+                                            <h1 className="text-sm ">{item.name.substring(0, 25)}</h1>
+                                            <h1 className={`text-sm font-bold  ${addCart?.id === item.id ? 'border-black' : 'text-CollorSecondaryDefault'}`}>{item.price.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</h1>
+                                            {
+                                                screenX < 700 ?
+                                                    <h1 className={`text-xs md:w-64 `}>{item.description.substring(0, 115)}...</h1>
+                                                    :
+                                                    <h1 className="text-xs md:w-64">{item.description.substring(0, 160)}...</h1>
+                                            }
+                                        </div>
+                                    </div>
+
+                                    {
+                                        addCart?.id === item.id && <div className="flex flex-row justify-between items-start gap-2 pt-2">
+                                            <div className="flex flex-row items-center">
+                                                <button onClick={() => lessQuantityFood(item)} className={`rounded-l-2xl  flex justify-center bg-white items-center border-gray-4  w-10 h-6`}>
+                                                    -
+                                                </button>
+                                                <div id={`qtd_Food-${item.id}`} className={` bg-white border-l border-r border-gray-300 flex justify-center items-center w-10 h-6`}>
+                                                    {0}
+                                                </div>
+                                                <button onClick={() => moreQuantityFood(item)} className={`bg-white flex justify-center items-center rounded-r-2xl border-gray-300 w-10 h-6 `}>
+                                                    +
+                                                </button>
                                             </div>
-                                            <button onClick={() => moreQuantityFood(item)} className={`bg-white flex justify-center items-center rounded-r-2xl border-gray-300 w-10 h-6 `}>
-                                                +
+                                            <button id={`qtd_Orders-${item.id}`} onClick={() => { formatArrayToCart(item); toCart(item) }} className={`  flex items-center gap-2 rounded-2xl px-2 `}>
+                                                <FaShoppingBag id={`iconCart-${item.id}`} className={`${addCart?.id === item.id ? 'text-black' : 'text-CollorSecondaryDefault'}`} />
+                                                <p className="text-black">Adicionar</p>
                                             </button>
                                         </div>
-                                        <button id={`qtd_Orders-${item.id}`} onClick={() => { formatArrayToCart(item); toCart(item) }} className={` w-40 flex items-center gap-2 rounded-2xl px-2 `}>
-                                            <FaShoppingBag id={`iconCart-${item.id}`} className={`${addCart?.id === item.id ? 'text-black' : 'text-CollorSecondaryDefault'}`} />
-                                            <p>Adicionar</p>
-                                        </button>
-                                    </div>
-                                }
+                                    }
+                                </div>
                             </div>
                         })
                     }

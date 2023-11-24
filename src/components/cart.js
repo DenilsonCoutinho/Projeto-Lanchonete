@@ -6,6 +6,10 @@ import { FaMagnifyingGlass, FaMapLocationDot, FaMotorcycle, FaTrash } from "reac
 import { useScreenSize } from "@/context/screenSizeContext";
 import { MdRemoveShoppingCart } from "react-icons/md";
 import { validateFields } from "@/utils/form.validator";
+import maskCep from "@/utils/regex/maskCep";
+import OnlyNumber from "@/utils/regex/onlyNumber";
+import { FaHamburger } from "react-icons/fa";
+import OnlyLetter from "@/utils/regex/onlyLetter";
 export default function Cart({ cartOn }) {
 
     const { setCartActive, cartActive, setItensCart, loading, setLoading, itensCart, cartItensAnimate, setbody, body } = useCart()
@@ -17,11 +21,13 @@ export default function Cart({ cartOn }) {
     const [number, setNumber] = useState('')
     const [city, setCity] = useState('')
     const [complement, setComplement] = useState('')
-
+    const [itensToFormat, setItensToFormat] = useState('')
+    const [internalLoading, setInternalLoading] = useState(false)
     useEffect(() => {
         const itemsLocaStorage = JSON.parse(localStorage.getItem('foodService'))
         localStorage.setItem('foodService', JSON.stringify(itemsLocaStorage))
         setItensCart(itemsLocaStorage)
+        setItensToFormat(itemsLocaStorage)
     }, [loading])
     function withouScroll() {
         if (body) {
@@ -135,10 +141,10 @@ export default function Cart({ cartOn }) {
     async function getCep() {
         try {
             let getCepApi = await fetch(`https://viacep.com.br/ws/${cep}/json/`).then(res => res.json())
-            console.log(getCepApi)
             setAdress(getCepApi.logradouro)
             setNeighborhood(getCepApi.bairro)
             setCity(getCepApi.localidade)
+            setComplement('')
         } catch (error) {
             console.log(error)
         }
@@ -159,206 +165,241 @@ export default function Cart({ cartOn }) {
         }
     }
 
+
+    async function toWhatsapp() {
+        let text = `olá! gostaria de fazer um pedido:`
+        const items = itensToFormat?.map((i) => ({
+            id: i.id,
+            img: i.img,
+            name: i.name,
+            price: i.price,
+            qtd: i.qtd,
+        }));
+        let orders = items.map((item) => `*x${item.qtd}* ${item.name}....R$${item.price}`).join('\n');
+        text += `\n*Itens do pedido:*\n${orders}\n`
+        text += `\n*Endereço de entrega:*`
+        text += `\n${adress},${number},${neighborhood}`
+        text += `\n${city},${cep},${complement} \n`
+        text += `\n*Total (com entrega):R$ ${totPrice}*`
+        setInternalLoading(true)
+        await new Promise(resolve => setTimeout(resolve, 1))
+        let setAnimation = window.document.querySelectorAll('.animationOn')
+        for (const i of setAnimation) {
+            await new Promise(resolve => setTimeout(resolve, 3000));
+            i.innerHTML = ' Obrigado pela preferência!';
+            await new Promise(resolve => setTimeout(resolve, 4000));
+            i.innerHTML = 'Em breve, seu pedido estará a caminho!';
+            await new Promise(resolve => setTimeout(resolve, 4000));
+            i.style.display = 'none'
+            window.location.href = `https://wa.me/+5548991109700?text=${encodeURI(text)}`
+            localStorage.setItem('foodService', JSON.stringify([]))
+            setInternalLoading(false)
+            i.style.display = 'flex'
+        }
+    }
+
     return (
-        cartActive && <div div className="h-full  fixed z-[9999] right-0 top-0 left-0 bg-white" >
-            <div id="cartItens" className={`${cartItensAnimate ? "translate-x-0" : "translate-x-full"} max-w-[1000px] m-auto p-5 duration-150 bg-[#fff] h-full w-full relative z-[9999] `}>
-                <div className="flex justify-between">
-                    <div className="flex items-center">
-                        <button onClick={() => setNextStep(1)} className="h-8 w-8 rounded-full flex items-center justify-center shadow-3xl bg-CollorSecondaryDefault text-black">1</button>
-                        <div className="border-b border-CollorSecondaryDefault w-5"></div>
-                        <div onClick={() => setNextStep(2)} className={`h-8 w-8 rounded-full flex items-center justify-center shadow-3xl ${nextStep === 2 || nextStep > 2 ? "bg-CollorSecondaryDefault" : "bg-white"} text-black`}>2</div>
-                        <div className={`${nextStep === 3 ? "border-CollorSecondaryDefault border" : "border-b border-black "} w-5`}></div>
-                        <div className={`h-8 w-8 rounded-full flex items-center justify-center shadow-3xl ${nextStep === 3 ? "bg-CollorSecondaryDefault" : "bg-white"}  text-black`}>3</div>
-                    </div>
-                    <button onClick={() => { setLoading(false); setCartActive(false); setbody(false) }} className="bg-white shadow-3xl font-medium rounded-xl text-CollorDefault py-1 px-3">Fechar</button>
-                </div>
-                {nextStep === 1 ? <div className="">
-                    <h1 className="text-black font-semibold pt-5"> Seu carrinho:</h1>
-                    <div style={{ height: screenY - 230 }} className={`overflow-hidden  overflow-y-auto myScroll shadow-innerShadow rounded-lg p-2`}>
-                        {fortmatedItens.length > 0 ?
-                            fortmatedItens?.map((items) => {
-                                return (
-                                    <div key={items?.id} className="pt-5 ">
-                                        {<div className="flex items-center justify-between">
-                                            <div className="flex items-center lg:gap-5 gap-2">
-                                                <Image src={items?.img} alt={items?.name} width={100} className="lg:rounded-3xl rounded-xl lg:w-28 md:w-24 w-20" />
-                                                -
-                                                <div className="flex flex-col items-start">
-                                                    <div className="flex items-center gap-2">
+        cartActive && <div className="h-full  fixed z-[99999] right-0 top-0 left-0 bg-white" >
 
-                                                        <h1 className="text-CollorDefault md:w-80 w-20 lg:text-base text-xs">{items?.name}</h1>
-                                                    </div>
-                                                    <p className=" text-CollorSecondaryDefault lg:text-base text-xs">{items?.price?.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
-                                                </div>
-                                            </div>
-                                            <div className="flex items-center gap-5">
-                                                <div className="flex items-center rounded-2xl shadow-md">
-                                                    <button onClick={() => lessQuantityFood(items)} className={`lg:rounded-l-2xl  rounded-l-xl  flex justify-center items-center border 'border-CollorSecondaryDefault'   lg:w-10 sm:w-7 w-6  lg:h-6 sm:h-7 h-5`}>
-                                                        {items.qtd > 1 ? '-' : <div><p className="lg:flex hidden ">-</p><FaTrash className="text-[10px] lg:hidden flex  text-red-500" /></div>}
-                                                    </button>
-                                                    <div id={`qtd_Food-Cart${items?.id}`} className={` border lg:text-base text-xs flex justify-center items-center border-CollorSecondaryDefault'  lg:w-10 sm:w-7 w-6 lg:h-6  sm:h-7 h-5`}>
-                                                        {items?.qtd}
-                                                    </div>
-                                                    <button id={`moreItem-${items?.id}`} onClick={() => moreQuantityFood(items)} className={` flex justify-center items-center lg:rounded-r-2xl rounded-r-xl border lg:w-10 sm:w-7 w-6 lg:h-6  sm:h-7 h-5  'border-CollorSecondaryDefault'`}>
-                                                        +
-                                                    </button>
-                                                </div>
-                                                {
-                                                    <button onClick={() => removeItemCart(items)} className="h-5 bg-red-500 w-5 hidden lg:flex justify-center items-center text-white rounded-lg cursor-pointer">X</button>
-                                                }
-                                            </div>
-                                        </div>
-
-                                        }
-                                        <hr className="mt-10" />
-                                    </div>
-                                )
-                            })
-                            :
-                            <div style={{ height: screenY - 250 }} className={`2xl:text-3xl xl:text-xl md:text-lg text-center  min-h-[-800px] m-auto flex justify-center items-center text-gray-400`}> <MdRemoveShoppingCart />Seu carrinho está vazio</div>
-                        }
-                    </div>
-
-                    <div className="flex flex-col lg:items-end items-start lg:gap-0  gap-4">
-                        <div className="flex flex-col lg:items-end items-start">
-                            <p className="text-gray-500 text-sm">Subtotal: {sumTotPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
-                            <p className=" text-gray-400 text-sm flex items-center gap-2"><FaMotorcycle className="text-gray-400 text-base" />Entrega: + {delivery.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
-                            <p className="font-medium lg?text-xl text-base pt-2">Total: <span className="font-extrabold text-CollorSecondaryDefault">{totPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</span></p>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <button onClick={() => setNextStep(2)} className="bg-CollorSecondaryDefault rounded-2xl text-white py-2 px-3">Continuar</button>
-                        </div>
-                    </div>
-                </div> :
-                    nextStep === 2 ?
-                        <div>
-                            <div style={{ height: screenY - 230 }} className={`overflow-hidden mt-10 overflow-y-auto myScroll  rounded-lg p-2`}>
-                                <div className="flex items-start flex-col gap-2">
-                                    <p className="text-CollorDefault lg:text-base text-sm">CEP:</p>
-                                    <div className="flex relative">
-                                        <button className="absolute flex justify-center items-center right-2 top-1 rounded-xl bg-CollorSecondaryDefault px-3 py-[8px]">
-                                            <FaMagnifyingGlass onClick={getCep} className="text-white" />
-                                        </button>
-                                        <input maxlength="9" id="cep" onChange={(e) => setCep(e.target.value)} onBlur={getCep} value={cep} type="text" className="  shadow-xl rounded-xl focus:border-1 pl-3 py-2 outline-none" />
-                                    </div>
-                                </div>
-
-                                <div className="grid 2xl:grid-cols-4 md:grid-cols-3 grid-cols-1 gap-5">
-                                    <div className="flex items-start flex-col  gap-2">
-                                        <p className="text-CollorDefault lg:text-base text-sm ">Endereço:</p>
-                                        <div className="flex ">
-                                            <input onChange={(e) => setAdress(e.target.value)} id="adress" value={adress} type="text" className=" shadow-xl max-w-96 w-full  rounded-xl focus:border-1 pl-3 py-2 " />
-                                        </div>
-                                    </div>
-                                    <div className="flex items-start flex-col gap-2">
-                                        <p className="text-CollorDefault lg:text-base text-sm">Bairro:</p>
-                                        <div className="flex ">
-                                            <input onChange={(e) => setNeighborhood(e.target.value)} value={neighborhood} id="neighborhood" type="text" className=" shadow-xl rounded-xl focus:border-1 pl-3 py-2 outline-none" />
-                                        </div>
-                                    </div>
-                                    <div className="flex items-start flex-col gap-2">
-                                        <p className="text-CollorDefault lg:text-base text-sm">Número:</p>
-                                        <div className="flex ">
-                                            <input onChange={(e) => setNumber(e.target.value)} id="number" value={number} type="text" className=" shadow-xl rounded-xl focus:border-1 pl-3 py-2 outline-none" />
-                                        </div>
-                                    </div>
-                                    <div className="flex items-start flex-col gap-2">
-                                        <p className="text-CollorDefault lg:text-base text-sm">Cidade:</p>
-                                        <div className="flex ">
-                                            <input onChange={(e) => setCity(e.target.value)} value={city} id="city" type="text" className=" shadow-xl rounded-xl focus:border-1 pl-3 py-2 outline-none" />
-                                        </div>
-                                    </div>
-
-                                    <div className="flex items-start flex-col gap-2">
-                                        <p className="text-CollorDefault lg:text-base text-sm">Complemento:</p>
-                                        <div className="flex ">
-                                            <input onChange={(e) => setComplement(e.target.value)} id="complement" value={complement} type="text" className=" shadow-xl rounded-xl focus:border-1 pl-3 py-2 outline-none" />
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                            <div className="flex flex-col lg:items-end items-start lg:gap-0  gap-4">
-                                <div className="flex flex-col lg:items-end items-start">
-                                    <p className="text-gray-500 text-sm">Subtotal: {sumTotPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
-                                    <p className=" text-gray-400 text-sm flex items-center gap-2"><FaMotorcycle className="text-gray-400 text-base" />Entrega: + {delivery.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
-                                    <p className="font-medium lg?text-xl text-base pt-2">Total: <span className="font-extrabold text-CollorSecondaryDefault">{totPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</span></p>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <button onClick={() => setNextStep(1)} className="bg-white shadow-3xl font-medium rounded-2xl text-CollorDefault py-2 px-3">Voltar</button>
-                                    <button onClick={() => getNextStep()} className="removeBlue bg-CollorSecondaryDefault rounded-2xl text-white py-2 px-3">Revisar pedido</button>
-
-                                </div>
-                            </div>
-                        </div> :
-                        nextStep === 3 &&
-                        <>
-                            {
-                                <div className="">
-                                    <h1 className="text-CollorDefault font-medium">Resumo do pedido:</h1>
-
-                                    {<div style={{ height: screenY - 350 }} className={`overflow-hidden  overflow-y-auto myScroll shadow-innerShadow rounded-lg p-10`}>
-                                        {itensCart.map((items) => {
-
-                                            return <>
-                                                <div className="flex items-center justify-between">
-                                                    <div className="flex items-center lg:gap-5 gap-2">
-                                                        <Image key={items?.id} src={items?.img} alt={items?.name} width={100} className="lg:rounded-3xl rounded-xl lg:w-28 md:w-24 w-14" />
-                                                        -
-                                                        <div className="flex flex-col items-start">
-                                                            <div className="flex items-center gap-2">
-                                                                <h1 className="text-CollorDefault md:w-80 w-20 lg:text-base text-xs">{items?.name}</h1>
-                                                            </div>
-                                                            <p className=" text-CollorSecondaryDefault lg:text-base text-xs">{items?.price?.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
-                                                        </div>
-                                                    </div>
-                                                    <div className="flex items-center ">
-                                                        <div className="flex gap-2 items-center rounded-2xl ">
-                                                            x  <span className="font-bold text-xl">{items?.qtd}</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <hr className="mt-4" />
-                                            </>
-                                        })
-                                        }
-                                    </div>}
-                                    <div className="">
-                                        <div className="flex flex-col">
-                                            <h1 className="lg:text-xl font-semibold">Local de entrega:</h1>
-
-                                            <div className="flex flex-row gap-3 items-start  pt-2">
-                                                <div className="bg-CollorSecondaryDefault pt-1 rounded-xl p-1">
-                                                    <FaMapLocationDot className="lg:text-4xl text-3xl" />
-                                                </div>
-                                                <div className="flex flex-col">
-                                                    <h1 className="font-semibold text-CollorDefault lg:text-base text-sm">{adress}, {number} ,{neighborhood}</h1>
-                                                    <h1 className="font-medium text-gray-400 text-sm">{city} / {cep}</h1>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="border-b w-full py-4"></div>
-                                        <div className="flex flex-col lg:items-end items-start lg:gap-0  gap-4">
-                                            <div className="flex flex-col lg:items-end items-start">
-                                                <p className="text-gray-500 text-sm">Subtotal: {sumTotPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
-                                                <p className=" text-gray-400 text-sm flex items-center gap-2"><FaMotorcycle className="text-gray-400 text-base" />Entrega: + {delivery.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
-                                                <p className="font-medium lg?text-xl text-base pt-2">Total: <span className="font-extrabold text-CollorSecondaryDefault">{totPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</span></p>
-                                            </div>
-                                            <div className="flex items-center gap-2">
-                                                <button onClick={() => setNextStep(2)} className="bg-white shadow-3xl font-medium rounded-2xl text-CollorDefault py-2 px-3">Voltar</button>
-                                                <button onClick={() => setNextStep(3)} className="bg-CollorSecondaryDefault rounded-2xl text-white py-2 px-3">Enviar pedido</button>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            }
-                        </>
-                }
+            {internalLoading ? <div className=" h-[100vh] flex flex-col justify-center items-center ">
+                <span class="loader"><FaHamburger className="a" /></span>
+                <div className="animationOn">Estamos recebendo seu pedido :)</div>
             </div>
+                :
+                <div id="cartItens" className={`${cartItensAnimate ? "translate-x-0" : "translate-x-full"} max-w-[1000px] m-auto p-5 duration-150 bg-[#fff] h-full w-full relative z-[9999] `}>
+                    <div className="flex justify-between">
+                        <div className="flex items-center">
+                            <button onClick={() => setNextStep(1)} className="h-8 w-8 rounded-full flex items-center justify-center shadow-3xl bg-CollorSecondaryDefault text-black">1</button>
+                            <div className="border-b border-CollorSecondaryDefault w-5"></div>
+                            <div onClick={() => setNextStep(2)} className={`h-8 w-8 rounded-full flex items-center justify-center shadow-3xl ${nextStep === 2 || nextStep > 2 ? "bg-CollorSecondaryDefault" : "bg-white"} text-black`}>2</div>
+                            <div className={`${nextStep === 3 ? "border-CollorSecondaryDefault border" : "border-b border-black "} w-5`}></div>
+                            <div className={`h-8 w-8 rounded-full flex items-center justify-center shadow-3xl ${nextStep === 3 ? "bg-CollorSecondaryDefault" : "bg-white"}  text-black`}>3</div>
+                        </div>
+                        <button onClick={() => { setLoading(false); setCartActive(false); setbody(false) }} className="bg-white shadow-3xl font-medium rounded-xl text-CollorDefault py-1 px-3">Fechar</button>
+                    </div>
+                    {nextStep === 1 ? <div className="">
+                        <h1 className="text-black font-semibold pt-5"> Seu carrinho:</h1>
+                        <div style={{ height: screenY - 230 }} className={`overflow-hidden  overflow-y-auto myScroll shadow-innerShadow rounded-lg p-2`}>
+                            {fortmatedItens.length > 0 ?
+                                fortmatedItens?.map((items) => {
+                                    return (
+                                        <div key={items?.id} className="pt-5 ">
+                                            {<div className="flex items-center justify-between">
+                                                <div className="flex items-center lg:gap-5 gap-2">
+                                                    <Image src={items?.img} alt={items?.name} width={100} className="lg:rounded-3xl rounded-xl lg:w-28 md:w-24 w-20" />
+                                                    -
+                                                    <div className="flex flex-col items-start">
+                                                        <div className="flex items-center gap-2">
+
+                                                            <h1 className="text-CollorDefault md:w-80 w-20 lg:text-base text-xs">{items?.name}</h1>
+                                                        </div>
+                                                        <p className=" text-CollorSecondaryDefault lg:text-base text-xs">{items?.price?.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
+                                                    </div>
+                                                </div>
+                                                <div className="flex items-center gap-5">
+                                                    <div className="flex items-center rounded-2xl shadow-md">
+                                                        <button onClick={() => lessQuantityFood(items)} className={`lg:rounded-l-2xl  rounded-l-xl  flex justify-center items-center border 'border-CollorSecondaryDefault'   lg:w-10 sm:w-7 w-6  lg:h-6 sm:h-7 h-5`}>
+                                                            {items.qtd > 1 ? '-' : <div><p className="lg:flex hidden ">-</p><FaTrash className="text-[10px] lg:hidden flex  text-red-500" /></div>}
+                                                        </button>
+                                                        <div id={`qtd_Food-Cart${items?.id}`} className={` border lg:text-base text-xs flex justify-center items-center border-CollorSecondaryDefault'  lg:w-10 sm:w-7 w-6 lg:h-6  sm:h-7 h-5`}>
+                                                            {items?.qtd}
+                                                        </div>
+                                                        <button id={`moreItem-${items?.id}`} onClick={() => moreQuantityFood(items)} className={` flex justify-center items-center lg:rounded-r-2xl rounded-r-xl border lg:w-10 sm:w-7 w-6 lg:h-6  sm:h-7 h-5  'border-CollorSecondaryDefault'`}>
+                                                            +
+                                                        </button>
+                                                    </div>
+                                                    {
+                                                        <button onClick={() => removeItemCart(items)} className="h-5 bg-red-500 w-5 hidden lg:flex justify-center items-center text-white rounded-lg cursor-pointer">X</button>
+                                                    }
+                                                </div>
+                                            </div>
+                                            }
+                                            <hr className="mt-10" />
+                                        </div>
+                                    )
+                                })
+                                :
+                                <div style={{ height: screenY - 250 }} className={`2xl:text-3xl xl:text-xl md:text-lg text-center  min-h-[-800px] m-auto flex justify-center items-center text-gray-400`}> <MdRemoveShoppingCart />Seu carrinho está vazio</div>
+                            }
+                        </div>
+
+                        <div className="flex flex-col lg:items-end items-start lg:gap-0  gap-4">
+                            <div className="flex flex-col lg:items-end items-start">
+                                <p className="text-gray-500 text-sm">Subtotal: {sumTotPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
+                                <p className=" text-gray-400 text-sm flex items-center gap-2"><FaMotorcycle className="text-gray-400 text-base" />Entrega: + {delivery.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
+                                <p className="font-medium lg?text-xl text-base pt-2">Total: <span className="font-extrabold text-CollorSecondaryDefault">{totPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</span></p>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <button onClick={() => setNextStep(2)} className="bg-CollorSecondaryDefault rounded-2xl text-white py-2 px-3">Continuar</button>
+                            </div>
+                        </div>
+                    </div> :
+                        nextStep === 2 ?
+                            <div>
+                                <div style={{ height: screenY - 230 }} className={`overflow-hidden mt-10 overflow-y-auto myScroll  rounded-lg p-2`}>
+                                    <div className="flex items-start flex-col gap-2">
+                                        <p className="text-CollorDefault lg:text-base text-sm">CEP:</p>
+                                        <div className="flex relative">
+                                            <button className="absolute flex justify-center items-center right-2 top-1 rounded-xl bg-CollorSecondaryDefault px-3 py-[8px]">
+                                                <FaMagnifyingGlass onClick={getCep} className="text-white" />
+                                            </button>
+                                            <input maxlength="9" id="cep" onChange={(e) => setCep(maskCep(e.target.value))} onBlur={getCep} value={cep} type="text" className="  shadow-xl rounded-xl focus:border-1 pl-3 py-2 outline-none" />
+                                        </div>
+                                    </div>
+
+                                    <div className="flex flex-wrap gap-5">
+                                        <div className="flex items-start flex-col  gap-2">
+                                            <p className="text-CollorDefault lg:text-base text-sm ">Endereço:</p>
+                                            <div className="flex ">
+                                                <input onChange={(e) => setAdress(OnlyLetter(e.target.value))} id="adress" value={adress} type="text" className=" shadow-xl xl:w-72   rounded-xl focus:border-1 pl-3 py-2 " />
+                                            </div>
+                                        </div>
+                                        <div className="flex items-start flex-col gap-2">
+                                            <p className="text-CollorDefault lg:text-base text-sm">Bairro:</p>
+                                            <div className="flex ">
+                                                <input onChange={(e) => setNeighborhood(OnlyLetter(e.target.value))} value={neighborhood} id="neighborhood" type="text" className=" shadow-xl xl:w-72 rounded-xl focus:border-1 pl-3 py-2 outline-none" />
+                                            </div>
+                                        </div>
+                                        <div className="flex items-start flex-col gap-2">
+                                            <p className="text-CollorDefault lg:text-base text-sm">Número:</p>
+                                            <div className="flex ">
+                                                <input onChange={(e) => setNumber(OnlyNumber(e.target.value))} id="number" value={number} type="text" className=" shadow-xl rounded-xl focus:border-1 pl-3 py-2 outline-none" />
+                                            </div>
+                                        </div>
+                                        <div className="flex items-start flex-col gap-2">
+                                            <p className="text-CollorDefault lg:text-base text-sm">Cidade:</p>
+                                            <div className="flex ">
+                                                <input onChange={(e) => setCity(OnlyLetter(e.target.value))} value={city || ''} id="city" type="text" className=" shadow-xl rounded-xl focus:border-1 pl-3 py-2 outline-none" />
+                                            </div>
+                                        </div>
+
+                                        <div className="flex items-start flex-col gap-2">
+                                            <p className="text-CollorDefault lg:text-base text-sm">Complemento:</p>
+                                            <div className="flex ">
+                                                <input onChange={(e) => setComplement(e.target.value)} id="complement" value={complement} type="text" className=" shadow-xl rounded-xl focus:border-1 pl-3 py-2 outline-none" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="flex flex-col lg:items-end items-start lg:gap-0  gap-4">
+                                    <div className="flex flex-col lg:items-end items-start">
+                                        <p className="text-gray-500 text-sm">Subtotal: {sumTotPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
+                                        <p className=" text-gray-400 text-sm flex items-center gap-2"><FaMotorcycle className="text-gray-400 text-base" />Entrega: + {delivery.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
+                                        <p className="font-medium lg?text-xl text-base pt-2">Total: <span className="font-extrabold text-CollorSecondaryDefault">{totPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</span></p>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <button onClick={() => setNextStep(1)} className="bg-white shadow-3xl font-medium rounded-2xl text-CollorDefault py-2 px-3">Voltar</button>
+                                        <button onClick={() => getNextStep()} className="removeBlue bg-CollorSecondaryDefault rounded-2xl text-white py-2 px-3">Revisar pedido</button>
+
+                                    </div>
+                                </div>
+                            </div> :
+                            nextStep === 3 &&
+                            <>
+                                {
+                                    <div className="">
+                                        <h1 className="text-CollorDefault font-medium">Resumo do pedido:</h1>
+
+                                        {<div style={{ height: screenY - 350 }} className={`overflow-hidden  overflow-y-auto myScroll shadow-innerShadow rounded-lg p-6`}>
+                                            {itensCart.map((items) => {
+
+                                                return <div key={items.id}>
+                                                    <div className="flex items-center justify-between mt-2">
+                                                        <div className="flex items-center lg:gap-5 gap-2">
+                                                            <Image key={items?.id} src={items?.img} alt={items?.name} width={100} className="lg:rounded-3xl rounded-xl lg:w-28 md:w-24 w-14" />
+                                                            -
+                                                            <div className="flex flex-col items-start">
+                                                                <div className="flex items-center gap-2">
+                                                                    <h1 className="text-CollorDefault md:w-80 w-20 lg:text-base text-xs">{items?.name}</h1>
+                                                                </div>
+                                                                <p className=" text-CollorSecondaryDefault lg:text-base text-xs">{items?.price?.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex items-center ">
+                                                            <div className="flex gap-1 items-center rounded-2xl text-gray-600 ">
+                                                                x  <span className="font-bold text-lg ">{items?.qtd}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <hr className="mt-4" />
+                                                </div>
+                                            })
+                                            }
+                                        </div>}
+                                        <div className="">
+                                            <div className="flex flex-col">
+                                                <h1 className="lg:text-xl font-semibold">Local de entrega:</h1>
+
+                                                <div className="flex flex-row gap-3 items-start  pt-2">
+                                                    <div className="bg-CollorSecondaryDefault pt-1 rounded-xl p-1">
+                                                        <FaMapLocationDot className="lg:text-4xl text-3xl" />
+                                                    </div>
+                                                    <div className="flex flex-col">
+                                                        <h1 className="font-semibold text-CollorDefault lg:text-base text-sm">{adress}, {number} ,{neighborhood}</h1>
+                                                        <h1 className="font-medium text-gray-400 text-sm">{city} / {cep}</h1>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="border-b w-full py-4"></div>
+                                            <div className="flex flex-col lg:items-end items-start lg:gap-0  gap-4">
+                                                <div className="flex flex-col lg:items-end items-start">
+                                                    <p className="text-gray-500 text-sm">Subtotal: {sumTotPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
+                                                    <p className=" text-gray-400 text-sm flex items-center gap-2"><FaMotorcycle className="text-gray-400 text-base" />Entrega: + {delivery.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
+                                                    <p className="font-medium lg?text-xl text-base pt-2">Total: <span className="font-extrabold text-CollorSecondaryDefault">{totPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</span></p>
+                                                </div>
+                                                <div className="flex items-center gap-2">
+                                                    <button onClick={() => setNextStep(2)} className="bg-white shadow-3xl font-medium rounded-2xl text-CollorDefault py-2 px-3">Voltar</button>
+                                                    <button onClick={() => toWhatsapp()} className="bg-CollorSecondaryDefault rounded-2xl text-white py-2 px-3">Enviar pedido</button>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                }
+                            </>
+                    }
+                </div>}
         </div >
     )
 }
