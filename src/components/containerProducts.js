@@ -9,7 +9,7 @@ import { FaHamburger, FaShoppingBag } from "react-icons/fa"
 import { useSpring, animated } from 'react-spring';
 
 export default function ContainerProduct({ items }) {
-    const { setCartActive, itensCart, loading, setLoading, setbody } = useCart()
+    const { setCartActive, itensCart, setItensCart, loading, setLoading, setbody } = useCart()
     const [addCart, setAddCart] = useState()
     const [attCart, setAttCart] = useState([])
     const [somaToHTML, setsomaToHTML] = useState()
@@ -137,10 +137,10 @@ export default function ContainerProduct({ items }) {
 
             await new Promise((resolve) => setTimeout(resolve, 100))
             attCart?.push(lastIndex);
-            console.log(attCart)
             setLoading(true)
             localStorage.setItem('foodService', JSON.stringify(attCart));
             let itenStorage = JSON.parse(localStorage.getItem('foodService'))
+            setItensCart(itenStorage)
             setLoading(false)
             let qtdToCart = itenStorage?.map((item) => {
                 return item?.qtd
@@ -181,9 +181,9 @@ export default function ContainerProduct({ items }) {
         setModalOpen(true);
     }
     return (
-        <div>
+        <>
+            <Cart />
             <div className="z-[9999] bg-green-400 fixed  flex flex-col gap-4 lg:right-6 right-3  lg:top-5 top-14  rounded-2xl py-2 ">
-
                 {modalOpen && (
                     <TemporizedModal
                         content={<h2 className="font-medium px-10 text-white">Item adicionado a sacola</h2>}
@@ -192,7 +192,7 @@ export default function ContainerProduct({ items }) {
                     />
                 )}
             </div>
-            <Cart />
+
             <div className="pt-28 max-w-[1200px] m-auto">
                 <p className="text-CollorSecondaryDefault uppercase tracking-wide text-center font-semibold">Cardápio</p>
                 <h1 className="text-CollorDefault text-center font-bold text-3xl">Nosso Cardápio</h1>
@@ -213,7 +213,7 @@ export default function ContainerProduct({ items }) {
             </div>
             <button onClick={() => { setLoading(true); setCartActive(true); setbody(true) }} className='fixed z-10 select-none md:right-10 right-3 bottom-10 bg-CollorSecondaryDefault border border-white shadow-xl rounded-full p-3'>
                 <FaShoppingBag className='text-CollorDefault lg:text-4xl text-3xl' />
-                <div id="qtd_order" className='bg-white w-6 shadow-3xl -top-2 right-0 h-6 absolute rounded-full'>{somaToHTML || 0}</div>
+                <div id="qtd_order" className='bg-red-600 text-white w-6 shadow-3xl -top-2 right-0 h-6 absolute rounded-full'>{somaToHTML || 0}</div>
             </button>
             <div className="max-w-[1000px] m-auto pt-20">
                 <div className="flex flex-wrap lg:justify-start justify-center gap-10 items-center">
@@ -249,6 +249,6 @@ export default function ContainerProduct({ items }) {
                     }
                 </div>
             </div >
-        </div>
+        </>
     )
 }

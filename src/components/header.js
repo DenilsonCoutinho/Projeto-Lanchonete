@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { MdClose } from "react-icons/md";
 
 export default function Header() {
-    const { setCartActive,loading } = useCart()
+    const { setCartActive,loading,itensCart } = useCart()
     const [HeaderActive, setHeaderActive] = useState(false)
     const [headerActiveAnimation, setHeaderActiveAnimation] = useState(false)
 
@@ -38,7 +38,7 @@ export default function Header() {
             return acumulador + valorAtual;
         }, 0);
         qtdToInt = qtd.innerHTML = soma || 0
-    }, [loading])
+    }, [loading,itensCart])
     animationCart()
     return (
         <>
