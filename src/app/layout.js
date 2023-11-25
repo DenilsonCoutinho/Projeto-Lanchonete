@@ -17,9 +17,9 @@ export default function RootLayout({ children }) {
       <TriggerContextProvider>
         <ScreenSizeContext>
           <CartProvider>
-            <body className={`${openSans.className} myScroll`}>
-              {children}
-            </body>
+              <body className={`${openSans.className} myScroll`}>
+                {children}
+              </body>
           </CartProvider>
         </ScreenSizeContext>
       </TriggerContextProvider>

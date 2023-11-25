@@ -169,13 +169,15 @@ export default function Cart({ cartOn }) {
     async function toWhatsapp() {
         let text = `Olá! gostaria de fazer um pedido:\n`
         const items = itensToFormat?.map((i) => ({
-            id: i.id,
-            img: i.img,
-            name: i.name,
-            price: i.price,
-            qtd: i.qtd,
+            id: i.id || '',
+            img: i.img || '',
+            name: i.name || '',
+            price: i.price || 0,
+            qtd: i.qtd || 0,
         }));
         let orders = items.map((item) => `*x${item.qtd}* ${item.name}....${item.price.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}`).join('\n\n');
+        console.log(items)
+        return
         text += `\n*Itens do pedido:*\n${orders}\n`
         text += `\n*Endereço de entrega:*`
         text += `\n${adress},${number},\n${neighborhood},${city}`
@@ -288,7 +290,7 @@ export default function Cart({ cartOn }) {
                                             <button className="absolute flex justify-center items-center right-2 top-1 rounded-xl bg-CollorSecondaryDefault px-3 py-[8px]">
                                                 <FaMagnifyingGlass onClick={getCep} className="text-white" />
                                             </button>
-                                            <input maxlength="9" id="cep" onChange={(e) => setCep(maskCep(e.target.value))} onBlur={getCep} value={cep} type="text" className="  shadow-xl rounded-xl focus:border-1 pl-3 py-2 outline-none" />
+                                            <input  id="cep" onChange={(e) => setCep(maskCep(e.target.value))} onBlur={getCep} value={cep} type="text" className="  shadow-xl rounded-xl focus:border-1 pl-3 py-2 outline-none" />
                                         </div>
                                     </div>
 

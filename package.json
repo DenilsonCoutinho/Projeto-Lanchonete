@@ -9,7 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@chakra-ui/react": "^2.8.2",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
     "autoprefixer": "10.4.16",
+    "framer-motion": "^10.16.5",
     "next": "14.0.2",
     "postcss": "8.4.31",
     "react": "18.2.0",

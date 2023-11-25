@@ -8,6 +8,8 @@ import { BiSolidDrink } from "react-icons/bi"
 import { FaHamburger, FaShoppingBag } from "react-icons/fa"
 import { useSpring, animated } from 'react-spring';
 import { useScreenSize } from "@/context/screenSizeContext"
+import { useToast } from '@chakra-ui/react'
+import { ChakraProvider } from '@chakra-ui/react'
 
 export default function ContainerProduct({ items }) {
     const { setCartActive, itensCart, setItensCart, loading, setLoading, setbody } = useCart()
@@ -155,47 +157,21 @@ export default function ContainerProduct({ items }) {
             qtdFoodHtml.innerHTML = soma
             qtdHtmlMore.innerHTML = 0
             setiternalLoading(false)
-            openModal()
             return
         }
     }
 
-    const TemporizedModal = ({ content, timeout, onClose }) => {
-        const [visible, setVisible] = useState(true);
+    const toast = useToast({
+        position: 'top-right',
+        containerStyle: {
+          width: '320px',
+          maxWidth: '100%',
+        },
+      })
 
-        const fade = useSpring({
-            opacity: visible ? 1 : 0,
-            config: { duration: 600 },
-            onRest: () => {
-                if (!visible) {
-                    onClose();
-                }
-            },
-        });
-        setTimeout(() => {
-            setVisible(false);
-        }, timeout);
-
-        return <animated.div style={fade}>{content}</animated.div>;
-    };
-    const [modalOpen, setModalOpen] = useState(false);
-
-    const openModal = () => {
-        setModalOpen(true);
-    }
     return (
-        <>
+        <ChakraProvider>
             <Cart />
-            <div className="z-[99999] bg-green-400 fixed  flex flex-col gap-4 lg:right-6 right-3  lg:top-5 top-14  rounded-2xl py-2 ">
-                {modalOpen && (
-                    <TemporizedModal
-                        content={<h2 className="font-medium px-10 text-white">Item adicionado a sacola</h2>}
-                        timeout={600} // Mesmo tempo especificado anteriormente
-                        onClose={() => setModalOpen(false)}
-                    />
-                )}
-            </div>
-
             <div className="pt-28 max-w-[1200px] m-auto">
                 <p className="text-CollorSecondaryDefault uppercase tracking-wide text-center font-semibold animatedElmentBottom">Cardápio</p>
                 <h1 className="text-CollorDefault text-center font-bold text-3xl animatedElmentBottom">Nosso Cardápio</h1>
@@ -205,8 +181,8 @@ export default function ContainerProduct({ items }) {
                             {
                                 menuOptions.map((item, i) => {
                                     return <button key={item.id} onClick={() => { setButtonSelected(item.id); setIdentifyProduct(item) }} className={` flex items-center removeBlue py-2 px-2  gap-2 ${buttonSelected === item.id ? 'bg-CollorSecondaryDefault' : 'bg-white'} shadow-3xl rounded-2xl`}>
-                                        <p className="animatedElmentBottom text-black">{item.icon}</p>
-                                        <p className="animatedElmentBottom text-black">{item.name}</p>
+                                        <p className=" text-black">{item.icon}</p>
+                                        <p className=" text-black">{item.name}</p>
                                     </button>
                                 })
                             }
@@ -253,7 +229,14 @@ export default function ContainerProduct({ items }) {
                                                     +
                                                 </button>
                                             </div>
-                                            <button id={`qtd_Orders-${item.id}`} onClick={() => { formatArrayToCart(item); toCart(item) }} className={`  flex items-center gap-2 rounded-2xl px-2 `}>
+                                            <button id={`qtd_Orders-${item.id}`} onClick={() => {
+                                                formatArrayToCart(item); toCart(item); toast({
+                                                    title: 'Item adicionado com sucesso!',
+                                                    status: 'success',
+                                                    duration: 3000,
+                                                    isClosable: true,
+                                                })
+                                            }} className={`  flex items-center gap-2 rounded-2xl px-2 `}>
                                                 <FaShoppingBag id={`iconCart-${item.id}`} className={`${addCart?.id === item.id ? 'text-black' : 'text-CollorSecondaryDefault'}`} />
                                                 <p className="text-black">Adicionar</p>
                                             </button>
@@ -265,6 +248,6 @@ export default function ContainerProduct({ items }) {
                     }
                 </div>
             </div >
-        </>
+        </ChakraProvider>
     )
 }
