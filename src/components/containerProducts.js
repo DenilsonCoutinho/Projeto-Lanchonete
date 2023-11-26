@@ -245,7 +245,7 @@ export default function ContainerProduct({ items }) {
                                             {validadeInput > 0 ? <button id={`qtd_Orders-${item.id}`} onClick={() => {
                                                 formatArrayToCart(item); toCart(item); toast({
                                                     position: 'top-right',
-                                                    duration: 3500,
+                                                    duration: 4500,
                                                     render: () => (
                                                         <Box className=" lg:translate-y-0 translate-y-28 rounded-md flex items-center gap-3" color='white' p={3} bg='green.400'>
                                                             <FaCheckCircle className="text-white" /> Pedido adicionado a sacola 
