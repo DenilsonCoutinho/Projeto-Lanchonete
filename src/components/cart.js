@@ -150,8 +150,6 @@ export default function Cart({ cartOn }) {
         }
     }
 
-
-
     function getNextStep() {
         const fieldstoValidate = [
             { "name": 'cep', "value": cep, "required": false, "type": 'string' },
@@ -206,6 +204,7 @@ export default function Cart({ cartOn }) {
         }
         setbody('')
         localStorage.setItem('foodService', JSON.stringify([]))
+        setItensCart([])
         setNextStep(1)
         await new Promise(resolve => setTimeout(resolve, 3000));
         setCartActive(false)

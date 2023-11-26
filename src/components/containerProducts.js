@@ -33,6 +33,18 @@ export default function ContainerProduct({ items }) {
             name: "Bebidas",
             toFilter: "drink"
         },
+        {
+            id: 3,
+            icon: <BiSolidDrink />,
+            name: "Combos",
+            toFilter: "cb"
+        },
+        {
+            id: 4,
+            icon: <BiSolidDrink />,
+            name: "Açai",
+            toFilter: "ac"
+        },
 
     ]
     const [buttonSelected, setButtonSelected] = useState(1)
@@ -177,11 +189,11 @@ export default function ContainerProduct({ items }) {
                 <p className="text-CollorSecondaryDefault uppercase tracking-wide text-center font-semibold animatedElmentBottom">Cardápio</p>
                 <h1 className="text-CollorDefault text-center font-bold text-3xl animatedElmentBottom">Nosso Cardápio</h1>
                 <div>
-                    <div className="pt-20 max-w-[1000px] flex justify-center m-auto">
-                        <div id="filter" className="flex flex-row items-center gap-4">
+                    <div className="pt-20 max-w-[1000px] flex justify-center m-auto  py-1">
+                        <div id="filter" className="flex flex-row items-center gap-4 max-w-[1000px] overflow-x-auto bg-[#fffdf7]  myScroll py-1 px-2">
                             {
                                 menuOptions.map((item, i) => {
-                                    return <button key={item.id} onClick={() => { setButtonSelected(item.id); setIdentifyProduct(item) }} className={` flex items-center removeBlue py-2 px-2  gap-2 ${buttonSelected === item.id ? 'bg-CollorSecondaryDefault' : 'bg-white'} shadow-3xl rounded-2xl`}>
+                                    return <button key={item.id} onClick={() => { setButtonSelected(item.id); setIdentifyProduct(item) }} className={` flex items-center removeBlue w-28 text-center justify-center py-2 px-2  gap-2 ${buttonSelected === item.id ? 'bg-CollorSecondaryDefault' : 'bg-white'} lg:shadow-3xl shadow-xl rounded-2xl`}>
                                         <p className=" text-black">{item.icon}</p>
                                         <p className=" text-black">{item.name}</p>
                                     </button>
