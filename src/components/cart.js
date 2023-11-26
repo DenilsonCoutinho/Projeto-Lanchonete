@@ -30,19 +30,15 @@ export default function Cart({ cartOn }) {
         setItensCart(itemsLocaStorage)
         setItensToFormat(itemsLocaStorage)
     }, [loading])
-
-    function withouScroll() {
-        if (typeof window !== 'undefined') {
-            if (body) {
-                document.body.style.overflow = 'hidden';
-            } else {
-                document.body.style.overflow = 'auto';
-            }
+    if (typeof window !== undefined) {
+        if (body === '1') {
+            document.body.style.overflow = 'hidden';
         }
+    } else {
+            document.body.style.overflow = 'auto';
     }
-    useEffect(() => {
-        withouScroll()
-    }, [body])
+
+   
 
     let itenStorage = []
     if (typeof window !== 'undefined') {
@@ -193,9 +189,7 @@ export default function Cart({ cartOn }) {
         text += `\n*Itens do pedido:*\n${orders}\n`
         text += `\n*Endereço de entrega:*`
         text += `\n${adress},${number},\n${neighborhood},${city}`
-        text += `\nCEP:${cep} / Complemento:${complement}
-        
-        \n`
+        text += `\nCEP:${cep} / Complemento:${complement}`
         text += `\n*Total (com entrega):R$ ${totPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}*`
         setInternalLoading(true)
         await new Promise(resolve => setTimeout(resolve, 1))
@@ -210,9 +204,9 @@ export default function Cart({ cartOn }) {
             window.location.href = `https://wa.me/+5548991109700?text=${encodeURI(text)}`
             i.style.display = 'flex'
         }
+        setbody('')
         localStorage.setItem('foodService', JSON.stringify([]))
         setNextStep(1)
-        setbody(false)
         await new Promise(resolve => setTimeout(resolve, 3000));
         setCartActive(false)
         setInternalLoading(false)
@@ -226,7 +220,7 @@ export default function Cart({ cartOn }) {
                 <div className="animationOn">Estamos recebendo seu pedido :)</div>
             </div>
                 :
-                <div id="cartItens" className={`${cartItensAnimate ? "translate-x-0" : "translate-x-full"} max-w-[1000px] m-auto p-5 duration-150 bg-[#fff] h-full w-full relative z-[9999] `}>
+                <div id="cartItens" className={`${cartItensAnimate ? "translate-x-0" : "translate-x-full"} max-w-[1000px] m-auto p-5 duration-200 bg-[#fff] h-full w-full relative z-[9999] `}>
                     <div className="flex justify-between">
                         <div className="flex items-center">
                             <button onClick={() => setNextStep(1)} className="h-8 w-8 rounded-full flex items-center justify-center shadow-3xl bg-CollorSecondaryDefault text-black">1</button>
@@ -235,7 +229,7 @@ export default function Cart({ cartOn }) {
                             <div className={`${nextStep === 3 ? "border-CollorSecondaryDefault border" : "border-b border-black "} w-5`}></div>
                             <div className={`h-8 w-8 rounded-full flex items-center justify-center shadow-3xl ${nextStep === 3 ? "bg-CollorSecondaryDefault" : "bg-white"}  text-black`}>3</div>
                         </div>
-                        <button onClick={() => { setLoading(false); setCartActive(false); setbody(false) }} className="bg-white shadow-3xl font-medium rounded-xl text-CollorDefault py-1 px-3">Fechar</button>
+                        <button onClick={() => { setLoading(false); setCartActive(false); setbody('') }} className="bg-white shadow-3xl font-medium rounded-xl text-CollorDefault py-1 px-3">Fechar</button>
                     </div>
                     {nextStep === 1 ? <div className="">
                         <h1 className="text-black font-semibold pt-5"> Seu carrinho:</h1>

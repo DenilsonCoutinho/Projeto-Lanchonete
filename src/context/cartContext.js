@@ -9,12 +9,14 @@ export function CartProvider({ children }) {
     const [loading, setLoading] = useState(false)
     const [cartActive, setCartActive] = useState(false)
     const [cartItensAnimate, setcartItensAnimate] = useState(false)
-    const [body, setbody] = useState(false)
+    const [body, setbody] = useState('')
     useEffect(() => {
         async function updateBodyOverflow() {
             if (cartActive === true) {
                 setcartItensAnimate(true);
-            } 
+            } else{
+                setcartItensAnimate(false);
+            }
         }
         updateBodyOverflow()
     }, [cartActive]);

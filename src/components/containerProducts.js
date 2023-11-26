@@ -191,7 +191,7 @@ export default function ContainerProduct({ items }) {
                     </div>
                 </div>
             </div>
-            <button onClick={() => { setLoading(true); setCartActive(true); setbody(true) }} className='fixed z-10 select-none md:right-10 right-3 bottom-10 bg-CollorSecondaryDefault border border-white shadow-xl rounded-full p-3'>
+            <button onClick={() => { setLoading(true); setCartActive(true); setbody('1') }} className='fixed z-10 select-none md:right-10 right-3 bottom-10 bg-CollorSecondaryDefault border border-white shadow-xl rounded-full p-3'>
                 <FaShoppingBag className='text-CollorDefault lg:text-5xl text-3xl' />
                 <div id="qtd_order" className='bg-red-600 text-white w-6 shadow-3xl -top-2 right-0 h-6 absolute rounded-full'>{somaToHTML || 0}</div>
             </button>
