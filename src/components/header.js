@@ -62,7 +62,7 @@ export default function Header() {
                     </button>
                 </div>
             </div>
-            <div className='md:hidden flex fixed z-[99999] w-full shadow-2xl'>
+            <div className='md:hidden flex fixed z-[9999] w-full shadow-2xl'>
                 <div className='bg-white px-3 h-28 flex justify-between items-center w-full'>
                     <div className='shadow-3xl rounded-full w-20 h-20 overflow-hidden'>
                         <Image src={Logo} />
@@ -75,7 +75,7 @@ export default function Header() {
                     }
                 </div>
             </div>
-            {HeaderActive && <div className={` bg-white flex items-start pt-10 mt-28 justify-center border-t z-[99999] h-full w-full duration-150 fixed  ${headerActiveAnimation ? 'translate-x-0' : 'translate-x-full'}`}>
+            {HeaderActive && <div className={` bg-white flex items-start pt-10 mt-28 justify-center border-t z-[9999] h-full w-full duration-150 fixed  ${headerActiveAnimation ? 'translate-x-0' : 'translate-x-full'}`}>
                 <div className='flex flex-col items-center gap-10'>
                     <div onClick={() => setCartActive(true)} className='bg-white px-3 py-3 shadow-3xl rounded-3xl flex items-center gap-2'>
                         <p className='text-CollorDefault'> Meu Carrinho</p>

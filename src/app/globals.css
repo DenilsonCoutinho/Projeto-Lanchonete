@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  background-color: #fffdf7;
+  background-color: #fffdf7!important;
 
 }
 .removeBlue {

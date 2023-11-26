@@ -10,6 +10,7 @@ export function validateFields(fields) {
                         errors.push(field)
                         try {
                             document.getElementById(field?.name).style.border = '1px solid red'
+                            document.getElementById(field?.name).style.transition = '0.3s'
                         } catch (error) {
                             console.log('error field')
                         }

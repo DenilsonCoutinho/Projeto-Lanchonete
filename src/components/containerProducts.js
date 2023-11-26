@@ -1,14 +1,14 @@
 "use client"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import listFood from "../listFood/listFood"
 import Cart from "./cart"
 import Image from "next/image"
 import { useCart } from "../context/cartContext.js"
 import { BiSolidDrink } from "react-icons/bi"
-import { FaHamburger, FaShoppingBag } from "react-icons/fa"
+import { FaCheckCircle, FaHamburger, FaShoppingBag } from "react-icons/fa"
 import { useSpring, animated } from 'react-spring';
 import { useScreenSize } from "@/context/screenSizeContext"
-import { useToast } from '@chakra-ui/react'
+import { Box, Button, useToast } from '@chakra-ui/react'
 import { ChakraProvider } from '@chakra-ui/react'
 
 export default function ContainerProduct({ items }) {
@@ -17,6 +17,7 @@ export default function ContainerProduct({ items }) {
     const [addCart, setAddCart] = useState()
     const [attCart, setAttCart] = useState([])
     const [somaToHTML, setsomaToHTML] = useState()
+    const [validadeInput, setValidadeInput] = useState()
     const [iternalLoading, setiternalLoading] = useState(false)
     const menuOptions = [
         {
@@ -69,6 +70,7 @@ export default function ContainerProduct({ items }) {
 
         let qtdHtmlMore = document.getElementById(`qtd_Food-${addCart?.id}`)
         let qtdAddCart = document.getElementById(`qtd_Orders-${addCart?.id}`)
+        setValidadeInput(parseInt(qtdHtmlMore?.innerHTML))
         if (parseInt(qtdHtmlMore?.innerHTML) > 0) {
             qtdAddCart.style.transition = '0.3s'
             qtdAddCart.style.background = '#fff	'
@@ -161,14 +163,13 @@ export default function ContainerProduct({ items }) {
         }
     }
 
-    const toast = useToast({
-        position: 'top-right',
-        containerStyle: {
-          width: '320px',
-          maxWidth: '100%',
-        },
-      })
-
+    const toast = useToast()
+    const toastIdRef = useRef()
+    function close() {
+        if (toastIdRef.current) {
+            toast.close(toastIdRef.current)
+        }
+    }
     return (
         <ChakraProvider>
             <Cart />
@@ -191,7 +192,7 @@ export default function ContainerProduct({ items }) {
                 </div>
             </div>
             <button onClick={() => { setLoading(true); setCartActive(true); setbody(true) }} className='fixed z-10 select-none md:right-10 right-3 bottom-10 bg-CollorSecondaryDefault border border-white shadow-xl rounded-full p-3'>
-                <FaShoppingBag className='text-CollorDefault lg:text-4xl text-3xl' />
+                <FaShoppingBag className='text-CollorDefault lg:text-5xl text-3xl' />
                 <div id="qtd_order" className='bg-red-600 text-white w-6 shadow-3xl -top-2 right-0 h-6 absolute rounded-full'>{somaToHTML || 0}</div>
             </button>
             <div className="max-w-[1200px] px-2 m-auto py-20">
@@ -201,17 +202,17 @@ export default function ContainerProduct({ items }) {
                             return <div className="relative">
                                 <div alt={item.id} id={`itemFood-${item.id}`} onClick={() => { setAddCart(item) }} key={item.id} className={`${addCart?.id === item.id ? 'bg-CollorSecondaryDefault removeBlue duration-200 ease-in-out' : 'bg-white'} flex flex-col justify-x items-start select-none rounded-xl p-2 shadow-3xl md:w-[450px]   md:h-[190px] `}>
                                     <div className="flex items-start gap-2">
-                                        <div className={`md:w-28 w-48 overflow-hidden m-auto ${item.type === "drink" ? 'w-36 bg-white rounded-lg' : ''}  pb-5`}>
-                                            <Image src={item.img} alt={item.name} width={item.type === "drink" ? 120 : 160} height={200} className="cursor-pointer rounded-xl  select-none  " />
+                                        <div className={`md:w-28   overflow-hidden m-auto ${item.type === "drink" ? 'w-36 bg-white rounded-lg' : ''}  pb-5`}>
+                                            <Image src={item.img} alt={item.name} width={item.type === "drink" ? 120 : 360} height={300} className="cursor-pointer lg:rounded-xl rounded-md  select-none  " />
                                         </div>
                                         <div className="flex flex-col items-start gap-1 ">
                                             <h1 className="text-sm ">{item.name.substring(0, 25)}</h1>
                                             <h1 className={`text-sm font-bold  ${addCart?.id === item.id ? 'border-black' : 'text-CollorSecondaryDefault'}`}>{item.price.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</h1>
                                             {
                                                 screenX < 700 ?
-                                                    <h1 className={`text-xs md:w-64 `}>{item.description.substring(0, 115)}...</h1>
+                                                    <h1 className={`md:text-xs text-[10px] md:w-64 `}>{item.description}</h1>
                                                     :
-                                                    <h1 className="text-xs md:w-64">{item.description.substring(0, 160)}...</h1>
+                                                    <h1 className="text-xs md:w-64">{item.description}</h1>
                                             }
                                         </div>
                                     </div>
@@ -229,17 +230,24 @@ export default function ContainerProduct({ items }) {
                                                     +
                                                 </button>
                                             </div>
-                                            <button id={`qtd_Orders-${item.id}`} onClick={() => {
+                                            {validadeInput > 0 ? <button id={`qtd_Orders-${item.id}`} onClick={() => {
                                                 formatArrayToCart(item); toCart(item); toast({
-                                                    title: 'Item adicionado com sucesso!',
-                                                    status: 'success',
-                                                    duration: 3000,
-                                                    isClosable: true,
+                                                    position: 'top-right',
+                                                    duration: 2000,
+                                                    render: () => (
+                                                        <Box className=" lg:translate-y-0 translate-y-28 rounded-md flex items-center gap-3" color='white' p={3} bg='green.400'>
+                                                            <FaCheckCircle className="text-white" /> Pedido adicionado a sacola 
+                                                        </Box>
+                                                    ),
                                                 })
                                             }} className={`  flex items-center gap-2 rounded-2xl px-2 `}>
                                                 <FaShoppingBag id={`iconCart-${item.id}`} className={`${addCart?.id === item.id ? 'text-black' : 'text-CollorSecondaryDefault'}`} />
                                                 <p className="text-black">Adicionar</p>
                                             </button>
+                                                : <button id={`qtd_Orders-${item.id}`} onClick={() => { formatArrayToCart(item); toCart(item); }} className={`  flex items-center gap-2 rounded-2xl px-2 `}>
+                                                    <FaShoppingBag id={`iconCart-${item.id}`} className={`${addCart?.id === item.id ? 'text-black' : 'text-CollorSecondaryDefault'}`} />
+                                                    <p className="text-black">Adicionar</p>
+                                                </button>}
                                         </div>
                                     }
                                 </div>

@@ -8,8 +8,9 @@ import { MdRemoveShoppingCart } from "react-icons/md";
 import { validateFields } from "@/utils/form.validator";
 import maskCep from "@/utils/regex/maskCep";
 import OnlyNumber from "@/utils/regex/onlyNumber";
-import { FaHamburger } from "react-icons/fa";
+import { FaCheckCircle, FaHamburger } from "react-icons/fa";
 import OnlyLetter from "@/utils/regex/onlyLetter";
+import { Box, useToast } from "@chakra-ui/react";
 export default function Cart({ cartOn }) {
 
     const { setCartActive, cartActive, setItensCart, loading, setLoading, itensCart, cartItensAnimate, setbody, body } = useCart()
@@ -29,17 +30,20 @@ export default function Cart({ cartOn }) {
         setItensCart(itemsLocaStorage)
         setItensToFormat(itemsLocaStorage)
     }, [loading])
-    // function withouScroll() {
-    //     if (typeof window !== 'undefined') {
-    //         if (body) {
-    //             document.body.style.overflow = 'hidden';
-    //         } else {
-    //             document.body.style.overflow = 'auto';
-    //         }
-    //     }
-    // }
 
-    // withouScroll()
+    function withouScroll() {
+        if (typeof window !== 'undefined') {
+            if (body) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = 'auto';
+            }
+        }
+    }
+    useEffect(() => {
+        withouScroll()
+    }, [body])
+
     let itenStorage = []
     if (typeof window !== 'undefined') {
         let itensStorage = JSON.parse(localStorage.getItem('foodService'))
@@ -150,9 +154,11 @@ export default function Cart({ cartOn }) {
         }
     }
 
+
+
     function getNextStep() {
         const fieldstoValidate = [
-            { "name": 'cep', "value": cep, "required": true, "type": 'string' },
+            { "name": 'cep', "value": cep, "required": false, "type": 'string' },
             { "name": 'neighborhood', "value": neighborhood, "required": true, "type": 'string' },
             { "name": 'number', "value": number, "required": true, "type": 'string' },
             { "name": 'city', "value": city, "required": true, "type": 'string' },
@@ -165,7 +171,14 @@ export default function Cart({ cartOn }) {
         }
     }
 
-
+    const toast = useToast({
+        position: 'top-right',
+        containerStyle: {
+            width: '320px',
+            maxWidth: '100%',
+            zIndex: '999999'
+        },
+    })
     async function toWhatsapp() {
         let text = `Olá! gostaria de fazer um pedido:\n`
         const items = itensToFormat?.map((i) => ({
@@ -177,7 +190,6 @@ export default function Cart({ cartOn }) {
         }));
         let orders = items.map((item) => `*x${item.qtd}* ${item.name}....${item.price.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}`).join('\n\n');
         console.log(items)
-        return
         text += `\n*Itens do pedido:*\n${orders}\n`
         text += `\n*Endereço de entrega:*`
         text += `\n${adress},${number},\n${neighborhood},${city}`
@@ -200,6 +212,7 @@ export default function Cart({ cartOn }) {
         }
         localStorage.setItem('foodService', JSON.stringify([]))
         setNextStep(1)
+        setbody(false)
         await new Promise(resolve => setTimeout(resolve, 3000));
         setCartActive(false)
         setInternalLoading(false)
@@ -256,7 +269,18 @@ export default function Cart({ cartOn }) {
                                                         </button>
                                                     </div>
                                                     {
-                                                        <button onClick={() => removeItemCart(items)} className="h-5 bg-red-500 w-5 hidden lg:flex justify-center items-center text-white rounded-lg cursor-pointer">X</button>
+                                                        <button onClick={() => {
+                                                            removeItemCart(items); toast({
+                                                                position: 'top-right',
+                                                                zIndex: 999999,
+                                                                duration: 2000,
+                                                                render: () => (
+                                                                    <Box className=" lg:translate-y-0 translate-y-28 rounded-md flex items-center gap-3" color='white' p={3} bg='red.400'>
+                                                                        <FaCheckCircle className="text-white" /> Item removido
+                                                                    </Box>
+                                                                ),
+                                                            })
+                                                        }} className="h-5 font-bold px-3 bg-red-500  hidden lg:flex justify-center items-center text-white rounded-lg cursor-pointer">X</button>
                                                     }
                                                 </div>
                                             </div>
@@ -290,7 +314,7 @@ export default function Cart({ cartOn }) {
                                             <button className="absolute flex justify-center items-center right-2 top-1 rounded-xl bg-CollorSecondaryDefault px-3 py-[8px]">
                                                 <FaMagnifyingGlass onClick={getCep} className="text-white" />
                                             </button>
-                                            <input  id="cep" onChange={(e) => setCep(maskCep(e.target.value))} onBlur={getCep} value={cep} type="text" className="  shadow-xl rounded-xl focus:border-1 pl-3 py-2 outline-none" />
+                                            <input maxLength={9} id="cep" onChange={(e) => setCep(maskCep(e.target.value))} onBlur={getCep} value={cep} type="text" className="  shadow-xl rounded-xl focus:border-1 pl-3 py-2 outline-none" />
                                         </div>
                                     </div>
 
