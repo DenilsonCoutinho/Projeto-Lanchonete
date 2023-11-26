@@ -35,10 +35,10 @@ export default function Cart({ cartOn }) {
             document.body.style.overflow = 'hidden';
         }
     } else {
-            document.body.style.overflow = 'auto';
+        document.body.style.overflow = 'auto';
     }
 
-   
+
 
     let itenStorage = []
     if (typeof window !== 'undefined') {
@@ -139,15 +139,22 @@ export default function Cart({ cartOn }) {
     }
 
     async function getCep() {
-        try {
-            let getCepApi = await fetch(`https://viacep.com.br/ws/${cep}/json/`).then(res => res.json())
-            setAdress(getCepApi.logradouro)
-            setNeighborhood(getCepApi.bairro)
-            setCity(getCepApi.localidade)
-            setComplement('')
-        } catch (error) {
-            console.log(error)
+        var cepRegex = /^[0-9]{5}-?[0-9]{3}$/;
+        if (cep === '') {
+            return
         }
+        if (!cepRegex.test(cep)){
+            return alert('cep inválido')
+        }
+            try {
+                let getCepApi = await fetch(`https://viacep.com.br/ws/${cep}/json/`).then(res => res.json())
+                setAdress(getCepApi.logradouro)
+                setNeighborhood(getCepApi.bairro)
+                setCity(getCepApi.localidade)
+                setComplement('')
+            } catch (error) {
+                console.log(error)
+            }
     }
 
     function getNextStep() {
@@ -222,11 +229,11 @@ export default function Cart({ cartOn }) {
                 <div id="cartItens" className={`${cartItensAnimate ? "translate-x-0" : "translate-x-full"} max-w-[1000px] m-auto p-5 duration-200 bg-[#fff] h-full w-full relative z-[9999] `}>
                     <div className="flex justify-between">
                         <div className="flex items-center">
-                            <button onClick={() => setNextStep(1)} className="h-8 w-8 rounded-full flex items-center justify-center shadow-3xl bg-CollorSecondaryDefault text-black">1</button>
+                            <button onClick={() => setNextStep(1)} className="select-none h-8 w-8 rounded-full flex items-center justify-center shadow-3xl bg-CollorSecondaryDefault text-black">1</button>
                             <div className="border-b border-CollorSecondaryDefault w-5"></div>
-                            <div onClick={() => setNextStep(itensCart.length > 0 ? 2 : 1)} className={`h-8 w-8 rounded-full flex items-center cursor-pointer justify-center shadow-3xl ${nextStep === 2 || nextStep > 2 ? "bg-CollorSecondaryDefault" : "bg-white"} text-black`}>2</div>
+                            <div onClick={() => setNextStep(itensCart.length > 0 ? 2 : 1)} className={`select-none h-8 w-8 rounded-full flex items-center cursor-pointer justify-center shadow-3xl ${nextStep === 2 || nextStep > 2 ? "bg-CollorSecondaryDefault" : "bg-white"} text-black`}>2</div>
                             <div className={`${nextStep === 3 ? "border-CollorSecondaryDefault border" : "border-b border-black "} w-5`}></div>
-                            <div className={`h-8 w-8 rounded-full flex items-center justify-center shadow-3xl ${nextStep === 3 ? "bg-CollorSecondaryDefault" : "bg-white"}  text-black`}>3</div>
+                            <div className={`h-8 w-8 rounded-full flex items-center justify-center shadow-3xl select-none ${nextStep === 3 ? "bg-CollorSecondaryDefault" : "bg-white"}  text-black`}>3</div>
                         </div>
                         <button onClick={() => { setLoading(false); setCartActive(false); setbody('') }} className="bg-white shadow-3xl font-medium rounded-xl text-CollorDefault py-1 px-3">Fechar</button>
                     </div>
@@ -294,7 +301,7 @@ export default function Cart({ cartOn }) {
                                 <p className="font-medium lg?text-xl text-base pt-2">Total: <span className="font-extrabold text-CollorSecondaryDefault">{totPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</span></p>
                             </div>
                             <div className="flex items-center gap-2">
-                                <button onClick={() => setNextStep(itensCart.length > 0 ? 2 : 1)} className="bg-CollorSecondaryDefault rounded-2xl text-white py-2 px-3">Continuar</button>
+                                <button onClick={() => setNextStep(itensCart.length > 0 ? 2 : 1)} className="bg-CollorSecondaryDefault rounded-2xl removeBlue text-white py-2 px-3">Continuar</button>
                             </div>
                         </div>
                     </div> :

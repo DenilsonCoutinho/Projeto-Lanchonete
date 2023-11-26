@@ -193,7 +193,7 @@ export default function ContainerProduct({ items }) {
                         <div id="filter" className="flex flex-row items-center gap-4 max-w-[1000px] overflow-x-auto bg-[#fffdf7]  myScroll py-1 px-2">
                             {
                                 menuOptions.map((item, i) => {
-                                    return <button key={item.id} onClick={() => { setButtonSelected(item.id); setIdentifyProduct(item) }} className={` flex items-center removeBlue w-28 text-center justify-center py-2 px-2  gap-2 ${buttonSelected === item.id ? 'bg-CollorSecondaryDefault' : 'bg-white'} lg:shadow-3xl shadow-xl rounded-2xl`}>
+                                    return <button key={item.id} onClick={() => { setButtonSelected(item.id); setIdentifyProduct(item) }} className={`select-none flex items-center removeBlue w-28 text-center justify-center py-2 px-2  gap-2 ${buttonSelected === item.id ? 'bg-CollorSecondaryDefault' : 'bg-white'} shadow-xl rounded-2xl`}>
                                         <p className=" text-black">{item.icon}</p>
                                         <p className=" text-black">{item.name}</p>
                                     </button>
@@ -212,7 +212,7 @@ export default function ContainerProduct({ items }) {
                     {
                         foodToFilter?.map((item, i) => {
                             return <div className="relative">
-                                <div alt={item.id} id={`itemFood-${item.id}`} onClick={() => { setAddCart(item) }} key={item.id} className={`${addCart?.id === item.id ? 'bg-CollorSecondaryDefault removeBlue duration-200 ease-in-out' : 'bg-white'} flex flex-col justify-x items-start select-none rounded-xl p-2 shadow-3xl md:w-[450px]   md:h-[190px] `}>
+                                <div alt={item.id} id={`itemFood-${item.id}`} onClick={() => { setAddCart(item) }} key={item.id} className={`${addCart?.id === item.id ? 'bg-CollorSecondaryDefault removeBlue duration-100 ease-in-out' : 'bg-white'} flex flex-col justify-x items-start select-none rounded-xl p-2 shadow-3xl md:w-[450px]   md:h-[190px] `}>
                                     <div className="flex items-start gap-2">
                                         <div className={`md:w-28   overflow-hidden m-auto ${item.type === "drink" ? 'w-36 bg-white rounded-lg' : ''}  pb-5`}>
                                             <Image src={item.img} alt={item.name} width={item.type === "drink" ? 120 : 360} height={300} className="cursor-pointer lg:rounded-xl rounded-md  select-none  " />
