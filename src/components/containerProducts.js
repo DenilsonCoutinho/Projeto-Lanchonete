@@ -215,7 +215,7 @@ export default function ContainerProduct({ items }) {
                             return i < moreProductsToView && <div className="relative ">
                                 <div alt={item.id} id={`itemFood-${item.id}`} onClick={() => { setAddCart(item) }} key={item.id} className={`${addCart?.id === item.id ? 'bg-CollorSecondaryDefault removeBlue duration-100 ease-in-out' : 'bg-white'} flex flex-col justify-x items-start select-none rounded-xl p-2 shadow-3xl md:w-[450px] animationToTop  md:h-[190px] `}>
                                     <div className="flex md:flex-row flex-col items-start gap-2">
-                                        <div className={`relative   overflow-hidden ${item.type === "drink" ? '  w-64 ' : ''} bg-white rounded-lg md:w-36 w-full lg:h-20 h-28  pb-5`}>
+                                        <div className={`relative   overflow-hidden ${item.type === "drink" ? '  w-64 ' : 'md:w-36 w-full'} bg-white rounded-lg  lg:h-20 h-28  pb-5`}>
                                             <Image fill='layout' objectFit="cover" src={item.img} alt={item.name}   className="cursor-pointer   lg:rounded-xl rounded-md  select-none  " />
                                         </div>
                                         <div className="flex flex-col items-start gap-1 ">
