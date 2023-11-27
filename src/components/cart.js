@@ -187,8 +187,6 @@ export default function Cart({ cartOn }) {
         text += `\n${adress},${number},\n${neighborhood},${city}`
         text += `\nCEP:${cep} / Complemento:${complement}`
         text += `\n*Total (com entrega):R$ ${totPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}*`
-        console.log(text)
-        return
         setInternalLoading(true)
         await new Promise(resolve => setTimeout(resolve, 1))
         let setAnimation = window.document.querySelectorAll('.animationOn')
