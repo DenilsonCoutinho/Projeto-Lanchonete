@@ -141,18 +141,18 @@ export default function Cart({ cartOn }) {
         if (cep === '') {
             return
         }
-        if (!cepRegex.test(cep)){
+        if (!cepRegex.test(cep)) {
             return alert('cep inválido')
         }
-            try {
-                let getCepApi = await fetch(`https://viacep.com.br/ws/${cep}/json/`).then(res => res.json())
-                setAdress(getCepApi.logradouro)
-                setNeighborhood(getCepApi.bairro)
-                setCity(getCepApi.localidade)
-                setComplement('')
-            } catch (error) {
-                console.log(error)
-            }
+        try {
+            let getCepApi = await fetch(`https://viacep.com.br/ws/${cep}/json/`).then(res => res.json())
+            setAdress(getCepApi.logradouro)
+            setNeighborhood(getCepApi.bairro)
+            setCity(getCepApi.localidade)
+            setComplement('')
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     function getNextStep() {
@@ -181,7 +181,7 @@ export default function Cart({ cartOn }) {
     async function toWhatsapp() {
         let text = `Olá! gostaria de fazer um pedido:\n`
         let orders = itensToFormat.map((item) => `*x${item.qtd}* ${item.name}....${item.price.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}`).join('\n\n');
-        
+
         text += `\n*Itens do pedido:*\n${orders}\n`
         text += `\n*Endereço de entrega:*`
         text += `\n${adress},${number},\n${neighborhood},${city}`
@@ -203,10 +203,13 @@ export default function Cart({ cartOn }) {
         setbody('')
         localStorage.setItem('foodService', JSON.stringify([]))
         setItensCart([])
+        setLoading(true)
         setNextStep(1)
         await new Promise(resolve => setTimeout(resolve, 3000));
         setCartActive(false)
         setInternalLoading(false)
+        setLoading(false)
+
     }
 
     return (
