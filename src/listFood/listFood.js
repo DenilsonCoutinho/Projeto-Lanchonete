@@ -9,7 +9,6 @@ import bebida_1 from '../assets/bebida/pngwing.com (1).png'
 const listFood = [
     {
         id: 1,
-
         description: 'Pão de brioche, hambúrguer artesanal de 130g grelhado, queijo prato gratinado, alface, tomate, picles, cebola caramelizada, maionese caseira, barbecue. Acompanha fritas 200g, 3 anéis de cebola fritos e 1 refri lata.', img: hamburguer_1,
         name: 'Brazilian BBQ Burger',
         price: 20,
@@ -17,7 +16,6 @@ const listFood = [
     },
     {
         id: 2,
-
         description: 'Pão de brioche, hambúrguer artesanal de 130g grelhado, queijo prato gratinado, alface, tomate, picles, cebola caramelizada, maionese caseira, barbecue. Acompanha fritas 200g, 3 anéis de cebola fritos e 1 refri lata.', img: hamburguer_2,
         name: 'Mediterranean Sunshine Burger',
         price: 20.53,
@@ -27,7 +25,6 @@ const listFood = [
     ,
     {
         id: 3,
-
         description: 'Pão de brioche, hambúrguer artesanal de 130g grelhado, queijo prato gratinado, alface, tomate, picles, cebola caramelizada, maionese caseira, barbecue. Acompanha fritas 200g, 3 anéis de cebola fritos e 1 refri lata.', img: hamburguer_3,
         name: 'Vegan Tropical Bliss Burger',
         price: 32.44,
@@ -37,7 +34,6 @@ const listFood = [
     ,
     {
         id: 4,
-
         description: 'Pão de brioche, hambúrguer artesanal de 130g grelhado, queijo prato gratinado, alface, tomate, picles, cebola caramelizada, maionese caseira, barbecue. Acompanha fritas 200g, 3 anéis de cebola fritos e 1 refri lata.', img: hamburguer_4,
         name: 'Asian Fusion Delight Burger',
         price: 27.70,
@@ -47,7 +43,46 @@ const listFood = [
     ,
     {
         id: 5,
+        description: 'Pão de brioche, hambúrguer artesanal de 130g grelhado, queijo prato gratinado, alface, tomate, picles, cebola caramelizada, maionese caseira, barbecue. Acompanha fritas 200g, 3 anéis de cebola fritos e 1 refri lata.',
+        img: hamburguer_5,
+        name: 'Gourmet Coffee Infusion Burger',
+        price: 17.90,
+        type: 'burguer'
 
+    }
+    ,
+    {
+        id: 6,
+        description: 'Pão de brioche, hambúrguer artesanal de 130g grelhado, queijo prato gratinado, alface, tomate, picles, cebola caramelizada, maionese caseira, barbecue. Acompanha fritas 200g, 3 anéis de cebola fritos e 1 refri lata.',
+        img: hamburguer_5,
+        name: 'Gourmet Coffee Infusion Burger',
+        price: 17.90,
+        type: 'burguer'
+
+    }
+    ,
+    {
+        id: 7,
+        description: 'Pão de brioche, hambúrguer artesanal de 130g grelhado, queijo prato gratinado, alface, tomate, picles, cebola caramelizada, maionese caseira, barbecue. Acompanha fritas 200g, 3 anéis de cebola fritos e 1 refri lata.',
+        img: hamburguer_5,
+        name: 'Gourmet Coffee Infusion Burger',
+        price: 17.90,
+        type: 'burguer'
+
+    }
+    ,
+    {
+        id: 8,
+        description: 'Pão de brioche, hambúrguer artesanal de 130g grelhado, queijo prato gratinado, alface, tomate, picles, cebola caramelizada, maionese caseira, barbecue. Acompanha fritas 200g, 3 anéis de cebola fritos e 1 refri lata.',
+        img: hamburguer_5,
+        name: 'Gourmet Coffee Infusion Burger',
+        price: 17.90,
+        type: 'burguer'
+
+    }
+    ,
+    {
+        id: 9,
         description: 'Pão de brioche, hambúrguer artesanal de 130g grelhado, queijo prato gratinado, alface, tomate, picles, cebola caramelizada, maionese caseira, barbecue. Acompanha fritas 200g, 3 anéis de cebola fritos e 1 refri lata.',
         img: hamburguer_5,
         name: 'Gourmet Coffee Infusion Burger',

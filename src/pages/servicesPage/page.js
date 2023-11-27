@@ -5,9 +5,9 @@ import Image from 'next/image'
 export default function ServicePage() {
 
     return (
-        <div className="Container lg:max-w-[1000px] m-auto flex flex-col pt-28">
+        <div id='service' className="Container lg:max-w-[1000px] m-auto flex flex-col pt-28">
             <p className="font-semibold text-CollorSecondaryDefault tracking-wider text-center">Nossos Serviços</p>
-            <h1 className="text-CollorDefault font-bold text-3xl text-center">O que oferecemos a você?</h1>
+            <h1 className="text-CollorDefault font-bold lg:text-3xl text-2xl text-center">O que oferecemos a você?</h1>
             <div className='flex lg:flex-row flex-col items-center justify-between lg:gap-10 gap-5 pt-20'>
                 <div className='flex flex-col items-center bg-CollorSecondaryDefault rounded-2xl lg:w-72 p-2 animatedElmentBottom'>
                     <Image alt='serviço 1' src={service_1} width={140} className='h-20'/>

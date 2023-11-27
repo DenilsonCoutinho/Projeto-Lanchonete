@@ -38,8 +38,6 @@ export default function Cart({ cartOn }) {
         document.body.style.overflow = 'auto';
     }
 
-
-
     let itenStorage = []
     if (typeof window !== 'undefined') {
         let itensStorage = JSON.parse(localStorage.getItem('foodService'))
@@ -78,7 +76,7 @@ export default function Cart({ cartOn }) {
     let totPrice = sumTotPrice + delivery
 
 
-    function attCart() {
+    function filterItensCart() {
         let filteredItem = fortmatedItens?.filter((item) => {
             return item.qtd > 0
         })
@@ -133,7 +131,7 @@ export default function Cart({ cartOn }) {
             setLoading(true)
             await new Promise((resolve) => setTimeout(resolve, 100))
             localStorage.setItem('foodService', JSON.stringify(fortmatedItens))
-            attCart()
+            filterItensCart()
             setLoading(false)
         }
     }
@@ -182,20 +180,15 @@ export default function Cart({ cartOn }) {
     })
     async function toWhatsapp() {
         let text = `Olá! gostaria de fazer um pedido:\n`
-        const items = itensToFormat?.map((i) => ({
-            id: i.id || '',
-            img: i.img || '',
-            name: i.name || '',
-            price: i.price || 0,
-            qtd: i.qtd || 0,
-        }));
-        let orders = items.map((item) => `*x${item.qtd}* ${item.name}....${item.price.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}`).join('\n\n');
-        console.log(items)
+        let orders = itensToFormat.map((item) => `*x${item.qtd}* ${item.name}....${item.price.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}`).join('\n\n');
+        
         text += `\n*Itens do pedido:*\n${orders}\n`
         text += `\n*Endereço de entrega:*`
         text += `\n${adress},${number},\n${neighborhood},${city}`
         text += `\nCEP:${cep} / Complemento:${complement}`
         text += `\n*Total (com entrega):R$ ${totPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}*`
+        console.log(text)
+        return
         setInternalLoading(true)
         await new Promise(resolve => setTimeout(resolve, 1))
         let setAnimation = window.document.querySelectorAll('.animationOn')

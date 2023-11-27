@@ -1,14 +1,13 @@
 "use client"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import listFood from "../listFood/listFood"
 import Cart from "./cart"
 import Image from "next/image"
 import { useCart } from "../context/cartContext.js"
 import { BiSolidDrink } from "react-icons/bi"
 import { FaCheckCircle, FaHamburger, FaShoppingBag } from "react-icons/fa"
-import { useSpring, animated } from 'react-spring';
 import { useScreenSize } from "@/context/screenSizeContext"
-import { Box, Button, useToast } from '@chakra-ui/react'
+import { Box, useToast } from '@chakra-ui/react'
 import { ChakraProvider } from '@chakra-ui/react'
 
 export default function ContainerProduct({ items }) {
@@ -49,6 +48,7 @@ export default function ContainerProduct({ items }) {
     ]
     const [buttonSelected, setButtonSelected] = useState(1)
     const [identifyProduct, setIdentifyProduct] = useState()
+    const [moreProductsToView, setMoreProductsToView] = useState(4)
 
     const foodToFilter = listFood.filter((food) => {
         return identifyProduct?.toFilter ? food.type === identifyProduct.toFilter : food.type === 'burguer'
@@ -176,21 +176,16 @@ export default function ContainerProduct({ items }) {
     }
 
     const toast = useToast()
-    const toastIdRef = useRef()
-    function close() {
-        if (toastIdRef.current) {
-            toast.close(toastIdRef.current)
-        }
-    }
+
     return (
         <ChakraProvider>
             <Cart />
-            <div className="pt-28 max-w-[1200px] m-auto">
+            <div id="menu" className="pt-28 max-w-[1200px] m-auto">
                 <p className="text-CollorSecondaryDefault uppercase tracking-wide text-center font-semibold animatedElmentBottom">Cardápio</p>
                 <h1 className="text-CollorDefault text-center font-bold text-3xl animatedElmentBottom">Nosso Cardápio</h1>
                 <div>
                     <div className="pt-20 max-w-[1000px] flex justify-center m-auto  py-1">
-                        <div id="filter" className="flex flex-row items-center gap-4 max-w-[1000px] overflow-x-auto bg-[#fffdf7]  myScroll py-1 px-2">
+                        <div id="filter" className="flex flex-row items-center gap-4 max-w-[1000px] overflow-x-auto bg-[#fdf7e7]  myScroll py-1 px-2">
                             {
                                 menuOptions.map((item, i) => {
                                     return <button key={item.id} onClick={() => { setButtonSelected(item.id); setIdentifyProduct(item) }} className={`select-none flex items-center removeBlue w-28 text-center justify-center py-2 px-2  gap-2 ${buttonSelected === item.id ? 'bg-CollorSecondaryDefault' : 'bg-white'} shadow-xl rounded-2xl`}>
@@ -207,11 +202,11 @@ export default function ContainerProduct({ items }) {
                 <FaShoppingBag className='text-CollorDefault lg:text-5xl text-3xl' />
                 <div id="qtd_order" className='bg-red-600 text-white w-6 shadow-3xl -top-2 right-0 h-6 absolute rounded-full'>{somaToHTML || 0}</div>
             </button>
-            <div className="max-w-[1200px] px-2 m-auto py-20">
-                <div className="flex flex-wrap  justify-center gap-10 items-center">
+            <div className="max-w-[1200px] px-2  m-auto py-20">
+                <div className="flex flex-wrap justify-center gap-10 items-center">
                     {
                         foodToFilter?.map((item, i) => {
-                            return <div className="relative">
+                            return i < moreProductsToView && <div className="relative animationToTop">
                                 <div alt={item.id} id={`itemFood-${item.id}`} onClick={() => { setAddCart(item) }} key={item.id} className={`${addCart?.id === item.id ? 'bg-CollorSecondaryDefault removeBlue duration-100 ease-in-out' : 'bg-white'} flex flex-col justify-x items-start select-none rounded-xl p-2 shadow-3xl md:w-[450px]   md:h-[190px] `}>
                                     <div className="flex items-start gap-2">
                                         <div className={`md:w-28   overflow-hidden m-auto ${item.type === "drink" ? 'w-36 bg-white rounded-lg' : ''}  pb-5`}>
@@ -248,7 +243,7 @@ export default function ContainerProduct({ items }) {
                                                     duration: 4500,
                                                     render: () => (
                                                         <Box className=" lg:translate-y-0 translate-y-28 rounded-md flex items-center gap-3" color='white' p={3} bg='green.400'>
-                                                            <FaCheckCircle className="text-white" /> Pedido adicionado a sacola 
+                                                            <FaCheckCircle className="text-white" /> Pedido adicionado a sacola
                                                         </Box>
                                                     ),
                                                 })
@@ -267,7 +262,12 @@ export default function ContainerProduct({ items }) {
                         })
                     }
                 </div>
+                {foodToFilter.length >= moreProductsToView ?
+                    <button onClick={() => setMoreProductsToView((prev) => prev + 2)} className="mt-2 px-10 py-2 bg-white rounded-2xl shadow-lg m-auto flex justify-center text-black">Ver mais</button>
+                    :
+                    <></>
+                }
             </div >
-        </ChakraProvider>
+        </ChakraProvider >
     )
 }

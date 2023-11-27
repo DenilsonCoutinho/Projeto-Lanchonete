@@ -6,9 +6,9 @@ import { IoIosMenu } from "react-icons/io";
 import { useCart } from '@/context/cartContext';
 import { useEffect, useState } from 'react';
 import { MdClose } from "react-icons/md";
-
+import { scrollToDiv } from '@/utils/scrollToDiv';
 export default function Header() {
-    const { setCartActive,loading,itensCart } = useCart()
+    const { setCartActive, loading, itensCart } = useCart()
     const [HeaderActive, setHeaderActive] = useState(false)
     const [headerActiveAnimation, setHeaderActiveAnimation] = useState(false)
 
@@ -38,7 +38,7 @@ export default function Header() {
             return acumulador + valorAtual;
         }, 0);
         qtdToInt = qtd.innerHTML = soma || 0
-    }, [loading,itensCart])
+    }, [loading, itensCart])
     animationCart()
     return (
         <>
@@ -48,10 +48,9 @@ export default function Header() {
                         <Image alt=' logo' src={Logo} />
                     </div>
                     <div className='flex items-center  lg:gap-14 gap-7 '>
-                        <p className='text-CollorDefault'>Reservas</p>
-                        <p className='text-CollorDefault'>Serviços</p>
-                        <p className='text-CollorDefault'>Cardápio</p>
-                        <p className='text-CollorDefault'>Depoimentos</p>
+                        <p onClick={() => scrollToDiv('service')} className='text-CollorDefault cursor-pointer'>Serviços</p>
+                        <p onClick={() => scrollToDiv('menu')} className='text-CollorDefault cursor-pointer'>Cardápio</p>
+                        <p onClick={() => scrollToDiv('comments')} className='text-CollorDefault cursor-pointer'>Depoimentos</p>
                     </div>
                     <button onClick={() => setCartActive(true)} className='bg-white removeBlue px-3 py-3 shadow-3xl rounded-3xl flex items-center gap-2'>
                         <p className='text-CollorDefault'> Meu Carrinho</p>
@@ -83,16 +82,13 @@ export default function Header() {
                             <FaShoppingBag className='text-CollorDefault' />
                         </div>
                     </div>
-                    <h1 className='text-CollorDefault text-xl'>
-                        Reservas
-                    </h1>
-                    <h1 className='text-CollorDefault text-xl'>
+                    <h1 onClick={() => { scrollToDiv('service'); setHeaderActive(false) }} className='text-CollorDefault text-xl'>
                         Serviços
                     </h1>
-                    <h1 className='text-CollorDefault text-xl'>
+                    <h1 onClick={() => { scrollToDiv('menu'); setHeaderActive(false) }} className='text-CollorDefault text-xl'>
                         Cardápio
                     </h1>
-                    <h1 className='text-CollorDefault text-xl'>
+                    <h1 onClick={() => { scrollToDiv('comments'); setHeaderActive(false) }} className='text-CollorDefault text-xl'>
                         Depoimentos
                     </h1>
 

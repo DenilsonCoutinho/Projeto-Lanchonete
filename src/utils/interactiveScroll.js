@@ -7,7 +7,6 @@ export function InteractiveScroll() {
 
     const { setStartCountingAnimation } = useTriggerContext()
     const [scaleElementFinded, setScaleElementFinded] = useState(false)
-    const [isToSearchScaleElement, setIsToSearchScaleElement] = useState(true)
 
     function getAnimatedElementsNow() {
         let qtdElement = 0
