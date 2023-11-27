@@ -144,7 +144,8 @@ const listFood = [
     },
     {
         id: 14,
-        description: 'O açaí tradicional é uma opção clássica, conhecida por sua textura cremosa e sabor rico e frutado. Originário da região amazônica, este açaí é frequentemente servido em tigelas com complementos como granola, banana e mel, proporcionando uma combinação equilibrada de doçura e energia.l',
+        description: 'A variante gourmet do açaí é conhecida por suas adições indulgentes, como pedaços de brownie, lascas de coco torrado e até mesmo calda de chocolate. Essa versão mais indulgente oferece uma experiência decadente.',
+
         img: acai_3,
         name: 'Açai 350ml',
         price: 18.50,
@@ -153,7 +154,8 @@ const listFood = [
     },
     {
         id: 15,
-        description: 'A versão com frutas tropicais eleva a experiência do açaí ao incorporar uma variedade de frutas frescas, como morangos, kiwi e abacaxi. Essa combinação acrescenta camadas de sabores vibrantes, criando uma tigela refrescante e repleta de nutrientes, perfeita para aqueles que buscam uma opção mais tropical.',
+        description: 'A variante gourmet do açaí é conhecida por suas adições indulgentes, como pedaços de brownie, lascas de coco torrado e até mesmo calda de chocolate. Essa versão mais indulgente oferece uma experiência decadente.',
+
         img: acai_2,
         name: 'Açai 1L',
         price: 23.50,
@@ -162,7 +164,7 @@ const listFood = [
     },
     {
         id: 16,
-        description: 'A variante gourmet do açaí é conhecida por suas adições indulgentes, como pedaços de brownie, lascas de coco torrado e até mesmo calda de chocolate. Essa versão mais indulgente oferece uma experiência decadente, equilibrando a cremosidade do açaí com a riqueza de sabores adicionais para um deleite verdadeiramente luxuoso.',
+        description: 'A variante gourmet do açaí é conhecida por suas adições indulgentes, como pedaços de brownie, lascas de coco torrado e até mesmo calda de chocolate. Essa versão mais indulgente oferece uma experiência decadente.',
         img: acai_1,
         name: 'Açai 500ML',
         price: 32.50,
