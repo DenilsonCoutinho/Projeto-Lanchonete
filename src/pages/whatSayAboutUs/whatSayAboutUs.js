@@ -32,7 +32,7 @@ export default function WhatSayAboutUs() {
     return (
         <div id='comments' className="lg:pt-28 max-w-[1200px] m-auto px-3">
             <div className='flex justify-between items-start'>
-                <Image src={hamburguer} height={400} className='lg:flex hidden'/>
+                <Image src={hamburguer} height={400} className='lg:flex hidden' />
                 <div className='flex flex-col gap-4'>
                     <div className='flex flex-col  lg:items-start items-center'>
                         <p className='text-CollorSecondaryDefault font-bold'>Depoimentos</p>
@@ -61,7 +61,8 @@ export default function WhatSayAboutUs() {
                         })}
                         <div className='flex items-center gap-6'>
                             {comments.map((items, i) => {
-                                return <button onClick={() => setPositionComent(i + 1)} className='hover:shadow-inner hover:bg-CollorSecondaryDefault duration-200 mt-2 py-1 px-4 rounded-lg shadow-xl bg-white '>{i + 1}</button>
+                                
+                                return <button onClick={() => {setPositionComent(i + 1)}} className={`hover:shadow-inner ${items.id === positionComent ? 'bg-CollorSecondaryDefault' : 'bg-white'} hover:bg-CollorSecondaryDefault duration-200 mt-2 py-1 px-4 rounded-lg shadow-xl  `}>{i + 1}</button>
                             })
                             }
                         </div>

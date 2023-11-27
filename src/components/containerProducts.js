@@ -6,10 +6,14 @@ import Image from "next/image"
 import { useCart } from "../context/cartContext.js"
 import { BiSolidDrink } from "react-icons/bi"
 import { FaCheckCircle, FaHamburger, FaShoppingBag } from "react-icons/fa"
+import { MdFastfood } from "react-icons/md";
+
 import { useScreenSize } from "@/context/screenSizeContext"
 import { Box, useToast } from '@chakra-ui/react'
 import { ChakraProvider } from '@chakra-ui/react'
 
+import img from '../assets/bebida/45b650b301.jpg'
+import { FaIceCream } from "react-icons/fa6"
 export default function ContainerProduct({ items }) {
     const { setCartActive, itensCart, setItensCart, loading, setLoading, setbody } = useCart()
     const { screenX } = useScreenSize()
@@ -34,15 +38,15 @@ export default function ContainerProduct({ items }) {
         },
         {
             id: 3,
-            icon: <BiSolidDrink />,
+            icon: <MdFastfood />,
             name: "Combos",
-            toFilter: "cb"
+            toFilter: "comb"
         },
         {
             id: 4,
-            icon: <BiSolidDrink />,
+            icon: <FaIceCream />,
             name: "Açai",
-            toFilter: "ac"
+            toFilter: "acai"
         },
 
     ]
@@ -176,7 +180,9 @@ export default function ContainerProduct({ items }) {
     }
 
     const toast = useToast()
+    const [imagemCarregada, setImagemCarregada] = useState(false);
 
+    
     return (
         <ChakraProvider>
             <Cart />
@@ -206,18 +212,18 @@ export default function ContainerProduct({ items }) {
                 <div className="flex flex-wrap justify-center gap-10 items-center">
                     {
                         foodToFilter?.map((item, i) => {
-                            return i < moreProductsToView && <div className="relative animationToTop">
-                                <div alt={item.id} id={`itemFood-${item.id}`} onClick={() => { setAddCart(item) }} key={item.id} className={`${addCart?.id === item.id ? 'bg-CollorSecondaryDefault removeBlue duration-100 ease-in-out' : 'bg-white'} flex flex-col justify-x items-start select-none rounded-xl p-2 shadow-3xl md:w-[450px]   md:h-[190px] `}>
-                                    <div className="flex items-start gap-2">
-                                        <div className={`md:w-28   overflow-hidden m-auto ${item.type === "drink" ? 'w-36 bg-white rounded-lg' : ''}  pb-5`}>
-                                            <Image src={item.img} alt={item.name} width={item.type === "drink" ? 120 : 360} height={300} className="cursor-pointer lg:rounded-xl rounded-md  select-none  " />
+                            return i < moreProductsToView && <div className="relative ">
+                                <div alt={item.id} id={`itemFood-${item.id}`} onClick={() => { setAddCart(item) }} key={item.id} className={`${addCart?.id === item.id ? 'bg-CollorSecondaryDefault removeBlue duration-100 ease-in-out' : 'bg-white'} flex flex-col justify-x items-start select-none rounded-xl p-2 shadow-3xl md:w-[450px] animationToTop  md:h-[190px] `}>
+                                    <div className="flex md:flex-row flex-col items-start gap-2">
+                                        <div className={`relative   overflow-hidden ${item.type === "drink" ? '  w-64 ' : ''} bg-white rounded-lg md:w-36 w-full lg:h-20 h-28  pb-5`}>
+                                            <Image fill='layout' objectFit="cover" src={item.img} alt={item.name}   className="cursor-pointer   lg:rounded-xl rounded-md  select-none  " />
                                         </div>
                                         <div className="flex flex-col items-start gap-1 ">
                                             <h1 className="text-sm ">{item.name.substring(0, 25)}</h1>
                                             <h1 className={`text-sm font-bold  ${addCart?.id === item.id ? 'border-black' : 'text-CollorSecondaryDefault'}`}>{item.price.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</h1>
                                             {
                                                 screenX < 700 ?
-                                                    <h1 className={`md:text-xs text-[10px] md:w-64 `}>{item.description}</h1>
+                                                    <h1 className={`md:text-xs text-[10px] w-full `}>{item.description}</h1>
                                                     :
                                                     <h1 className="text-xs md:w-64">{item.description}</h1>
                                             }
@@ -263,7 +269,7 @@ export default function ContainerProduct({ items }) {
                     }
                 </div>
                 {foodToFilter.length >= moreProductsToView ?
-                    <button onClick={() => setMoreProductsToView((prev) => prev + 2)} className="mt-2 px-10 py-2 bg-white rounded-2xl shadow-lg m-auto flex justify-center text-black">Ver mais</button>
+                    <button onClick={() => setMoreProductsToView((prev) => prev + 1)} className="mt-2 px-10 py-2 bg-white rounded-2xl shadow-lg m-auto flex justify-center text-black">Ver mais</button>
                     :
                     <></>
                 }
