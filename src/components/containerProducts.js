@@ -268,7 +268,7 @@ export default function ContainerProduct({ items }) {
                         })
                     }
                 </div>
-                {foodToFilter.length >= moreProductsToView ?
+                {foodToFilter.length > moreProductsToView ?
                     <button onClick={() => setMoreProductsToView((prev) => prev + 1)} className="mt-2 px-10 py-2 bg-white rounded-2xl shadow-lg m-auto flex justify-center text-black">Ver mais</button>
                     :
                     <></>
