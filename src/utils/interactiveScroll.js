@@ -67,7 +67,7 @@ export function InteractiveScroll() {
 
         if (elementLeft.length > 0) {
             elementLeft.forEach((e) => {
-                if (e.getBoundingClientRect().y <= window.innerHeight / 1.8) {
+                if (e.getBoundingClientRect().y <= window.innerHeight / 1.3) {
                     e.style.opacity = '1'
                     e.style.transform = 'translateX(0px)'
                 }
