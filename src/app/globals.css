@@ -45,7 +45,7 @@ body {
 }
 
 .animatedElementRight {
-  transition: 1.6s;
+  transition: 0.6s;
   transform: translate(300px);
   opacity: 0;
 }

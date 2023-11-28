@@ -185,14 +185,14 @@ export default function ContainerProduct({ items }) {
         <ChakraProvider>
             <Cart />
             <div id="menu" className="pt-28 max-w-[1200px] m-auto">
-                <p className="text-CollorSecondaryDefault uppercase tracking-wide text-center font-semibold animatedElmentBottom">Cardápio</p>
-                <h1 className="text-CollorDefault text-center font-bold text-3xl animatedElmentBottom">Nosso Cardápio</h1>
+                <p className="text-CollorSecondaryDefault uppercase tracking-wide text-center font-semibold ">Cardápio</p>
+                <h1 className="text-CollorDefault text-center font-bold text-3xl ">Nosso Cardápio</h1>
                 <div>
                     <div className="pt-20 max-w-[1000px] flex justify-center m-auto  py-1">
-                        <div id="filter" className="flex flex-row items-center gap-4 max-w-[1000px] overflow-x-auto bg-[#fdf7e7]  myScroll py-1 px-2">
+                        <div id="filter" className="flex flex-row  items-center gap-4 max-w-[1000px] overflow-x-auto bg-[#fdf7e7]  myScroll py-1 px-2">
                             {
                                 menuOptions?.map((item, i) => {
-                                    return <button key={item.id} onClick={() => { setButtonSelected(item.id); setIdentifyProduct(item) }} className={`select-none flex items-center removeBlue w-28 text-center justify-center py-2 px-2  gap-2 ${buttonSelected === item.id ? 'bg-CollorSecondaryDefault' : 'bg-white'} shadow-xl rounded-2xl`}>
+                                    return <button key={item.id} onClick={() => { setButtonSelected(item.id); setIdentifyProduct(item) }} className={`select-none flex ${i % 2 === 0 ? 'animatedElementLeft' : 'animatedElementRight'} items-center removeBlue w-28 text-center justify-center py-2 px-2  gap-2 ${buttonSelected === item.id ? 'bg-CollorSecondaryDefault' : 'bg-white'} shadow-xl rounded-2xl`}>
                                         <p className=" text-black">{item.icon}</p>
                                         <p className=" text-black">{item.name}</p>
                                     </button>
@@ -213,8 +213,8 @@ export default function ContainerProduct({ items }) {
                             return i < moreProductsToView && <div className="relative ">
                                 <div alt={item.id} id={`itemFood-${item.id}`} onClick={() => { setAddCart(item) }} key={item.id} className={`${addCart?.id === item.id ? 'bg-CollorSecondaryDefault removeBlue duration-100 ease-in-out' : 'bg-white'} flex flex-col justify-x items-start select-none rounded-xl p-2 shadow-3xl md:w-[450px] animationToTop  md:h-[190px] `}>
                                     <div className="flex md:flex-row flex-col items-start gap-2">
-                                        <div className={`relative   overflow-hidden ${item.type === "drink" ? '  w-64 ' : 'md:w-36 w-full'} bg-white rounded-lg  lg:h-20 h-28  pb-5`}>
-                                            <Image fill='layout' objectFit="cover" src={item.img} alt={item.name} className="cursor-pointer   lg:rounded-xl rounded-md  select-none  " />
+                                        <div className={`relative   overflow-hidden ${item.type === "drink" ? ' w-64' : 'md:w-36 w-full'} bg-white rounded-lg  lg:h-20 h-28  pb-5`}>
+                                            <Image style={{ objectFit: 'cover', width: '100%', height: '140%' }} src={item.img} alt={item.name} className="cursor-pointer   lg:rounded-xl rounded-md  select-none  " />
                                         </div>
                                         <div className="flex flex-col items-start gap-1 ">
                                             <h1 className="text-sm ">{item.name.substring(0, 25)}</h1>

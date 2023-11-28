@@ -56,7 +56,7 @@ export function InteractiveScroll() {
         const elementRight = document.querySelectorAll('.animatedElementRight')
         if (elementRight.length > 0) {
             elementRight.forEach((e) => {
-                if (e.getBoundingClientRect().y <= window.innerHeight / 1.5) {
+                if (e.getBoundingClientRect().y <= window.innerHeight / 1.3) {
                     e.style.opacity = '1'
                     e.style.transform = 'translateX(0px)'
                 }
