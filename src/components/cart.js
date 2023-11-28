@@ -109,31 +109,30 @@ export default function Cart({ cartOn }) {
         let qtdHtmlToInt = parseInt(qtdHtml.innerHTML)
         let qtdScreen = qtdHtml.innerHTML = qtdHtmlToInt - 1
         let objIndex = fortmatedItens.findIndex((obj => obj.id == item.id))
-
+        setLoading(true)
         if (objIndex !== -1) {
             fortmatedItens[objIndex].qtd = qtdScreen;
             fortmatedItens[objIndex].price = item.price - item.originalPrice;
             let filteredItem = fortmatedItens?.filter((item) => {
                 return item.qtd > 0
             })
-            setLoading(true)
             await new Promise((resolve) => setTimeout(resolve, 100))
             localStorage.setItem('foodService', JSON.stringify(filteredItem))
-            setLoading(false)
             return
         }
+        setLoading(false)
     }
 
     async function removeItemCart(item) {
+        setLoading(true)
         let objIndex = fortmatedItens.findIndex((obj => obj.id == item.id))
         if (objIndex !== -1) {
             fortmatedItens[objIndex].qtd = 0
-            setLoading(true)
             await new Promise((resolve) => setTimeout(resolve, 100))
             localStorage.setItem('foodService', JSON.stringify(fortmatedItens))
             filterItensCart()
-            setLoading(false)
         }
+        setLoading(false)
     }
 
     async function getCep() {
