@@ -22,16 +22,16 @@ const listFood = [
         id: 1,
         description: 'Pão de brioche, hambúrguer artesanal de 130g grelhado, queijo prato gratinado, alface, tomate, picles, cebola caramelizada, maionese caseira, barbecue. Acompanha fritas 200g, 3 anéis de cebola fritos e 1 refri lata.',
         img: hamburguer_1,
-        name: 'Brazilian BBQ Burger',
-        price: 20,
+        name: 'Promoção Smash Egg bacon',
+        price: 40,
         type: 'burguer'
     },
     {
         id: 2,
         description: 'Pão de brioche, hambúrguer artesanal de 130g grelhado, queijo prato gratinado, alface, tomate, picles, cebola caramelizada, maionese caseira, barbecue. Acompanha fritas 200g, 3 anéis de cebola fritos e 1 refri lata.',
         img: hamburguer_2,
-        name: 'Mediterranean Sunshine Burger',
-        price: 20.53,
+        name: 'Torre de Hambúrguer',
+        price: 68.00,
         type: 'burguer'
 
     }
@@ -40,8 +40,8 @@ const listFood = [
         id: 3,
         description: 'Pão de brioche, hambúrguer artesanal de 130g grelhado, queijo prato gratinado, alface, tomate, picles, cebola caramelizada, maionese caseira, barbecue. Acompanha fritas 200g, 3 anéis de cebola fritos e 1 refri lata.',
         img: hamburguer_3,
-        name: 'Vegan Tropical Bliss Burger',
-        price: 32.44,
+        name: 'Smash Bacon + 150g Fritas',
+        price: 24.90,
         type: 'burguer'
 
     }
