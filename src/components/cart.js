@@ -14,7 +14,7 @@ import { Box, useToast } from "@chakra-ui/react";
 export default function Cart({ cartOn }) {
 
     const { setCartActive, cartActive, setItensCart, loading, setLoading, itensCart, cartItensAnimate, setbody, body } = useCart()
-    const { screenY } = useScreenSize()
+    const { screenY, screenX } = useScreenSize()
     const [nextStep, setNextStep] = useState(1)
     const [cep, setCep] = useState('')
     const [adress, setAdress] = useState('')
@@ -192,9 +192,9 @@ export default function Cart({ cartOn }) {
         for (const i of setAnimation) {
             await new Promise(resolve => setTimeout(resolve, 3000));
             i.innerHTML = ' Obrigado pela preferência!';
-            await new Promise(resolve => setTimeout(resolve, 4000));
+            await new Promise(resolve => setTimeout(resolve, 3000));
             i.innerHTML = 'Em breve, seu pedido estará a caminho!';
-            await new Promise(resolve => setTimeout(resolve, 4000));
+            await new Promise(resolve => setTimeout(resolve, 3000));
             i.style.display = 'none'
             window.location.href = `https://wa.me/+5548991109700?text=${encodeURI(text)}`
             i.style.display = 'flex'
@@ -300,50 +300,55 @@ export default function Cart({ cartOn }) {
                     </div> :
                         nextStep === 2 ?
                             <div>
-                                <div style={{ height: screenY - 230 }} className={`overflow-hidden mt-10 overflow-y-auto myScroll  rounded-lg p-2`}>
-                                    <div className="flex items-start flex-col gap-2">
-                                        <p className="text-CollorDefault lg:text-base text-sm">CEP:</p>
-                                        <div className="flex relative">
-                                            <button className="absolute flex justify-center items-center right-2 top-1 rounded-xl bg-CollorSecondaryDefault px-3 py-[8px]">
-                                                <FaMagnifyingGlass onClick={getCep} className="text-white" />
-                                            </button>
-                                            <input maxLength={9} id="cep" onChange={(e) => setCep(maskCep(e.target.value))} onBlur={getCep} value={cep} type="text" className="  shadow-xl rounded-xl focus:border-1 pl-3 py-2 outline-none" />
-                                        </div>
-                                    </div>
-
-                                    <div className="flex flex-wrap gap-5">
-                                        <div className="flex items-start flex-col  gap-2">
-                                            <p className="text-CollorDefault lg:text-base text-sm ">Endereço:</p>
-                                            <div className="flex ">
-                                                <input onChange={(e) => setAdress(OnlyLetter(e.target.value))} id="adress" value={adress} type="text" className=" shadow-xl xl:w-72   rounded-xl focus:border-1 pl-3 py-2 " />
-                                            </div>
-                                        </div>
+                                <div className="flex flex-col items-center">
+                                    <div style={{ height: screenX < 900 ? screenY - 340 : screenY - 230 }} className={`overflow-hidden lg:w-full  overflow-y-auto myScroll  rounded-lg p-2`}>
                                         <div className="flex items-start flex-col gap-2">
-                                            <p className="text-CollorDefault lg:text-base text-sm">Bairro:</p>
-                                            <div className="flex ">
-                                                <input onChange={(e) => setNeighborhood(OnlyLetter(e.target.value))} value={neighborhood} id="neighborhood" type="text" className=" shadow-xl xl:w-72 rounded-xl focus:border-1 pl-3 py-2 outline-none" />
-                                            </div>
-                                        </div>
-                                        <div className="flex items-start flex-col gap-2">
-                                            <p className="text-CollorDefault lg:text-base text-sm">Número:</p>
-                                            <div className="flex ">
-                                                <input onChange={(e) => setNumber(OnlyNumber(e.target.value))} id="number" value={number} type="text" className=" shadow-xl rounded-xl focus:border-1 pl-3 py-2 outline-none" />
-                                            </div>
-                                        </div>
-                                        <div className="flex items-start flex-col gap-2">
-                                            <p className="text-CollorDefault lg:text-base text-sm">Cidade:</p>
-                                            <div className="flex ">
-                                                <input onChange={(e) => setCity(OnlyLetter(e.target.value))} value={city || ''} id="city" type="text" className=" shadow-xl rounded-xl focus:border-1 pl-3 py-2 outline-none" />
+                                            <p className="text-CollorDefault lg:text-base text-sm">CEP:</p>
+                                            <div className="flex relative">
+                                                <button className="absolute flex justify-center items-center right-2 top-1 rounded-xl bg-CollorSecondaryDefault px-3 py-[8px]">
+                                                    <FaMagnifyingGlass onClick={getCep} className="text-white" />
+                                                </button>
+                                                <input maxLength={9} id="cep" onChange={(e) => setCep(maskCep(e.target.value))} onBlur={getCep} value={cep} type="text" className="  shadow-xl rounded-xl border pl-3 py-2 outline-none" />
                                             </div>
                                         </div>
 
-                                        <div className="flex items-start flex-col gap-2">
-                                            <p className="text-CollorDefault lg:text-base text-sm">Complemento:</p>
-                                            <div className="flex ">
-                                                <input onChange={(e) => setComplement(e.target.value)} id="complement" value={complement} type="text" className=" shadow-xl rounded-xl focus:border-1 pl-3 py-2 outline-none" />
+                                        <div className="flex flex-wrap gap-5">
+                                            <div className="flex items-start flex-col  gap-2">
+                                                <p className="text-CollorDefault lg:text-base text-sm ">Endereço:</p>
+                                                <div className="flex ">
+                                                    <input onChange={(e) => setAdress(OnlyLetter(e.target.value))} id="adress" value={adress} type="text" className=" shadow-xl xl:w-72   rounded-xl border pl-3 py-2 " />
+                                                </div>
+                                            </div>
+                                            <div className="flex items-start flex-col gap-2">
+                                                <p className="text-CollorDefault lg:text-base text-sm">Bairro:</p>
+                                                <div className="flex ">
+                                                    <input onChange={(e) => setNeighborhood(OnlyLetter(e.target.value))} value={neighborhood} id="neighborhood" type="text" className=" shadow-xl xl:w-72 rounded-xl border pl-3 py-2 outline-none" />
+                                                </div>
+                                            </div>
+                                            <div className="flex items-start flex-col gap-2">
+                                                <p className="text-CollorDefault lg:text-base text-sm">Número:</p>
+                                                <div className="flex ">
+                                                    <input onChange={(e) => setNumber(OnlyNumber(e.target.value))} id="number" value={number} type="text" className=" shadow-xl rounded-xl border pl-3 py-2 outline-none" />
+                                                </div>
+                                            </div>
+                                            <div className="flex items-start flex-col gap-2">
+                                                <p className="text-CollorDefault lg:text-base text-sm">Cidade:</p>
+                                                <div className="flex ">
+                                                    <input onChange={(e) => setCity(OnlyLetter(e.target.value))} value={city || ''} id="city" type="text" className=" shadow-xl rounded-xl border pl-3 py-2 outline-none" />
+                                                </div>
+                                            </div>
+
+                                            <div className="flex items-start flex-col gap-2">
+                                                <p className="text-CollorDefault lg:text-base text-sm">Complemento:</p>
+                                                <div className="flex ">
+                                                    <input onChange={(e) => setComplement(e.target.value)} id="complement" value={complement} type="text" className=" shadow-xl rounded-xl border pl-3 py-2 outline-none" />
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
+                                    {/* <div className="bg-white shadow-3xl p-2 w-full h-20 rounded-md mt-2">
+                                        <h1 className="text-CollorDefault">Forma de pagamento:</h1>
+                                    </div> */}
                                 </div>
                                 <div className="flex flex-col lg:items-end items-start lg:gap-0  gap-4">
                                     <div className="flex flex-col lg:items-end items-start">
