@@ -71,7 +71,7 @@ export default function Cart({ cartOn }) {
     let Prices = fortmatedItens.map((i) => {
         return i.price
     })
-    let delivery = 5
+    let delivery = deliverOrEstablishment === '1' ? 0 : 5
 
     let sumTotPrice = Prices.reduce((acumulador, valorAtual) => {
         return acumulador + valorAtual;
@@ -187,16 +187,13 @@ export default function Cart({ cartOn }) {
         if (deliverOrEstablishment === '2') {
             text += `\n*Endereço de entrega:*`
             text += `\n${adress},${number},\n${neighborhood},${city}`
-            text += `\nCEP:${cep} / Complemento:${complement}`
-            text += `\n*Total (com entrega):R$ ${totPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}*`
+            text += `\nCEP:${cep} / Complemento:${complement}\n`
+            text += `\n*Total (com entrega): ${totPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}*`
         } else {
-            text += `\nRetirar em:\nR. Blumenau, 202 - Santo Antônio, Joinville - SC, 89204-248`
-            text += `\n*Total (com entrega):R$ ${totPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}*`
+            text += `\nRetirar seu pedido em:\nR. Blumenau, 202 - Santo Antônio, Joinville - SC, 89204-248\n`
+            text += `\n*Total: ${totPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}*`
         }
 
-        console.log(text)
-
-        return
         setInternalLoading(true)
         await new Promise(resolve => setTimeout(resolve, 1))
         let setAnimation = window.document.querySelectorAll('.animationOn')
@@ -429,48 +426,53 @@ export default function Cart({ cartOn }) {
                                             }
                                         </div>}
                                         <div className="">
-                                            <div className="flex flex-col">
+                                            <div className="flex flex-col h-20  overflow-y-auto overflow-hidden ">
                                                 {
-                                                    deliverOrEstablishment === '2'?
-                                                    <h1 h1 className="lg:text-xl font-semibold">Local de entrega:</h1>
-                                                    :
-                                                    <h1 h1 className="lg:text-xl font-semibold">Retirar em:</h1>
+                                                    deliverOrEstablishment === '2' ?
+                                                        <h1 h1 className="lg:text-xl font-semibold">Local de entrega:</h1>
+                                                        :
+                                                        <h1 h1 className="lg:text-xl font-semibold">Retirar em:</h1>
 
                                                 }
 
-                                            <div className="flex flex-row gap-3 items-start  pt-2">
-                                                <div className="bg-CollorSecondaryDefault pt-1 rounded-xl p-1">
-                                                    <FaMapLocationDot className="lg:text-4xl text-3xl" />
+                                                <div className="flex flex-row gap-3 items-start  pt-2">
+                                                    <div className="bg-CollorSecondaryDefault pt-1 rounded-xl p-1">
+                                                        <FaMapLocationDot className="lg:text-4xl text-3xl" />
+                                                    </div>
+                                                    {deliverOrEstablishment === '2' ? <div className="flex flex-col">
+                                                        <h1 className="font-semibold text-CollorDefault lg:text-base text-sm">{adress}, {number} ,{neighborhood}</h1>
+                                                        <h1 className="font-medium text-gray-400 text-sm">{city} / {cep}</h1>
+                                                    </div>
+                                                        :
+                                                        <div className="flex flex-col items-start">
+                                                            <h1 className="font-semibold text-CollorDefault lg:text-base text-sm"> R. Blumenau, 202 - Santo Antônio, Joinville - SC, 89204-248</h1>
+                                                            <div  className="w-52 h-20   border rounded-xl shadow-xl ove ">
+                                                                <iframe className="w-52 h-20 focus-in-expand   rounded-xl border-2 border-CollorSecondaryDefault " src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d57242.14100170128!2d-48.92772745136715!3d-26.27354559999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94deaf812df04939%3A0x4f6cf9c0a434da5f!2sBurger%20King%20-%20Drive%20Thru%20II!5e0!3m2!1spt-BR!2sbr!4v1701355942256!5m2!1spt-BR!2sbr" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                                                            </div>
+                                                        </div>
+                                                    }
                                                 </div>
-                                                {deliverOrEstablishment === '2' ? <div className="flex flex-col">
-                                                    <h1 className="font-semibold text-CollorDefault lg:text-base text-sm">{adress}, {number} ,{neighborhood}</h1>
-                                                    <h1 className="font-medium text-gray-400 text-sm">{city} / {cep}</h1>
+                                            </div>
+                                            <div className="border-b w-full py-4"></div>
+                                            <div className="flex flex-col lg:items-end items-start lg:gap-0  gap-4">
+                                                <div className="flex flex-col lg:items-end items-start">
+                                                    <p className="text-gray-500 text-sm">Subtotal: {sumTotPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
+                                                    <p className=" text-gray-400 text-sm flex items-center gap-2"><FaMotorcycle className="text-gray-400 text-base" />Entrega: + {delivery.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
+                                                    <p className="font-medium lg?text-xl text-base pt-2">Total: <span className="font-extrabold text-CollorSecondaryDefault">{totPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</span></p>
                                                 </div>
-                                                    :
-                                                    <h1 className="font-semibold text-CollorDefault lg:text-base text-sm"> R. Blumenau, 202 - Santo Antônio, Joinville - SC, 89204-248</h1>
-                                                }
-                                            </div>
-                                        </div>
-                                        <div className="border-b w-full py-4"></div>
-                                        <div className="flex flex-col lg:items-end items-start lg:gap-0  gap-4">
-                                            <div className="flex flex-col lg:items-end items-start">
-                                                <p className="text-gray-500 text-sm">Subtotal: {sumTotPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
-                                                <p className=" text-gray-400 text-sm flex items-center gap-2"><FaMotorcycle className="text-gray-400 text-base" />Entrega: + {delivery.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
-                                                <p className="font-medium lg?text-xl text-base pt-2">Total: <span className="font-extrabold text-CollorSecondaryDefault">{totPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</span></p>
-                                            </div>
-                                            <div className="flex items-center gap-2">
-                                                <button onClick={() => setNextStep(2)} className="bg-white shadow-3xl font-medium rounded-2xl text-CollorDefault py-2 px-3">Voltar</button>
-                                                <button onClick={() => toWhatsapp()} className="bg-CollorSecondaryDefault rounded-2xl text-white py-2 px-3">Enviar pedido</button>
+                                                <div className="flex items-center gap-2">
+                                                    <button onClick={() => setNextStep(2)} className="bg-white shadow-3xl font-medium rounded-2xl text-CollorDefault py-2 px-3">Voltar</button>
+                                                    <button onClick={() => toWhatsapp()} className="bg-CollorSecondaryDefault rounded-2xl text-white py-2 px-3">Enviar pedido</button>
 
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
                                     </div>
 
                                 }
-                </>
-            }
-        </div>}
+                            </>
+                    }
+                </div>}
         </div >
     )
 }
