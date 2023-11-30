@@ -221,9 +221,9 @@ export default function ContainerProduct({ items }) {
                                             <h1 className={`text-sm font-bold  ${addCart?.id === item.id ? 'border-black' : 'text-CollorSecondaryDefault'}`}>{item.price.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</h1>
                                             {
                                                 screenX < 700 ?
-                                                    <h1 className={`md:text-xs text-[10px] w-full `}>{item.description}</h1>
+                                                    <h1 className={`md:text-xs  text-[10px] w-full `}>{item.description}</h1>
                                                     :
-                                                    <h1 className="text-xs md:w-64">{item.description}</h1>
+                                                    <h1 className="text-xs md:w-64 overflow-hidden h-20 myScrollContainer overflow-y-auto">{item.description}</h1>
                                             }
                                         </div>
                                     </div>

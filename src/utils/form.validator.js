@@ -14,9 +14,8 @@ export function validateFields(fields) {
                         } catch (error) {
                             console.log('error field')
                         }
-                    } else if (field?.value !== '') {
+                    } else  {
                         document.getElementById(field?.name).style.border = ''
-
                     }
                     break;
                 case 'object':

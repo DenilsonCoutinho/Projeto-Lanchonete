@@ -128,7 +128,7 @@ const listFood = [
         id: 12,
         description: 'Coca cola 350ml',
         img: bebida_2,
-        name: 'Coca-Cola 2L',
+        name: 'Coca-Cola 350ml',
         price: 8.50,
         type: 'drink'
 

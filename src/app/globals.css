@@ -152,6 +152,46 @@ body {
 .myScroll::-webkit-scrollbar-thumb:active {
   background-color: #FCB040;
 }
+
+/* Firefox */
+.myScrollContainer {
+  scrollbar-width: thin;
+  scrollbar-color: #E39F3A #FFFFFF;
+}
+
+/* Chrome, Edge and Safari */
+.myScrollContainer::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+.myScrollContainer::-webkit-scrollbar-track {
+  border-radius: 2px;
+  background-color: #f8f6f6;
+  border: 8px solid #f8f6f6;
+}
+
+.myScrollContainer::-webkit-scrollbar-track:hover {
+    background-color: #bab6b6;
+
+}
+
+.myScrollContainer::-webkit-scrollbar-track:active {
+  background-color: #bab6b6;
+
+}
+
+.myScrollContainer::-webkit-scrollbar-thumb {
+  border-radius: 18px;
+  background-color: #e3803a;
+}
+
+.myScrollContainer::-webkit-scrollbar-thumb:hover {
+  background-color: #E39F3A;
+}
+
+.myScrollContainer::-webkit-scrollbar-thumb:active {
+  background-color: #E39F3A;
+}
 .loader {
   width: 48px;
   height: 48px;
