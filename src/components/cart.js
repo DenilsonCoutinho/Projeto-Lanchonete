@@ -184,7 +184,7 @@ export default function Cart() {
     })
     async function toWhatsapp() {
         let text = `Olá! gostaria de fazer um pedido:\n`
-        let orders = itensToFormat.map((item) => `*x${item.qtd}* ${item.name}....${item.price.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}\nObservações: ${item.comment}`).join('\n\n');
+        let orders = itensToFormat.map((item) => `*x${item.qtd}* ${item.name}....${item.price.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}\n*Observações:* ${item.comment}`).join('\n\n');
         text += `\n*Itens do pedido:*\n${orders}\n`
 
         if (deliverOrEstablishment === '2') {
@@ -201,11 +201,11 @@ export default function Cart() {
         await new Promise(resolve => setTimeout(resolve, 1))
         let setAnimation = window.document.querySelectorAll('.animationOn')
         for (const i of setAnimation) {
-            await new Promise(resolve => setTimeout(resolve, 3000));
+            await new Promise(resolve => setTimeout(resolve, 1500));
             i.innerHTML = ' Obrigado pela preferência!';
-            await new Promise(resolve => setTimeout(resolve, 3000));
+            await new Promise(resolve => setTimeout(resolve, 1500));
             i.innerHTML = 'Em breve, seu pedido estará a caminho!';
-            await new Promise(resolve => setTimeout(resolve, 3000));
+            await new Promise(resolve => setTimeout(resolve, 1500));
             i.style.display = 'none'
             window.location.href = `https://wa.me/+5548991109700?text=${encodeURI(text)}`
             i.style.display = 'flex'
