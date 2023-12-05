@@ -184,7 +184,7 @@ export default function Cart() {
     })
     async function toWhatsapp() {
         let text = `Olá! gostaria de fazer um pedido:\n`
-        let orders = itensToFormat.map((item) => `*x${item.qtd}* ${item.name}....${item.price.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}\n*Observações:* ${item.comment}`).join('\n\n');
+        let orders = itensToFormat.map((item) => `*x${item.qtd}* ${item.name}....${item.price.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}\n*Observações:* ${item?.comment || ''}`).join('\n\n');
         text += `\n*Itens do pedido:*\n${orders}\n`
 
         if (deliverOrEstablishment === '2') {

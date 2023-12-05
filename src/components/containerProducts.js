@@ -207,7 +207,7 @@ export default function ContainerProduct({ items }) {
                     </div>
                 </div>
             </div>
-            <button onClick={() => { setLoading(true); setCartActive(true); setbody('1') }} className='fixed z-10 select-none md:right-10 right-3 bottom-10 bg-CollorSecondaryDefault border border-white shadow-xl rounded-full p-3'>
+            <button  onClick={() => { setLoading(true); setCartActive(true); setbody('1') }} className='fixed z-10 select-none md:right-10 right-3 bottom-10 bg-CollorSecondaryDefault border border-white shadow-xl rounded-full p-3'>
                 <FaShoppingBag className='text-CollorDefault lg:text-5xl text-3xl' />
                 <div id="qtd_order" className='bg-red-600 text-white w-6 shadow-3xl -top-2 right-0 h-6 absolute rounded-full'>{somaToHTML || 0}</div>
             </button>
@@ -302,7 +302,7 @@ export default function ContainerProduct({ items }) {
                                         </div>
                                         <div className="flex flex-col items-start gap-1 ">
                                             <h1 className="text-sm ">{item.name.substring(0, 25)}</h1>
-                                            <h1 className={`text-sm font-bold  ${addCart?.id === item.id ? 'border-black' : 'text-CollorSecondaryDefault'}`}>{item.price.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</h1>
+                                            <h1 className={`text-sm font-bold  ${addCart?.id === item.id ? 'text-CollorSecondaryDefault' : 'text-CollorSecondaryDefault'}`}>{item.price.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</h1>
                                             {
                                                 screenX < 700 ?
                                                     <h1 className={`md:text-xs  text-[10px] w-full `}>{item.description}</h1>
