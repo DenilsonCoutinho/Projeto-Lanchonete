@@ -409,7 +409,7 @@ export default function Cart() {
                                         <h1 className="text-CollorDefault font-medium">Resumo do pedido:</h1>
 
                                         {<div style={{ height: screenY - 350 }} className={`overflow-hidden  overflow-y-auto myScroll shadow-innerShadow rounded-lg p-6`}>
-                                            {itensCart.map((items) => {
+                                            {fortmatedItens.map((items) => {
 
                                                 return <div key={items.id}>
                                                     <div className="flex items-center justify-between mt-2">
