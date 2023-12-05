@@ -10,15 +10,12 @@ export default function Modal({ children, animationOn }) {
 
     useEffect(() => {
         setAnimation(false)
-        document.body.style.overflow = 'auto';
     }, [modal])
 
     async function animationModal() {
         if (modal) {
             await new Promise(resolve => setTimeout(resolve, 100))
             setAnimation(true)
-            document.body.style.overflow = 'hidden';
-
         }
     }
     animationModal()
