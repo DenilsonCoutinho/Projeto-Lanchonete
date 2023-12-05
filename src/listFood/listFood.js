@@ -126,7 +126,7 @@ const listFood = [
 
     {
         id: 10,
-        description: 'coca-cola de 1,5 litros',
+        description: 'coca-cola de 1,5 litros ',
         img: bebida_1,
         name: 'Coca-Cola 1,5L',
         price: 6,

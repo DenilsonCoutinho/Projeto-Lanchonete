@@ -41,8 +41,8 @@ export default function WhatSayAboutUs() {
                     <div className='flex flex-col lg:items-start justify-center items-center overflow-hidden'>
                         {comments.map((items) => {
                             return items.id === positionComent && <div className='flex items-start gap-4 focus-in-expand'>
-                                <div className='w-16 h-1w-16 rounded-full bg-white'>
-                                    <Image src={people} className='md:flex hidden' />
+                                <div className='w-16 rounded-full md:flex hidden bg-white'>
+                                    <Image src={people} className='' />
                                 </div>
                                 <div className='flex flex-col items-start'>
                                     <h1 className='text-CollorDefault text-xl'>{items.name}</h1>
@@ -61,7 +61,6 @@ export default function WhatSayAboutUs() {
                         })}
                         <div className='flex items-center gap-6'>
                             {comments.map((items, i) => {
-                                
                                 return <button onClick={() => {setPositionComent(i + 1)}} className={`hover:shadow-inner ${items.id === positionComent ? 'bg-CollorSecondaryDefault' : 'bg-white'} hover:bg-CollorSecondaryDefault duration-200 mt-2 py-1 px-4 rounded-lg shadow-xl  `}>{i + 1}</button>
                             })
                             }

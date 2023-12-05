@@ -19,7 +19,7 @@ import OnlyLetter from "@/utils/regex/onlyLetter"
 export default function ContainerProduct({ items }) {
     const { setCartActive, itensCart, setItensCart, loading, setLoading, setbody } = useCart()
     const { modal, setModal } = useModalContext()
-    const { screenX } = useScreenSize()
+    const { screenX, screenY } = useScreenSize()
     const [addCart, setAddCart] = useState()
     const [attCart, setAttCart] = useState([])
     const [somaToHTML, setsomaToHTML] = useState()
@@ -218,18 +218,18 @@ export default function ContainerProduct({ items }) {
 
                             return i < moreProductsToView && <div className="relative ">
                                 {item?.id === addCart?.id && <Modal>
-                                    <div className="relative">
-                                        <div className="flex lg:flex-row flex-col items-start gap-4">
-                                            <div className="bg-white rounded-lg p-2 lg:max-w-[600px] h-96 max-w-[400px]">
-                                                <Image style={{ backgroundSize: 'cover', width: '100%', height: '100%' }} src={item?.img} alt={item.id} className="cursor-pointer lg:rounded-xl rounded-md  select-none  " />
+                                    <div className="relative lg:h-full ">
+                                        <div className="flex lg:flex-row flex-col items-start gap-4 ">
+                                            <div className="bg-white rounded-lg md:p-4 lg:max-w-[600px] lg:h-96 max-w-[400px] w-full lg:max-h-96 max-h-64 overflow-hidden  m-auto">
+                                                <Image style={{ backgroundSize: 'cover', width: '100%', height: '100%' }} src={item?.img} alt={item.id} className=" lg:rounded-xl select-none " />
                                             </div>
-                                            <div className="flex flex-col">
-                                                <div className="lg:h-40 h-20 overflow-hidden overflow-y-auto">
-                                                    <div className="flex flex-col items-start">
-                                                        <h1>{item?.name}</h1>
-                                                        <p className="text-gray-400 font-light max-w-[500px]  lg:text-base text-xs">{item?.description}</p>
+                                            <div style={{ height: screenX < 1300 && screenX > 600 ? screenY - 290 : screenY - 390 }} className="flex flex-col w-full overflow-hidden overflow-y-auto myScroll px-2">
+                                                <div className="">
+                                                    <div className="flex flex-col items-start ">
+                                                        <h1 className="text-CollorDefault">{item?.name}</h1>
+                                                        <p className="text-gray-400 font-light md:max-w-[500px] w-full lg:text-base text-xs">{item?.description}</p>
                                                         <h1 className={`text-sm font-bold  ${addCart?.id === item.id ? 'border-black' : 'text-CollorSecondaryDefault'}`}>{item.price.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</h1>
-                                                        <h1 className="text-CollorDefault">Extra:</h1>
+                                                        {/* <h1 className="text-CollorDefault">Extra:</h1> */}
                                                         {/* <div className="flex flex-col">
                                                             {item.extra.map((i) => {
                                                                 return <h1>
@@ -240,8 +240,8 @@ export default function ContainerProduct({ items }) {
                                                         </div> */}
                                                     </div>
                                                 </div>
-                                                <div className="flex flex-col items-start gap-4 mt-10 py-4 px-3">
-                                                    <h1>Alguma observação?</h1>
+                                                <div className="flex flex-col items-start gap-4 mt-5 py-4 ">
+                                                    <h1 className="text-CollorDefault text-sm">Alguma observação?</h1>
                                                     <textarea onChange={(e) => setComment(OnlyLetter(e.target.value))} value={comment} placeholder="Ex: Tirar picles" className="max-h-32 text-sm p-3 outline-none w-full border rounded-lg">
                                                     </textarea>
                                                 </div>
@@ -250,7 +250,7 @@ export default function ContainerProduct({ items }) {
                                         <hr />
                                         <div className="h-20 rounded-b-sm px-2">
                                             {
-                                                addCart?.id === item.id && <div className="flex flex-row justify-end items-center gap-2 pt-2">
+                                                addCart?.id === item.id && <div className="flex flex-row md:justify-end justify-center items-center gap-2 pt-2">
                                                     <div className="flex flex-row items-center border rounded-lg">
                                                         <button onClick={() => lessQuantityFood(item)} className={`rounded-l-2xl  flex justify-center bg-white items-center border-gray-4  w-10 h-10`}>
                                                             -
@@ -351,7 +351,7 @@ export default function ContainerProduct({ items }) {
                     }
                 </div>
                 {foodToFilter.length > moreProductsToView ?
-                    <button onClick={() => setMoreProductsToView((prev) => prev + 1)} className="mt-2 px-10 py-2 bg-white rounded-2xl shadow-lg m-auto flex justify-center text-black">Ver mais</button>
+                    <button onClick={() => setMoreProductsToView((prev) => prev + 1)} className="mt-2 px-5 py-2 bg-white rounded-2xl shadow-lg m-auto flex justify-center text-black">Ver mais</button>
                     :
                     <></>
                 }

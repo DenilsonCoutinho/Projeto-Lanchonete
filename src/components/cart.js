@@ -13,7 +13,7 @@ import OnlyNumber from "@/utils/regex/onlyNumber";
 import { FaCheckCircle, FaHamburger } from "react-icons/fa";
 import OnlyLetter from "@/utils/regex/onlyLetter";
 import { Box, useToast } from "@chakra-ui/react";
-export default function Cart({ cartOn }) {
+export default function Cart() {
 
     const { setCartActive, cartActive, setItensCart, loading, setLoading, itensCart, cartItensAnimate, setbody, body } = useCart()
     const { screenY, screenX } = useScreenSize()
@@ -184,8 +184,9 @@ export default function Cart({ cartOn }) {
     })
     async function toWhatsapp() {
         let text = `Olá! gostaria de fazer um pedido:\n`
-        let orders = itensToFormat.map((item) => `*x${item.qtd}* ${item.name}....${item.price.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}`).join('\n\n');
+        let orders = itensToFormat.map((item) => `*x${item.qtd}* ${item.name}....${item.price.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}\nObservações: ${item.comment}`).join('\n\n');
         text += `\n*Itens do pedido:*\n${orders}\n`
+
         if (deliverOrEstablishment === '2') {
             text += `\n*Endereço de entrega:*`
             text += `\n${adress},${number},\n${neighborhood},${city}`
@@ -252,7 +253,7 @@ export default function Cart({ cartOn }) {
                                                     <div className="flex items-center lg:gap-5 gap-2">
                                                         <div className="relative">
                                                             <Image src={items?.img} alt={items?.name} width={100} className="rounded-xl lg:w-28 md:w-24 w-20" />
-                                                            <div className="bg-red-500 rounded-lg p-1 absolute -top-2 right-0"><FaPen  className="text-white"/></div>
+                                                            {/* <div className="bg-red-500 rounded-lg p-1 absolute -top-2 right-0"><FaPen  className="text-white"/></div> */}
                                                         </div>
                                                         -
                                                         <div className="flex flex-col items-start">
@@ -263,7 +264,7 @@ export default function Cart({ cartOn }) {
                                                             <p className=" text-CollorSecondaryDefault lg:text-base text-xs">{items?.price?.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
                                                         </div>
                                                     </div>
-                                                    <h1 className="text-CollorDefault text-xs">Observação: {items?.comment}</h1>
+                                                    {items?.comment !== "" && <h1 className="text-CollorDefault mt-5 text-xs"><strong>Observação:</strong> {items?.comment}</h1>}
                                                 </div>
                                                 <div className="flex items-center gap-5">
                                                     <div className="flex items-center rounded-2xl shadow-md">
@@ -412,15 +413,22 @@ export default function Cart({ cartOn }) {
 
                                                 return <div key={items.id}>
                                                     <div className="flex items-center justify-between mt-2">
-                                                        <div className="flex items-center lg:gap-5 gap-2">
-                                                            <Image key={items?.id} src={items?.img} alt={items?.name} width={100} className="lg:rounded-3xl rounded-xl lg:w-28 md:w-24 w-14" />
-                                                            -
-                                                            <div className="flex flex-col items-start">
-                                                                <div className="flex items-center gap-2">
-                                                                    <h1 className="text-CollorDefault md:w-80 w-20 lg:text-base text-xs">{items?.name}</h1>
+                                                        <div>
+                                                            <div className="flex items-center lg:gap-5 gap-2">
+                                                                <div className="relative">
+                                                                    <Image src={items?.img} alt={items?.name} width={100} className="rounded-xl lg:w-28 md:w-24 w-20" />
+                                                                    {/* <div className="bg-red-500 rounded-lg p-1 absolute -top-2 right-0"><FaPen  className="text-white"/></div> */}
                                                                 </div>
-                                                                <p className=" text-CollorSecondaryDefault lg:text-base text-xs">{items?.price?.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
+                                                                -
+                                                                <div className="flex flex-col items-start">
+                                                                    <div className="flex items-center gap-2">
+
+                                                                        <h1 className="text-CollorDefault md:w-80 w-20 lg:text-base text-xs">{items?.name}</h1>
+                                                                    </div>
+                                                                    <p className=" text-CollorSecondaryDefault lg:text-base text-xs">{items?.price?.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
+                                                                </div>
                                                             </div>
+                                                            {items?.comment !== "" && <h1 className="text-CollorDefault mt-4 text-xs"><strong>Observação:</strong> {items?.comment}</h1>}
                                                         </div>
                                                         <div className="flex items-center ">
                                                             <div className="flex gap-1 items-center rounded-2xl text-gray-600 ">
