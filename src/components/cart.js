@@ -2,7 +2,7 @@
 import Image from "next/image"
 import { useCart } from "../context/cartContext"
 import { useEffect, useState } from "react"
-import { FaMagnifyingGlass, FaMapLocationDot, FaMotorcycle, FaTrash } from "react-icons/fa6";
+import { FaMagnifyingGlass, FaMapLocationDot, FaMotorcycle, FaPen, FaTrash } from "react-icons/fa6";
 import { TbPaperBag } from "react-icons/tb";
 
 import { useScreenSize } from "@/context/screenSizeContext";
@@ -55,6 +55,7 @@ export default function Cart({ cartOn }) {
         if (cartNoDuplicates[key]) {
             cartNoDuplicates[key].qtd += item.qtd;
             cartNoDuplicates[key].price += item.price;
+            cartNoDuplicates[key].comment = item.comment;
         } else {
             // Se o item não existe no carrinhoSemDuplicatas, adiciona o item
             cartNoDuplicates[key] = {
@@ -63,6 +64,7 @@ export default function Cart({ cartOn }) {
                 name: item?.name,
                 qtd: item?.qtd,
                 price: item?.price,
+                comment: item?.comment,
                 originalPrice: item?.originalPrice
             };
         }
@@ -207,10 +209,10 @@ export default function Cart({ cartOn }) {
             window.location.href = `https://wa.me/+5548991109700?text=${encodeURI(text)}`
             i.style.display = 'flex'
         }
+        setLoading(true)
         setbody('')
         localStorage.setItem('foodService', JSON.stringify([]))
         setItensCart([])
-        setLoading(true)
         setNextStep(1)
         await new Promise(resolve => setTimeout(resolve, 3000));
         setCartActive(false)
@@ -246,16 +248,22 @@ export default function Cart({ cartOn }) {
                                     return (
                                         <div key={items?.id} className="pt-5 ">
                                             {<div className="flex items-center justify-between">
-                                                <div className="flex items-center lg:gap-5 gap-2">
-                                                    <Image src={items?.img} alt={items?.name} width={100} className="lg:rounded-3xl rounded-xl lg:w-28 md:w-24 w-20" />
-                                                    -
-                                                    <div className="flex flex-col items-start">
-                                                        <div className="flex items-center gap-2">
-
-                                                            <h1 className="text-CollorDefault md:w-80 w-20 lg:text-base text-xs">{items?.name}</h1>
+                                                <div>
+                                                    <div className="flex items-center lg:gap-5 gap-2">
+                                                        <div className="relative">
+                                                            <Image src={items?.img} alt={items?.name} width={100} className="rounded-xl lg:w-28 md:w-24 w-20" />
+                                                            <div className="bg-red-500 rounded-lg p-1 absolute -top-2 right-0"><FaPen  className="text-white"/></div>
                                                         </div>
-                                                        <p className=" text-CollorSecondaryDefault lg:text-base text-xs">{items?.price?.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
+                                                        -
+                                                        <div className="flex flex-col items-start">
+                                                            <div className="flex items-center gap-2">
+
+                                                                <h1 className="text-CollorDefault md:w-80 w-20 lg:text-base text-xs">{items?.name}</h1>
+                                                            </div>
+                                                            <p className=" text-CollorSecondaryDefault lg:text-base text-xs">{items?.price?.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
+                                                        </div>
                                                     </div>
+                                                    <h1 className="text-CollorDefault text-xs">Observação: {items?.comment}</h1>
                                                 </div>
                                                 <div className="flex items-center gap-5">
                                                     <div className="flex items-center rounded-2xl shadow-md">
@@ -446,7 +454,7 @@ export default function Cart({ cartOn }) {
                                                         :
                                                         <div className="flex flex-col items-start">
                                                             <h1 className="font-semibold text-CollorDefault lg:text-base text-sm"> R. Blumenau, 202 - Santo Antônio, Joinville - SC, 89204-248</h1>
-                                                            <div  className="w-52 h-20   border rounded-xl shadow-xl ove ">
+                                                            <div className="w-52 h-20   border rounded-xl shadow-xl ove ">
                                                                 <iframe className="w-52 h-20 focus-in-expand   rounded-xl border-2 border-CollorSecondaryDefault " src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d57242.14100170128!2d-48.92772745136715!3d-26.27354559999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94deaf812df04939%3A0x4f6cf9c0a434da5f!2sBurger%20King%20-%20Drive%20Thru%20II!5e0!3m2!1spt-BR!2sbr!4v1701355942256!5m2!1spt-BR!2sbr" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                                                             </div>
                                                         </div>

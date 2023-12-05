@@ -11,17 +11,21 @@ import { MdFastfood } from "react-icons/md";
 import { useScreenSize } from "@/context/screenSizeContext"
 import { Box, useToast } from '@chakra-ui/react'
 import { ChakraProvider } from '@chakra-ui/react'
-
-import img from '../assets/bebida/45b650b301.jpg'
 import { FaIceCream } from "react-icons/fa6"
+import Modal from "./modal"
+import useModalContext from "@/context/modalProvider"
+import OnlyLetter from "@/utils/regex/onlyLetter"
+
 export default function ContainerProduct({ items }) {
     const { setCartActive, itensCart, setItensCart, loading, setLoading, setbody } = useCart()
+    const { modal, setModal } = useModalContext()
     const { screenX } = useScreenSize()
     const [addCart, setAddCart] = useState()
     const [attCart, setAttCart] = useState([])
     const [somaToHTML, setsomaToHTML] = useState()
     const [validadeInput, setValidadeInput] = useState()
-    const [iternalLoading, setiternalLoading] = useState(false)
+    const [comment, setComment] = useState('')
+    const [internalLoading, setinternalLoading] = useState(false)
     const menuOptions = [
         {
             id: 1,
@@ -58,11 +62,9 @@ export default function ContainerProduct({ items }) {
         return identifyProduct?.toFilter ? food.type === identifyProduct.toFilter : food.type === 'burguer'
     })
     useEffect(() => {
-        let clickOn = document.getElementById(`itemFood-${1}`)
-        clickOn?.click()
         const itemsLocaStorage = JSON.parse(localStorage.getItem('foodService'))
         localStorage.setItem('foodService', JSON.stringify(itemsLocaStorage || []))
-        setiternalLoading(true)
+        setinternalLoading(true)
     }, [])
 
     useEffect(() => {
@@ -89,7 +91,7 @@ export default function ContainerProduct({ items }) {
         setValidadeInput(parseInt(qtdHtmlMore?.innerHTML))
         if (parseInt(qtdHtmlMore?.innerHTML) > 0) {
             qtdAddCart.style.transition = '0.3s'
-            qtdAddCart.style.background = '#fff	'
+            qtdAddCart.style.background = '#FCB040'
             qtdAddCart.style.boxShadow = ''
             document.getElementById(`qtd_Orders-${addCart?.id}`).disabled = false;
 
@@ -98,15 +100,15 @@ export default function ContainerProduct({ items }) {
             qtdAddCart.style.background = 'transparent'
         }
 
-    }, [iternalLoading])
+    }, [internalLoading])
 
     async function moreQuantityFood(item) {
         let qtdHtmlMore = document.getElementById(`qtd_Food-${item.id}`)
         let qtdHtmlMoreToNumber = parseInt(qtdHtmlMore.innerHTML)
-        setiternalLoading(true)
+        setinternalLoading(true)
         await new Promise(resolve => setTimeout(resolve, 100))
         qtdHtmlMore.innerHTML = qtdHtmlMoreToNumber + 1
-        setiternalLoading(false)
+        setinternalLoading(false)
     }
 
     async function lessQuantityFood(item) {
@@ -114,10 +116,10 @@ export default function ContainerProduct({ items }) {
         let qtdHtmlToNumber = parseInt(qtdHtml.innerHTML)
         console.log(qtdHtmlToNumber)
         if (qtdHtmlToNumber > 0) {
-            setiternalLoading(true)
+            setinternalLoading(true)
             await new Promise(resolve => setTimeout(resolve, 100))
             qtdHtml.innerHTML = qtdHtmlToNumber - 1
-            setiternalLoading(false)
+            setinternalLoading(false)
         } else {
             qtdHtmlToNumber = 0
         }
@@ -134,6 +136,7 @@ export default function ContainerProduct({ items }) {
     let toCartOrder = []
 
     function formatArrayToCart(item) {
+
         let qtdHtml = document.getElementById(`qtd_Food-${item?.id}`)
         let qtdHtmlToNumber = parseInt(qtdHtml?.innerHTML)
         let newArray = {
@@ -143,19 +146,19 @@ export default function ContainerProduct({ items }) {
             price: item.price * parseInt(qtdHtmlToNumber),
             originalPrice: item.price,
             qtd: parseInt(qtdHtmlToNumber),
+            comment: item.comment
         }
         if (qtdHtmlToNumber > 0) {
             toCartOrder.push(newArray)
 
         }
     }
-
     async function toCart(item) {
-        setiternalLoading(true)
+        setinternalLoading(true)
         let lastIndex = toCartOrder[toCartOrder.length - 1]
         let qtdHtmlMore = document.getElementById(`qtd_Food-${item.id}`)
         let qtdFoodHtml = document.getElementById(`qtd_order`)
-
+        lastIndex.comment = comment
         if (parseInt(qtdHtmlMore.innerHTML) > 0) {
 
             await new Promise((resolve) => setTimeout(resolve, 100))
@@ -174,7 +177,9 @@ export default function ContainerProduct({ items }) {
 
             qtdFoodHtml.innerHTML = soma
             qtdHtmlMore.innerHTML = 0
-            setiternalLoading(false)
+            setComment('')
+            setinternalLoading(false)
+            setModal(false)
             return
         }
     }
@@ -210,9 +215,88 @@ export default function ContainerProduct({ items }) {
                 <div className="flex flex-wrap justify-center gap-10 items-center">
                     {
                         foodToFilter?.map((item, i) => {
+
                             return i < moreProductsToView && <div className="relative ">
-                                <div alt={item.id} id={`itemFood-${item.id}`} onClick={() => { setAddCart(item) }} key={item.id} className={`${addCart?.id === item.id ? 'bg-CollorSecondaryDefault removeBlue duration-100 ease-in-out' : 'bg-white'} flex flex-col justify-x items-start select-none rounded-xl p-2 shadow-3xl md:w-[450px] animationToTop  md:h-[190px] `}>
-                                    <div className="flex md:flex-row flex-col items-start gap-2">
+                                {item?.id === addCart?.id && <Modal>
+                                    <div className="relative">
+                                        <div className="flex lg:flex-row flex-col items-start gap-4">
+                                            <div className="bg-white rounded-lg p-2 lg:max-w-[600px] h-96 max-w-[400px]">
+                                                <Image style={{ backgroundSize: 'cover', width: '100%', height: '100%' }} src={item?.img} alt={item.id} className="cursor-pointer lg:rounded-xl rounded-md  select-none  " />
+                                            </div>
+                                            <div className="flex flex-col">
+                                                <div className="lg:h-40 h-20 overflow-hidden overflow-y-auto">
+                                                    <div className="flex flex-col items-start">
+                                                        <h1>{item?.name}</h1>
+                                                        <p className="text-gray-400 font-light max-w-[500px]  lg:text-base text-xs">{item?.description}</p>
+                                                        <h1 className={`text-sm font-bold  ${addCart?.id === item.id ? 'border-black' : 'text-CollorSecondaryDefault'}`}>{item.price.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</h1>
+                                                        <h1 className="text-CollorDefault">Extra:</h1>
+                                                        {/* <div className="flex flex-col">
+                                                            {item.extra.map((i) => {
+                                                                return <h1>
+                                                                    { i.item.name }  
+                                                                </h1>
+                                                            })
+                                                            }
+                                                        </div> */}
+                                                    </div>
+                                                </div>
+                                                <div className="flex flex-col items-start gap-4 mt-10 py-4 px-3">
+                                                    <h1>Alguma observação?</h1>
+                                                    <textarea onChange={(e) => setComment(OnlyLetter(e.target.value))} value={comment} placeholder="Ex: Tirar picles" className="max-h-32 text-sm p-3 outline-none w-full border rounded-lg">
+                                                    </textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        <div className="h-20 rounded-b-sm px-2">
+                                            {
+                                                addCart?.id === item.id && <div className="flex flex-row justify-end items-center gap-2 pt-2">
+                                                    <div className="flex flex-row items-center border rounded-lg">
+                                                        <button onClick={() => lessQuantityFood(item)} className={`rounded-l-2xl  flex justify-center bg-white items-center border-gray-4  w-10 h-10`}>
+                                                            -
+                                                        </button>
+                                                        <div id={`qtd_Food-${item.id}`} className={` bg-white border-l border-r border-gray-300 flex justify-center items-center w-10 h-10`}>
+                                                            {1}
+                                                        </div>
+                                                        <button onClick={() => moreQuantityFood(item)} className={`bg-white flex justify-center items-center rounded-r-2xl border-gray-300 w-10 h-10 `}>
+                                                            +
+                                                        </button>
+                                                    </div>
+                                                    {validadeInput > 0 ? <button id={`qtd_Orders-${item.id}`} onClick={() => {
+                                                        formatArrayToCart(item); toCart(item); setModal(false); toast({
+                                                            position: 'top-right',
+                                                            duration: 4500,
+                                                            render: () => (
+                                                                <Box className=" lg:translate-y-0 translate-y-28 rounded-md flex items-center gap-3" color='white' p={3} bg='green.400'>
+                                                                    <FaCheckCircle className="text-white" /> Pedido adicionado a sacola
+                                                                </Box>
+                                                            ),
+                                                        })
+                                                    }} className={`bg-CollorSecondaryDefault  flex items-center gap-2 rounded-lg px-2  h-10`}>
+                                                        <FaShoppingBag id={`iconCart-${item.id}`} className={`${addCart?.id === item.id ? 'text-black' : 'text-CollorSecondaryDefault'} `} />
+                                                        <p className="text-black">Adicionar</p>
+                                                    </button>
+                                                        : <button id={`qtd_Orders-${item.id}`} onClick={() => {
+                                                            formatArrayToCart(item); toCart(item); toast({
+                                                                position: 'top-right',
+                                                                duration: 4500,
+                                                                render: () => (
+                                                                    <Box className=" lg:translate-y-0 translate-y-28 rounded-md flex items-center gap-3" color='white' p={3} bg='green.400'>
+                                                                        <FaCheckCircle className="text-white" /> Pedido adicionado a sacola
+                                                                    </Box>
+                                                                ),
+                                                            })
+                                                        }} className={`bg-CollorSecondaryDefault h-10 flex items-center gap-2 rounded-lg  px-2 `}>
+                                                            <FaShoppingBag id={`iconCart-${item.id}`} className={`${addCart?.id === item.id ? 'text-black' : 'text-CollorSecondaryDefault'}`} />
+                                                            <p className="text-black">Adicionar</p>
+                                                        </button>}
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </Modal>}
+                                <div alt={item.id} id={`itemFood-${item.id}`} onClick={() => { setAddCart(item); setModal(true) }} key={item.id} className={`bg-white flex flex-col justify-x items-start select-none rounded-xl p-2 shadow-3xl md:w-[450px] animationToTop  md:h-[190px] `}>
+                                    <div className="flex md:flex-row flex-col items-start gap-2 cursor-pointer">
                                         <div className={`relative   overflow-hidden ${item.type === "drink" ? ' w-64' : 'md:w-36 w-full'} bg-white rounded-lg  lg:h-20 h-28  pb-5`}>
                                             <Image style={{ objectFit: 'cover', width: '100%', height: '140%' }} src={item.img} alt={item.name} className="cursor-pointer   lg:rounded-xl rounded-md  select-none  " />
                                         </div>
@@ -223,12 +307,12 @@ export default function ContainerProduct({ items }) {
                                                 screenX < 700 ?
                                                     <h1 className={`md:text-xs  text-[10px] w-full `}>{item.description}</h1>
                                                     :
-                                                    <h1 className="text-xs md:w-64 overflow-hidden h-20 myScrollContainer overflow-y-auto">{item.description}</h1>
+                                                    <h1 className="text-xs md:w-64 overflow-hidden h-20 myScrollContainer ">{item.description}</h1>
                                             }
                                         </div>
                                     </div>
 
-                                    {
+                                    {/* {
                                         addCart?.id === item.id && <div className="flex flex-row justify-between items-start gap-2 pt-2">
                                             <div className="flex flex-row items-center">
                                                 <button onClick={() => lessQuantityFood(item)} className={`rounded-l-2xl  flex justify-center bg-white items-center border-gray-4  w-10 h-6`}>
@@ -260,7 +344,7 @@ export default function ContainerProduct({ items }) {
                                                     <p className="text-black">Adicionar</p>
                                                 </button>}
                                         </div>
-                                    }
+                                    } */}
                                 </div>
                             </div>
                         })

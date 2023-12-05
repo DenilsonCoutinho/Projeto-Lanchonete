@@ -24,7 +24,16 @@ const listFood = [
         img: hamburguer_1,
         name: 'Promoção Smash Egg bacon',
         price: 40,
-        type: 'burguer'
+        type: 'burguer',
+        comment: '',
+        extra: [{
+            item: {
+                name: "bacon",
+                maxBacon: 5,
+                price: 5
+            }
+        }]
+        
     },
     {
         id: 2,
@@ -32,7 +41,8 @@ const listFood = [
         img: hamburguer_2,
         name: 'Torre de Hambúrguer',
         price: 68.00,
-        type: 'burguer'
+        type: 'burguer',
+        comment: ''
 
     }
     ,
@@ -42,7 +52,8 @@ const listFood = [
         img: hamburguer_3,
         name: 'Smash Bacon + 150g Fritas',
         price: 24.90,
-        type: 'burguer'
+        type: 'burguer',
+        comment: ''
 
     }
     ,
@@ -52,7 +63,8 @@ const listFood = [
         img: hamburguer_4,
         name: 'Asian Fusion Delight Burger',
         price: 27.70,
-        type: 'burguer'
+        type: 'burguer',
+        comment: ''
 
     }
     ,
@@ -62,7 +74,8 @@ const listFood = [
         img: hamburguer_5,
         name: 'Gourmet Coffee Infusion Burger',
         price: 17.90,
-        type: 'burguer'
+        type: 'burguer',
+        comment: ''
 
     }
     ,
@@ -73,7 +86,8 @@ const listFood = [
         name: 'Gourmet Coffee Infusion Burger',
         price: 17.90,
         type: 'comb'
-
+        ,
+        comment: ''
     }
     ,
     {
@@ -83,7 +97,8 @@ const listFood = [
         name: 'COMBO burgue X',
         price: 37.90,
         type: 'comb'
-
+        ,
+        comment: ''
     }
     ,
     {
@@ -93,7 +108,8 @@ const listFood = [
         name: 'COMBO Gourmet Coffee  ',
         price: 47.90,
         type: 'comb'
-
+        ,
+        comment: ''
     }
     ,
     {
@@ -103,7 +119,8 @@ const listFood = [
         name: 'COMBO Gourmet Infusion Burger',
         price: 37.90,
         type: 'comb'
-
+        ,
+        comment: ''
     }
     ,
 
@@ -113,7 +130,8 @@ const listFood = [
         img: bebida_1,
         name: 'Coca-Cola 1,5L',
         price: 6,
-        type: 'drink'
+        type: 'drink',
+        comment: ''
     },
     {
         id: 11,
@@ -121,7 +139,8 @@ const listFood = [
         img: bebida_1,
         name: 'Coca-Cola 2L',
         price: 8.50,
-        type: 'drink'
+        type: 'drink',
+        comment: ''
 
     },
     {
@@ -130,7 +149,8 @@ const listFood = [
         img: bebida_2,
         name: 'Coca-Cola 350ml',
         price: 8.50,
-        type: 'drink'
+        type: 'drink',
+        comment: ''
 
     },
     {
@@ -139,28 +159,29 @@ const listFood = [
         img: bebida_3,
         name: 'Pepsi',
         price: 8.50,
-        type: 'drink'
+        type: 'drink',
+        comment: ''
 
     },
     {
         id: 14,
         description: 'A variante gourmet do açaí é conhecida por suas adições indulgentes, como pedaços de brownie, lascas de coco torrado e até mesmo calda de chocolate. Essa versão mais indulgente oferece uma experiência decadente.',
-
         img: acai_3,
         name: 'Açai 350ml',
         price: 18.50,
         type: 'acai'
-
+        ,
+        comment: ''
     },
     {
         id: 15,
         description: 'A variante gourmet do açaí é conhecida por suas adições indulgentes, como pedaços de brownie, lascas de coco torrado e até mesmo calda de chocolate. Essa versão mais indulgente oferece uma experiência decadente.',
-
         img: acai_2,
         name: 'Açai 1L',
         price: 23.50,
         type: 'acai'
-
+        ,
+        comment: ''
     },
     {
         id: 16,
@@ -169,7 +190,8 @@ const listFood = [
         name: 'Açai 500ML',
         price: 32.50,
         type: 'acai'
-
+        ,
+        comment: ''
     }
 ]
 export default listFood;
