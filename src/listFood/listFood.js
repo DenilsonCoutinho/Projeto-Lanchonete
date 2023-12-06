@@ -57,7 +57,26 @@ const listFood = [
         name: 'Torre de Hambúrguer',
         price: 68.00,
         type: 'burguer',
-        comment: ''
+        comment: '',
+        extra: [{
+            id: 1,
+            name: "Bacon",
+            img: extra_1,
+            maxBacon: 5,
+            price: 3.5,
+            qtd: 0
+        }
+            ,
+        {
+            id: 2,
+            name: "Ovo ",
+            img: extra_2,
+            maxBacon: 5,
+            price: 2.5,
+            qtd: 0
+        }
+
+        ]
 
     }
     ,
@@ -68,7 +87,26 @@ const listFood = [
         name: 'Smash Bacon + 150g Fritas',
         price: 24.90,
         type: 'burguer',
-        comment: ''
+        comment: '',
+        extra: [{
+            id: 1,
+            name: "Bacon",
+            img: extra_1,
+            maxBacon: 5,
+            price: 3.5,
+            qtd: 0
+        }
+            ,
+        {
+            id: 2,
+            name: "Ovo ",
+            img: extra_2,
+            maxBacon: 5,
+            price: 2.5,
+            qtd: 0
+        }
+
+        ]
 
     }
     ,
@@ -79,7 +117,26 @@ const listFood = [
         name: 'Asian Fusion Delight Burger',
         price: 27.70,
         type: 'burguer',
-        comment: ''
+        comment: '',
+        extra: [{
+            id: 1,
+            name: "Bacon",
+            img: extra_1,
+            maxBacon: 5,
+            price: 3.5,
+            qtd: 0
+        }
+            ,
+        {
+            id: 2,
+            name: "Ovo ",
+            img: extra_2,
+            maxBacon: 5,
+            price: 2.5,
+            qtd: 0
+        }
+
+        ]
 
     }
     ,
@@ -90,7 +147,26 @@ const listFood = [
         name: 'Gourmet Coffee Infusion Burger',
         price: 17.90,
         type: 'burguer',
-        comment: ''
+        comment: '',
+        extra: [{
+            id: 1,
+            name: "Bacon",
+            img: extra_1,
+            maxBacon: 5,
+            price: 3.5,
+            qtd: 0
+        }
+            ,
+        {
+            id: 2,
+            name: "Ovo ",
+            img: extra_2,
+            maxBacon: 5,
+            price: 2.5,
+            qtd: 0
+        }
+
+        ]
 
     }
     ,
@@ -102,7 +178,26 @@ const listFood = [
         price: 17.90,
         type: 'comb'
         ,
-        comment: ''
+        comment: '',
+        extra: [{
+            id: 1,
+            name: "Bacon",
+            img: extra_1,
+            maxBacon: 5,
+            price: 3.5,
+            qtd: 0
+        }
+            ,
+        {
+            id: 2,
+            name: "Ovo ",
+            img: extra_2,
+            maxBacon: 5,
+            price: 2.5,
+            qtd: 0
+        }
+
+        ]
     }
     ,
     {
@@ -113,7 +208,26 @@ const listFood = [
         price: 37.90,
         type: 'comb'
         ,
-        comment: ''
+        comment: '',
+        extra: [{
+            id: 1,
+            name: "Bacon",
+            img: extra_1,
+            maxBacon: 5,
+            price: 3.5,
+            qtd: 0
+        }
+            ,
+        {
+            id: 2,
+            name: "Ovo ",
+            img: extra_2,
+            maxBacon: 5,
+            price: 2.5,
+            qtd: 0
+        }
+
+        ]
     }
     ,
     {
@@ -124,7 +238,26 @@ const listFood = [
         price: 47.90,
         type: 'comb'
         ,
-        comment: ''
+        comment: '',
+        extra: [{
+            id: 1,
+            name: "Bacon",
+            img: extra_1,
+            maxBacon: 5,
+            price: 3.5,
+            qtd: 0
+        }
+            ,
+        {
+            id: 2,
+            name: "Ovo ",
+            img: extra_2,
+            maxBacon: 5,
+            price: 2.5,
+            qtd: 0
+        }
+
+        ]
     }
     ,
     {
@@ -135,7 +268,26 @@ const listFood = [
         price: 37.90,
         type: 'comb'
         ,
-        comment: ''
+        comment: '',
+        extra: [{
+            id: 1,
+            name: "Bacon",
+            img: extra_1,
+            maxBacon: 5,
+            price: 3.5,
+            qtd: 0
+        }
+            ,
+        {
+            id: 2,
+            name: "Ovo ",
+            img: extra_2,
+            maxBacon: 5,
+            price: 2.5,
+            qtd: 0
+        }
+
+        ]
     }
     ,
 
@@ -146,7 +298,7 @@ const listFood = [
         name: 'Coca-Cola 1,5L',
         price: 6,
         type: 'drink',
-        comment: ''
+        comment: '',
     },
     {
         id: 11,
