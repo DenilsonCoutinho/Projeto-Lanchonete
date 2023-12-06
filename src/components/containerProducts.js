@@ -7,6 +7,7 @@ import { useCart } from "../context/cartContext.js"
 import { BiSolidDrink } from "react-icons/bi"
 import { FaCheckCircle, FaHamburger, FaShoppingBag } from "react-icons/fa"
 import { MdFastfood } from "react-icons/md";
+import { v4 as uuidv4 } from 'uuid';
 
 import { useScreenSize } from "@/context/screenSizeContext"
 import { Box, useToast } from '@chakra-ui/react'
@@ -57,6 +58,7 @@ export default function ContainerProduct({ items }) {
     const [buttonSelected, setButtonSelected] = useState(1)
     const [identifyProduct, setIdentifyProduct] = useState()
     const [moreProductsToView, setMoreProductsToView] = useState(4)
+    const [pickItensExtra, setPickItensExtra] = useState([])
 
     const foodToFilter = listFood.filter((food) => {
         return identifyProduct?.toFilter ? food.type === identifyProduct.toFilter : food.type === 'burguer'
@@ -66,10 +68,11 @@ export default function ContainerProduct({ items }) {
         localStorage.setItem('foodService', JSON.stringify(itemsLocaStorage || []))
         setinternalLoading(true)
     }, [])
-
+    useEffect(() => {
+        setPickItensExtra([])
+    }, [modal])
     useEffect(() => {
         prevFood()
-
     }, [loading])
 
     useEffect(() => {
@@ -114,7 +117,6 @@ export default function ContainerProduct({ items }) {
     async function lessQuantityFood(item) {
         let qtdHtml = document.getElementById(`qtd_Food-${item.id}`)
         let qtdHtmlToNumber = parseInt(qtdHtml.innerHTML)
-        console.log(qtdHtmlToNumber)
         if (qtdHtmlToNumber > 0) {
             setinternalLoading(true)
             await new Promise(resolve => setTimeout(resolve, 100))
@@ -136,31 +138,37 @@ export default function ContainerProduct({ items }) {
     let toCartOrder = []
 
     function formatArrayToCart(item) {
-
         let qtdHtml = document.getElementById(`qtd_Food-${item?.id}`)
         let qtdHtmlToNumber = parseInt(qtdHtml?.innerHTML)
+        const uniqueItems = pickItensExtra.reduce((acc, currentItem) => {
+            acc[currentItem.id] = currentItem;
+            return acc;
+        }, {});
+        const newArrayExtra = Object.values(uniqueItems);
         let newArray = {
-            id: item.id,
+            id: uuidv4(),
             name: item.name,
             img: item.img,
             price: item.price * parseInt(qtdHtmlToNumber),
             originalPrice: item.price,
             qtd: parseInt(qtdHtmlToNumber),
+            extra: newArrayExtra,
             comment: item.comment
         }
+        console.log(newArray)
         if (qtdHtmlToNumber > 0) {
             toCartOrder.push(newArray)
-
         }
     }
     async function toCart(item) {
         setinternalLoading(true)
+
         let lastIndex = toCartOrder[toCartOrder.length - 1]
         let qtdHtmlMore = document.getElementById(`qtd_Food-${item.id}`)
         let qtdFoodHtml = document.getElementById(`qtd_order`)
         lastIndex.comment = comment
-        if (parseInt(qtdHtmlMore.innerHTML) > 0) {
 
+        if (parseInt(qtdHtmlMore.innerHTML) > 0) {
             await new Promise((resolve) => setTimeout(resolve, 100))
             attCart?.push(lastIndex);
             setLoading(true)
@@ -178,12 +186,39 @@ export default function ContainerProduct({ items }) {
             qtdFoodHtml.innerHTML = soma
             qtdHtmlMore.innerHTML = 0
             setComment('')
+            setPickItensExtra([])
             setinternalLoading(false)
             setModal(false)
             return
         }
     }
 
+    function lessExtra(item) {
+        let qtdLessExtra = document.getElementById(`qtdExtra-${item.id}`)
+        let qtd = parseInt(qtdLessExtra.innerHTML)
+
+        if (qtd > 0) {
+            qtdLessExtra.innerHTML = qtd - 1
+        } else {
+            qtd = 0
+        }
+    }
+    async function moreExtra(item) {
+        let qtdMoreExtra = document.getElementById(`qtdExtra-${item.id}`)
+        let qtd = parseInt(qtdMoreExtra.innerHTML)
+        qtdMoreExtra.innerHTML = qtd += 1
+        let newArrayExtra = {
+            ...item,
+            price: item.price * qtd,
+            originalPrice: item.price,
+            qtd: qtd,
+        }
+        pickItensExtra.push(newArrayExtra)
+
+    }
+    async function reduceExtra() {
+
+    }
     const toast = useToast()
 
     return (
@@ -207,7 +242,7 @@ export default function ContainerProduct({ items }) {
                     </div>
                 </div>
             </div>
-            <button  onClick={() => { setLoading(true); setCartActive(true); setbody('1') }} className='fixed z-10 select-none md:right-10 right-3 bottom-10 bg-CollorSecondaryDefault border border-white shadow-xl rounded-full p-3'>
+            <button onClick={() => { setLoading(true); setCartActive(true); setbody('1') }} className='fixed z-10 select-none md:right-10 right-3 bottom-10 bg-CollorSecondaryDefault border border-white shadow-xl rounded-full p-3'>
                 <FaShoppingBag className='text-CollorDefault lg:text-5xl text-3xl' />
                 <div id="qtd_order" className='bg-red-600 text-white w-6 shadow-3xl -top-2 right-0 h-6 absolute rounded-full'>{somaToHTML || 0}</div>
             </button>
@@ -215,13 +250,12 @@ export default function ContainerProduct({ items }) {
                 <div className="flex flex-wrap justify-center gap-10 items-center">
                     {
                         foodToFilter?.map((item, i) => {
-
                             return i < moreProductsToView && <div className="relative ">
                                 {item?.id === addCart?.id && <Modal>
                                     <div className="relative lg:h-full ">
                                         <div className="flex lg:flex-row flex-col items-start gap-4 ">
                                             <div className="bg-white rounded-lg md:p-4 lg:max-w-[600px] lg:h-96 max-w-[400px] w-full lg:max-h-96 max-h-64 overflow-hidden  m-auto">
-                                                <Image style={{ backgroundSize: 'cover', width: '100%', height: '100%' }} src={item?.img} alt={item.id} className=" lg:rounded-xl select-none " />
+                                                <Image style={{ backgroundSize: 'cover', width: screenX > 600 ? '600px' : '', height: screenX > 600 ? '350px' : '240px' }} src={item?.img} alt={item.id} className=" lg:rounded-xl select-none " />
                                             </div>
                                             <div style={{ height: screenX < 1300 && screenX > 600 ? screenY - 290 : screenY - 390 }} className="flex flex-col w-full overflow-hidden overflow-y-auto myScroll px-2">
                                                 <div className="">
@@ -229,15 +263,34 @@ export default function ContainerProduct({ items }) {
                                                         <h1 className="text-CollorDefault">{item?.name}</h1>
                                                         <p className="text-gray-400 font-light md:max-w-[500px] w-full lg:text-base text-xs">{item?.description}</p>
                                                         <h1 className={`text-sm font-bold  ${addCart?.id === item.id ? 'border-black' : 'text-CollorSecondaryDefault'}`}>{item.price.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</h1>
-                                                        {/* <h1 className="text-CollorDefault">Extra:</h1> */}
-                                                        {/* <div className="flex flex-col">
-                                                            {item.extra.map((i) => {
-                                                                return <h1>
-                                                                    { i.item.name }  
-                                                                </h1>
+                                                        <h1 className="text-CollorDefault rounded-xl pl-1 my-5 py-3 bg-gray-100 w-full">Adicionais:</h1>
+                                                        <div className="flex flex-col gap-4 w-full">
+                                                            {item?.extra?.map((i) => {
+                                                                return <div className="flex justify-between w-full items-center">
+                                                                    <div className="flex flex-col">
+                                                                        <h1 className="text-CollorDefault">
+                                                                            {i?.name}
+                                                                        </h1>
+                                                                        <p>{i?.price.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
+                                                                    </div>
+                                                                    <div className="flex flex-row-reverse gap-3 items-center ">
+                                                                        <div className="flex flex-row items-center border rounded-lg">
+                                                                            <button onClick={() => lessExtra(i)} className={`rounded-l-2xl  flex justify-center bg-white items-center border-gray-4  w-5 h-5`}>
+                                                                                -
+                                                                            </button>
+                                                                            <div id={`qtdExtra-${i.id}`} className={` bg-white border-l border-r border-gray-300 flex justify-center items-center w-5 h-5`}>
+                                                                                {0}
+                                                                            </div>
+                                                                            <button onClick={() => { moreExtra(i); reduceExtra() }} className={`bg-white flex justify-center items-center rounded-r-2xl border-gray-300 w-5 h-5 `}>
+                                                                                +
+                                                                            </button>
+                                                                        </div>
+                                                                        <Image width={100} className=" rounded-md" src={i?.img} />
+                                                                    </div>
+                                                                </div>
                                                             })
                                                             }
-                                                        </div> */}
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div className="flex flex-col items-start gap-4 mt-5 py-4 ">
@@ -263,7 +316,7 @@ export default function ContainerProduct({ items }) {
                                                         </button>
                                                     </div>
                                                     {validadeInput > 0 ? <button id={`qtd_Orders-${item.id}`} onClick={() => {
-                                                        formatArrayToCart(item); toCart(item); setModal(false); toast({
+                                                        formatArrayToCart(item); toCart(item); toast({
                                                             position: 'top-right',
                                                             duration: 4500,
                                                             render: () => (
@@ -298,7 +351,7 @@ export default function ContainerProduct({ items }) {
                                 <div alt={item.id} id={`itemFood-${item.id}`} onClick={() => { setAddCart(item); setModal(true) }} key={item.id} className={`bg-white flex flex-col justify-x items-start select-none rounded-xl p-2 shadow-3xl md:w-[450px] animationToTop  md:h-[190px] `}>
                                     <div className="flex md:flex-row flex-col items-start gap-2 cursor-pointer">
                                         <div className={`relative   overflow-hidden ${item.type === "drink" ? ' w-64' : 'md:w-36 w-full'} bg-white rounded-lg  lg:h-20 h-28  pb-5`}>
-                                            <Image style={{ objectFit: 'cover', width: '100%', height: '140%' }} src={item.img} alt={item.name} className="cursor-pointer   lg:rounded-xl rounded-md  select-none  " />
+                                            <Image style={{ objectFit: 'cover', width: '100%', height: '160%' }} src={item.img} alt={item.name} className="cursor-pointer   lg:rounded-xl rounded-md  select-none  " />
                                         </div>
                                         <div className="flex flex-col items-start gap-1 ">
                                             <h1 className="text-sm ">{item.name.substring(0, 25)}</h1>
@@ -311,40 +364,6 @@ export default function ContainerProduct({ items }) {
                                             }
                                         </div>
                                     </div>
-
-                                    {/* {
-                                        addCart?.id === item.id && <div className="flex flex-row justify-between items-start gap-2 pt-2">
-                                            <div className="flex flex-row items-center">
-                                                <button onClick={() => lessQuantityFood(item)} className={`rounded-l-2xl  flex justify-center bg-white items-center border-gray-4  w-10 h-6`}>
-                                                    -
-                                                </button>
-                                                <div id={`qtd_Food-${item.id}`} className={` bg-white border-l border-r border-gray-300 flex justify-center items-center w-10 h-6`}>
-                                                    {0}
-                                                </div>
-                                                <button onClick={() => moreQuantityFood(item)} className={`bg-white flex justify-center items-center rounded-r-2xl border-gray-300 w-10 h-6 `}>
-                                                    +
-                                                </button>
-                                            </div>
-                                            {validadeInput > 0 ? <button id={`qtd_Orders-${item.id}`} onClick={() => {
-                                                formatArrayToCart(item); toCart(item); toast({
-                                                    position: 'top-right',
-                                                    duration: 4500,
-                                                    render: () => (
-                                                        <Box className=" lg:translate-y-0 translate-y-28 rounded-md flex items-center gap-3" color='white' p={3} bg='green.400'>
-                                                            <FaCheckCircle className="text-white" /> Pedido adicionado a sacola
-                                                        </Box>
-                                                    ),
-                                                })
-                                            }} className={`  flex items-center gap-2 rounded-2xl px-2 `}>
-                                                <FaShoppingBag id={`iconCart-${item.id}`} className={`${addCart?.id === item.id ? 'text-black' : 'text-CollorSecondaryDefault'}`} />
-                                                <p className="text-black">Adicionar</p>
-                                            </button>
-                                                : <button id={`qtd_Orders-${item.id}`} onClick={() => { formatArrayToCart(item); toCart(item); }} className={`  flex items-center gap-2 rounded-2xl px-2 `}>
-                                                    <FaShoppingBag id={`iconCart-${item.id}`} className={`${addCart?.id === item.id ? 'text-black' : 'text-CollorSecondaryDefault'}`} />
-                                                    <p className="text-black">Adicionar</p>
-                                                </button>}
-                                        </div>
-                                    } */}
                                 </div>
                             </div>
                         })

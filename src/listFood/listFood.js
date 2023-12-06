@@ -17,6 +17,9 @@ import acai_1 from '../assets/açai/acaiTigela2.png'
 import acai_2 from '../assets/açai/açai.png'
 import acai_3 from '../assets/açai/açai_tigela.png'
 
+import extra_1 from './../assets/extrasBurguer/shutterstock-1526972282.jpg'
+import extra_2 from './../assets/extrasBurguer/um-ovo-frito-em-um-fundo-branco_771703-4388.jpg'
+
 const listFood = [
     {
         id: 1,
@@ -27,13 +30,25 @@ const listFood = [
         type: 'burguer',
         comment: '',
         extra: [{
-            item: {
-                name: "bacon",
-                maxBacon: 5,
-                price: 5
-            }
-        }]
-        
+            id: 1,
+            name: "Bacon",
+            img: extra_1,
+            maxBacon: 5,
+            price: 3.5,
+            qtd: 0
+        }
+            ,
+        {
+            id: 2,
+            name: "Ovo ",
+            img: extra_2,
+            maxBacon: 5,
+            price: 2.5,
+            qtd: 0
+        }
+
+        ]
+
     },
     {
         id: 2,

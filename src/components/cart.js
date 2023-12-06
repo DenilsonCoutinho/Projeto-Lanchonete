@@ -46,43 +46,53 @@ export default function Cart() {
         let itensStorage = JSON.parse(localStorage.getItem('foodService'))
         itenStorage = itensStorage
     }
-    let cartNoDuplicates = {};
-
-    itenStorage?.forEach(item => {
-        // Gera uma chave única para cada tipo de produto (pode ser melhorada dependendo do seu caso)
-        let key = item?.id;
-        // Se o item já existe no carrinhoSemDuplicatas, adiciona a quantidade e preço
-        if (cartNoDuplicates[key]) {
-            cartNoDuplicates[key].qtd += item.qtd;
-            cartNoDuplicates[key].price += item.price;
-            cartNoDuplicates[key].comment = item.comment;
-        } else {
-            // Se o item não existe no carrinhoSemDuplicatas, adiciona o item
-            cartNoDuplicates[key] = {
-                id: item?.id,
-                img: item?.img,
-                name: item?.name,
-                qtd: item?.qtd,
-                price: item?.price,
-                comment: item?.comment,
-                originalPrice: item?.originalPrice
-            };
-        }
-    });
-    let fortmatedItens = Object.values(cartNoDuplicates)
-    let Prices = fortmatedItens.map((i) => {
+    // let cartNoDuplicates = {};
+    // itenStorage?.forEach(item => {
+    //     // Gera uma chave única para cada tipo de produto (pode ser melhorada dependendo do seu caso)
+    //     let key = item?.id;
+    //     // Se o item já existe no carrinhoSemDuplicatas, adiciona a quantidade e preço
+    //     if (cartNoDuplicates[key]) {
+    //         cartNoDuplicates[key].qtd += item.qtd;
+    //         cartNoDuplicates[key].price += item.price;
+    //         cartNoDuplicates[key].comment = item.comment;
+    //     } else {
+    //         // Se o item não existe no carrinhoSemDuplicatas, adiciona o item
+    //         cartNoDuplicates[key] = {
+    //             id: item?.id,
+    //             img: item?.img,
+    //             name: item?.name,
+    //             qtd: item?.qtd,
+    //             price: item?.price,
+    //             comment: item?.comment,
+    //             originalPrice: item?.originalPrice
+    //         };
+    //     }
+    // });
+    // let itenStorage = Object.values(cartNoDuplicates)
+    let Prices = itenStorage.map((i) => {
         return i.price
     })
-    let delivery = deliverOrEstablishment === '1' ? 0 : 5
+    let priceExtraMap = itenStorage?.map((i) => {
+        return i.extra
+    })
 
-    let sumTotPrice = Prices.reduce((acumulador, valorAtual) => {
+    let priceExtra = priceExtraMap.flat().map((i) => {
+        return i.price
+    })
+
+    let delivery = deliverOrEstablishment === '1' ? 0 : 5
+    let sumTotExtra = priceExtra?.reduce((acumulador, valorAtual) => {
         return acumulador + valorAtual;
     }, 0);
+    let sumTot = Prices?.reduce((acumulador, valorAtual) => {
+        return acumulador + valorAtual;
+    }, 0);
+
+    let sumTotPrice = sumTot + sumTotExtra
     let totPrice = sumTotPrice + delivery
 
-
     function filterItensCart() {
-        let filteredItem = fortmatedItens?.filter((item) => {
+        let filteredItem = itenStorage?.filter((item) => {
             return item.qtd > 0
         })
         localStorage.setItem('foodService', JSON.stringify(filteredItem))
@@ -93,15 +103,15 @@ export default function Cart() {
         let qtdHtml = document.getElementById(`qtd_Food-Cart${item.id}`)
         let qtdHtmlToNumber = parseInt(qtdHtml.innerHTML)
         let q = qtdHtml.innerHTML = qtdHtmlToNumber + 1
-        let objIndex = fortmatedItens.findIndex((obj => obj.id == item.id))
+        let objIndex = itenStorage.findIndex((obj => obj.id == item.id))
         if (objIndex !== -1) {
             // Se o item já existe, atualize o objeto existente
-            fortmatedItens[objIndex].qtd = q;
-            fortmatedItens[objIndex].price = item.originalPrice * q;
+            itenStorage[objIndex].qtd = q;
+            itenStorage[objIndex].price = item.originalPrice * q;
             setLoading(true)
             //coloquei esse await para ele não passar direto sem setar no local storage o pedido
             await new Promise((resolve) => setTimeout(resolve, 100))
-            localStorage.setItem('foodService', JSON.stringify(fortmatedItens))
+            localStorage.setItem('foodService', JSON.stringify(itenStorage))
             setLoading(false)
             return
 
@@ -113,12 +123,12 @@ export default function Cart() {
         let qtdHtml = document.getElementById(`qtd_Food-Cart${item.id}`)
         let qtdHtmlToInt = parseInt(qtdHtml.innerHTML)
         let qtdScreen = qtdHtml.innerHTML = qtdHtmlToInt - 1
-        let objIndex = fortmatedItens.findIndex((obj => obj.id == item.id))
+        let objIndex = itenStorage.findIndex((obj => obj.id == item.id))
         setLoading(true)
         if (objIndex !== -1) {
-            fortmatedItens[objIndex].qtd = qtdScreen;
-            fortmatedItens[objIndex].price = item.price - item.originalPrice;
-            let filteredItem = fortmatedItens?.filter((item) => {
+            itenStorage[objIndex].qtd = qtdScreen;
+            itenStorage[objIndex].price = item.price - item.originalPrice;
+            let filteredItem = itenStorage?.filter((item) => {
                 return item.qtd > 0
             })
             await new Promise((resolve) => setTimeout(resolve, 100))
@@ -130,11 +140,11 @@ export default function Cart() {
 
     async function removeItemCart(item) {
         setLoading(true)
-        let objIndex = fortmatedItens.findIndex((obj => obj.id == item.id))
+        let objIndex = itenStorage.findIndex((obj => obj.id == item.id))
         if (objIndex !== -1) {
-            fortmatedItens[objIndex].qtd = 0
+            itenStorage[objIndex].qtd = 0
             await new Promise((resolve) => setTimeout(resolve, 100))
-            localStorage.setItem('foodService', JSON.stringify(fortmatedItens))
+            localStorage.setItem('foodService', JSON.stringify(itenStorage))
             filterItensCart()
         }
         setLoading(false)
@@ -184,7 +194,14 @@ export default function Cart() {
     })
     async function toWhatsapp() {
         let text = `Olá! gostaria de fazer um pedido:\n`
-        let orders = itensToFormat.map((item) => `*x${item.qtd}* ${item.name}....${item.price.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}\n*Observações:* ${item?.comment || ''}`).join('\n\n');
+        // let orders = itensToFormat.map((item) => `*x${item.qtd}* ${item.name}....${item.price.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}\n*Observações:* ${item?.comment || ''}\n*Adicionais:*${item?.extra.map(i => ' \n' + i.name + '.... X' + i.qtd + '\n') || ''}`).join('\n\n');
+        let orders = itensToFormat.map((item) => {
+            const extras = Array.isArray(item.extra)
+              ? item.extra.map(i => ' \n' + i.name + '.... X' + i.qtd ).join('')
+              : '';
+          
+            return `*x${item.qtd}* ${item.name}....${item.price.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}\n*Observações:* ${item?.comment || ''}\n*Adicionais:*${extras}`;
+          }).join('\n\n');
         text += `\n*Itens do pedido:*\n${orders}\n`
 
         if (deliverOrEstablishment === '2') {
@@ -196,7 +213,8 @@ export default function Cart() {
             text += `\nRetirar seu pedido em:\nR. Blumenau, 202 - Santo Antônio, Joinville - SC, 89204-248\n`
             text += `\n*Total: ${totPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}*`
         }
-
+        console.log(text)
+        return
         setInternalLoading(true)
         await new Promise(resolve => setTimeout(resolve, 1))
         let setAnimation = window.document.querySelectorAll('.animationOn')
@@ -244,8 +262,9 @@ export default function Cart() {
                     {nextStep === 1 ? <div className="">
                         <h1 className="text-black font-semibold pt-5"> Seu carrinho:</h1>
                         <div style={{ height: screenY - 230 }} className={`overflow-hidden  overflow-y-auto myScroll shadow-innerShadow rounded-lg p-2`}>
-                            {fortmatedItens.length > 0 ?
-                                fortmatedItens?.map((items) => {
+                            {itenStorage.length > 0 ?
+                                itenStorage?.map((items) => {
+                                    console.log(items)
                                     return (
                                         <div key={items?.id} className="pt-5 ">
                                             {<div className="flex items-center justify-between">
@@ -262,6 +281,11 @@ export default function Cart() {
                                                                 <h1 className="text-CollorDefault md:w-80 w-20 lg:text-base text-xs">{items?.name}</h1>
                                                             </div>
                                                             <p className=" text-CollorSecondaryDefault lg:text-base text-xs">{items?.price?.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
+                                                            {items?.extra.map((i) => {
+                                                                return <p className=" text-CollorDefault text-xs">{i.name} ..... X{i.qtd}</p>
+                                                            })
+
+                                                            }
                                                         </div>
                                                     </div>
                                                     {items?.comment !== "" && <h1 className="text-CollorDefault mt-5 text-xs"><strong>Observação:</strong> {items?.comment}</h1>}
@@ -303,11 +327,12 @@ export default function Cart() {
                             }
                         </div>
 
-                        <div className="flex flex-col lg:items-end items-start lg:gap-0  gap-4">
+                        <div className="flex flex-col lg:items-end items-start lg:gap-0  gap-2">
                             <div className="flex flex-col lg:items-end items-start">
-                                <p className="text-gray-500 text-sm">Subtotal: {sumTotPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
+                                <p className="text-gray-500 text-sm">Subtotal: {sumTot.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
+                                <p className="text-gray-500 text-sm">Adicionais: {sumTotExtra.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
                                 <p className=" text-gray-400 text-sm flex items-center gap-2"><FaMotorcycle className="text-gray-400 text-base" />Entrega: + {delivery.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
-                                <p className="font-medium lg?text-xl text-base pt-2">Total: <span className="font-extrabold text-CollorSecondaryDefault">{totPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</span></p>
+                                <p className="font-medium lg?text-xl text-base pt-">Total: <span className="font-extrabold text-CollorSecondaryDefault">{totPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</span></p>
                             </div>
                             <div className="flex items-center gap-2">
                                 <button onClick={() => setNextStep(itensCart.length > 0 ? 2 : 1)} className="bg-CollorSecondaryDefault rounded-2xl removeBlue text-white py-2 px-3">Continuar</button>
@@ -386,9 +411,10 @@ export default function Cart() {
                                 }
                                 {deliverOrEstablishment && <div className="flex flex-col lg:items-end items-start lg:gap-0  gap-4">
                                     <div className="flex flex-col lg:items-end items-start">
-                                        <p className="text-gray-500 text-sm">Subtotal: {sumTotPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
+                                        <p className="text-gray-500 text-sm">Subtotal: {sumTot.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
+                                        <p className="text-gray-500 text-sm">Adicionais: {sumTotExtra.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
                                         <p className=" text-gray-400 text-sm flex items-center gap-2"><FaMotorcycle className="text-gray-400 text-base" />Entrega: + {delivery.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
-                                        <p className="font-medium lg?text-xl text-base pt-1">Total: <span className="font-extrabold text-CollorSecondaryDefault">{totPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</span></p>
+                                        <p className="font-medium lg?text-xl text-base pt-2">Total: <span className="font-extrabold text-CollorSecondaryDefault">{totPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</span></p>
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <button onClick={() => setNextStep(1)} className="bg-white shadow-3xl font-medium rounded-2xl text-CollorDefault py-2 px-3">Voltar</button>
@@ -409,7 +435,7 @@ export default function Cart() {
                                         <h1 className="text-CollorDefault font-medium">Resumo do pedido:</h1>
 
                                         {<div style={{ height: screenY - 350 }} className={`overflow-hidden  overflow-y-auto myScroll shadow-innerShadow rounded-lg p-6`}>
-                                            {fortmatedItens.map((items) => {
+                                            {itenStorage.map((items) => {
 
                                                 return <div key={items.id}>
                                                     <div className="flex items-center justify-between mt-2">
@@ -426,6 +452,11 @@ export default function Cart() {
                                                                         <h1 className="text-CollorDefault md:w-80 w-20 lg:text-base text-xs">{items?.name}</h1>
                                                                     </div>
                                                                     <p className=" text-CollorSecondaryDefault lg:text-base text-xs">{items?.price?.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
+                                                                    {items?.extra.map((i) => {
+                                                                        return <p className=" text-CollorDefault text-xs">{i.name} ..... X{i.qtd}</p>
+                                                                    })
+
+                                                                    }
                                                                 </div>
                                                             </div>
                                                             {items?.comment !== "" && <h1 className="text-CollorDefault mt-4 text-xs"><strong>Observação:</strong> {items?.comment}</h1>}
@@ -472,7 +503,8 @@ export default function Cart() {
                                             <div className="border-b w-full py-4"></div>
                                             <div className="flex flex-col lg:items-end items-start lg:gap-0  gap-4">
                                                 <div className="flex flex-col lg:items-end items-start">
-                                                    <p className="text-gray-500 text-sm">Subtotal: {sumTotPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
+                                                    <p className="text-gray-500 text-sm">Subtotal: {sumTot.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
+                                                    <p className="text-gray-500 text-sm">Adicionais: {sumTotExtra.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
                                                     <p className=" text-gray-400 text-sm flex items-center gap-2"><FaMotorcycle className="text-gray-400 text-base" />Entrega: + {delivery.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
                                                     <p className="font-medium lg?text-xl text-base pt-2">Total: <span className="font-extrabold text-CollorSecondaryDefault">{totPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</span></p>
                                                 </div>
