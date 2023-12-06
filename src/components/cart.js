@@ -213,8 +213,6 @@ export default function Cart() {
             text += `\nRetirar seu pedido em:\nR. Blumenau, 202 - Santo Antônio, Joinville - SC, 89204-248\n`
             text += `\n*Total: ${totPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}*`
         }
-        console.log(text)
-        return
         setInternalLoading(true)
         await new Promise(resolve => setTimeout(resolve, 1))
         let setAnimation = window.document.querySelectorAll('.animationOn')
