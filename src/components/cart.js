@@ -69,14 +69,14 @@ export default function Cart() {
     //     }
     // });
     // let itenStorage = Object.values(cartNoDuplicates)
-    let Prices = itenStorage.map((i) => {
+    let Prices = itenStorage?.map((i) => {
         return i.price
     })
     let priceExtraMap = itenStorage?.map((i) => {
         return i.extra
     })
 
-    let priceExtra = priceExtraMap.flat().map((i) => {
+    let priceExtra = priceExtraMap?.flat()?.map((i) => {
         return i.price
     })
 
