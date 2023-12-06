@@ -70,14 +70,14 @@ export default function Cart() {
     // });
     // let itenStorage = Object.values(cartNoDuplicates)
     let Prices = itenStorage?.map((i) => {
-        return i.price
+        return i?.price
     })
     let priceExtraMap = itenStorage?.map((i) => {
-        return i.extra
+        return i?.extra
     })
 
     let priceExtra = priceExtraMap?.flat()?.map((i) => {
-        return i.price
+        return i?.price
     })
 
     let delivery = deliverOrEstablishment === '1' ? 0 : 5
@@ -105,11 +105,9 @@ export default function Cart() {
         let q = qtdHtml.innerHTML = qtdHtmlToNumber + 1
         let objIndex = itenStorage.findIndex((obj => obj.id == item.id))
         if (objIndex !== -1) {
-            // Se o item já existe, atualize o objeto existente
             itenStorage[objIndex].qtd = q;
             itenStorage[objIndex].price = item.originalPrice * q;
             setLoading(true)
-            //coloquei esse await para ele não passar direto sem setar no local storage o pedido
             await new Promise((resolve) => setTimeout(resolve, 100))
             localStorage.setItem('foodService', JSON.stringify(itenStorage))
             setLoading(false)
@@ -195,9 +193,9 @@ export default function Cart() {
     async function toWhatsapp() {
         let text = `Olá! gostaria de fazer um pedido:\n`
         // let orders = itensToFormat.map((item) => `*x${item.qtd}* ${item.name}....${item.price.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}\n*Observações:* ${item?.comment || ''}\n*Adicionais:*${item?.extra.map(i => ' \n' + i.name + '.... X' + i.qtd + '\n') || ''}`).join('\n\n');
-        let orders = itensToFormat.map((item) => {
-            const extras = Array.isArray(item.extra)
-              ? item.extra.map(i => ' \n' + i.name + '.... X' + i.qtd ).join('')
+        let orders = itensToFormat?.map((item) => {
+            const extras = Array?.isArray(item.extra)
+              ? item?.extra.map(i => ' \n' + i?.name + '.... X' + i.qtd ).join('')
               : '';
           
             return `*x${item.qtd}* ${item.name}....${item.price.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}\n*Observações:* ${item?.comment || ''}\n*Adicionais:*${extras}`;
@@ -262,7 +260,6 @@ export default function Cart() {
                         <div style={{ height: screenY - 230 }} className={`overflow-hidden  overflow-y-auto myScroll shadow-innerShadow rounded-lg p-2`}>
                             {itenStorage.length > 0 ?
                                 itenStorage?.map((items) => {
-                                    console.log(items)
                                     return (
                                         <div key={items?.id} className="pt-5 ">
                                             {<div className="flex items-center justify-between">
