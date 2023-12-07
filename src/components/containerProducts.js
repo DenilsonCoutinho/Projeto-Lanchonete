@@ -155,7 +155,6 @@ export default function ContainerProduct({ items }) {
             extra: newArrayExtra,
             comment: item.comment
         }
-        console.log(newArray)
         if (qtdHtmlToNumber > 0) {
             toCartOrder.push(newArray)
         }
@@ -253,8 +252,8 @@ export default function ContainerProduct({ items }) {
                             return i < moreProductsToView && <div className="relative ">
                                 {item?.id === addCart?.id && <Modal>
                                     <div className="relative lg:h-full ">
-                                        <div className="flex lg:flex-row flex-col items-start gap-4 ">
-                                            <div className="bg-white rounded-lg md:p-4 lg:max-w-[600px] lg:h-96 max-w-[400px] w-full lg:max-h-96 max-h-64 overflow-hidden  m-auto">
+                                        <div className="flex md:flex-row flex-col items-start gap-4 ">
+                                            <div className="bg-white rounded-lg md:p-4 md:max-w-[600px] md:h-96 max-w-[400px] w-full lg:max-h-96 max-h-64 overflow-hidden  m-auto">
                                                 <Image style={{ backgroundSize: 'cover', width: screenX > 600 ? '600px' : '', height: screenX > 600 ? '350px' : '240px' }} src={item?.img} alt={item.id} className=" lg:rounded-xl select-none " />
                                             </div>
                                             <div style={{ height: screenX < 1300 && screenX > 600 ? screenY - 290 : screenY - 390 }} className="flex flex-col w-full overflow-hidden overflow-y-auto myScroll px-2">

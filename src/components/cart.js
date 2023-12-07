@@ -195,11 +195,11 @@ export default function Cart() {
         // let orders = itensToFormat.map((item) => `*x${item.qtd}* ${item.name}....${item.price.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}\n*Observações:* ${item?.comment || ''}\n*Adicionais:*${item?.extra.map(i => ' \n' + i.name + '.... X' + i.qtd + '\n') || ''}`).join('\n\n');
         let orders = itensToFormat?.map((item) => {
             const extras = Array?.isArray(item.extra)
-              ? item?.extra.map(i => ' \n' + i?.name + '.... X' + i.qtd ).join('')
-              : '';
-          
-            return `*x${item.qtd}* ${item.name}....${item.price.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}\n*Observações:* ${item?.comment || ''}\n\n*Adicionais:*${extras}`;
-          }).join('\n\n');
+                ? item?.extra.map(i => ' \n(' + 'x' + `${i.qtd + ')'} ` + i?.name).join('')
+                : '';
+
+            return `*x${item.qtd}* ${item.name}....*${item.price.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}*\nAdicionais:${extras} \n*Observações:* ${item?.comment || ''}`;
+        }).join('\n\n');
         text += `\n*Itens do pedido:*\n${orders}\n`
 
         if (deliverOrEstablishment === '2') {
