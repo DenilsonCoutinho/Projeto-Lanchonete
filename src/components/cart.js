@@ -198,7 +198,7 @@ export default function Cart() {
               ? item?.extra.map(i => ' \n' + i?.name + '.... X' + i.qtd ).join('')
               : '';
           
-            return `*x${item.qtd}* ${item.name}....${item.price.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}\n*Observações:* ${item?.comment || ''}\n*Adicionais:*${extras}`;
+            return `*x${item.qtd}* ${item.name}....${item.price.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}\n*Observações:* ${item?.comment || ''}\n\n*Adicionais:*${extras}`;
           }).join('\n\n');
         text += `\n*Itens do pedido:*\n${orders}\n`
 
@@ -211,6 +211,7 @@ export default function Cart() {
             text += `\nRetirar seu pedido em:\nR. Blumenau, 202 - Santo Antônio, Joinville - SC, 89204-248\n`
             text += `\n*Total: ${totPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}*`
         }
+        console.log(text)
         setInternalLoading(true)
         await new Promise(resolve => setTimeout(resolve, 1))
         let setAnimation = window.document.querySelectorAll('.animationOn')
@@ -352,12 +353,12 @@ export default function Cart() {
                                     </div>
 
                                     {deliverOrEstablishment === '1' ?
-                                        <div style={{ height: screenX < 900 ? screenY - 390 : screenY - 330 }} className="focus-in-expand overflow-hidden w-full overflow-y-auto myScroll border rounded-xl shadow-xl p-2">
+                                        <div style={{ height: screenX < 900 ? screenY - 390 : screenY - 345 }} className="focus-in-expand overflow-hidden w-full overflow-y-auto myScroll border rounded-xl shadow-xl p-2">
                                             <h1 className="flex items-start gap-3 text-sm"><MdLocationOn className="text-3xl w-10 text-CollorSecondaryDefault" />R. Blumenau, 202 - Santo Antônio, Joinville - SC, 89204-248</h1>
                                             <iframe className="w-full h-full  rounded-xl border-2 border-CollorSecondaryDefault " src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d57242.14100170128!2d-48.92772745136715!3d-26.27354559999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94deaf812df04939%3A0x4f6cf9c0a434da5f!2sBurger%20King%20-%20Drive%20Thru%20II!5e0!3m2!1spt-BR!2sbr!4v1701355942256!5m2!1spt-BR!2sbr" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                                         </div>
                                         : deliverOrEstablishment === '2' ?
-                                            <div style={{ height: screenX < 900 ? screenY - 390 : screenY - 330 }} className={`focus-in-expand overflow-hidden lg:w-full  overflow-y-auto myScroll  rounded-lg p-2`}>
+                                            <div style={{ height: screenX < 900 ? screenY - 390 : screenY - 350 }} className={`focus-in-expand overflow-hidden lg:w-full  overflow-y-auto myScroll  rounded-lg p-2`}>
                                                 <div className="flex items-start flex-col gap-2">
                                                     <p className="text-CollorDefault lg:text-base text-sm">CEP:</p>
                                                     <div className="flex relative">
