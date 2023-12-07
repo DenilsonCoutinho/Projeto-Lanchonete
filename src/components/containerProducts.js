@@ -65,7 +65,7 @@ export default function ContainerProduct({ items }) {
     })
     useEffect(() => {
         const itemsLocaStorage = JSON.parse(localStorage.getItem('foodService'))
-        localStorage.setItem('foodService', JSON.stringify(itemsLocaStorage || []))
+        localStorage.setItem('foodService', JSON.stringify([]))
         setinternalLoading(true)
     }, [])
     useEffect(() => {
