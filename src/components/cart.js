@@ -262,7 +262,7 @@ export default function Cart() {
                             {itenStorage.length > 0 ?
                                 itenStorage?.map((items) => {
                                     return (
-                                        <div key={items?.id} className="pt-5 ">
+                                        <div key={items?.id} className="pt-5 focus-in-expand ">
                                             {<div className="flex items-center justify-between">
                                                 <div>
                                                     <div className="flex items-center lg:gap-5 gap-2">
@@ -433,7 +433,7 @@ export default function Cart() {
                                             {itenStorage.map((items) => {
 
                                                 return <div key={items.id}>
-                                                    <div className="flex items-center justify-between mt-2">
+                                                    <div className="flex items-center justify-between mt-2 focus-in-expand">
                                                         <div>
                                                             <div className="flex items-center lg:gap-5 gap-2">
                                                                 <div className="relative">
