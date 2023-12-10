@@ -278,10 +278,8 @@ export default function Cart() {
                                                             </div>
                                                             <p className=" text-CollorSecondaryDefault lg:text-base text-xs">{items?.price?.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
                                                             {items?.extra.map((i) => {
-
                                                                 return i.qtd > 0 && <p className=" text-CollorDefault text-xs">(x{i.qtd}) {i.name} <br /><span className="font-bold text-[11px]">{i?.price?.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</span> </p>
                                                             })
-
                                                             }
                                                         </div>
                                                     </div>

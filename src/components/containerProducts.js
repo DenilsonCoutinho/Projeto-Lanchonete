@@ -155,7 +155,6 @@ export default function ContainerProduct({ items }) {
             extra: newArrayExtra,
             comment: item?.comment
         }
-        console.log(newArray)
         if (qtdHtmlToNumber > 0) {
             toCartOrder.push(newArray)
         }
@@ -166,7 +165,7 @@ export default function ContainerProduct({ items }) {
         let lastIndex = toCartOrder[toCartOrder.length - 1]
         let qtdHtmlMore = document.getElementById(`qtd_Food-${item.id}`)
         let qtdFoodHtml = document.getElementById(`qtd_order`)
-        if(comment){
+        if (comment) {
             lastIndex.comment = comment
         }
 
@@ -198,8 +197,9 @@ export default function ContainerProduct({ items }) {
     function lessExtra(item) {
         let qtdLessExtra = document.getElementById(`qtdExtra-${item.id}`)
         let qtd = parseInt(qtdLessExtra.innerHTML)
-        qtdLessExtra.innerHTML = qtd -= 1
-        if (qtd < 1) {
+        if (qtd > 0) {
+            qtdLessExtra.innerHTML = qtd -= 1
+        } else {
             qtd = 0
         }
         let newArrayExtra = {
@@ -209,13 +209,12 @@ export default function ContainerProduct({ items }) {
             qtd: qtd,
         }
         pickItensExtra.push(newArrayExtra)
-        
+
     }
     async function moreExtra(item) {
         let qtdMoreExtra = document.getElementById(`qtdExtra-${item.id}`)
         let qtd = parseInt(qtdMoreExtra.innerHTML)
         qtdMoreExtra.innerHTML = qtd += 1
-        console.log(qtd)
 
         let newArrayExtra = {
             ...item,
