@@ -6,11 +6,14 @@ const ModalContext = createContext()
 export function ModalContextProvider({ children }) {
 
     const [modal, setModal] = useState(false)
+    const [modalPopUp, setModalPopUp] = useState(false)
 
     return <ModalContext.Provider
         value={{
             modal,
             setModal,
+            modalPopUp,
+            setModalPopUp
         }}>
         {children}
     </ModalContext.Provider>

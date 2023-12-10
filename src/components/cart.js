@@ -195,7 +195,7 @@ export default function Cart() {
         // let orders = itensToFormat.map((item) => `*x${item.qtd}* ${item.name}....${item.price.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}\n*Observações:* ${item?.comment || ''}\n*Adicionais:*${item?.extra.map(i => ' \n' + i.name + '.... X' + i.qtd + '\n') || ''}`).join('\n\n');
         let orders = itensToFormat?.map((item) => {
             const extras = Array?.isArray(item.extra)
-                ? item?.extra.map(i => ' \n(' + 'x' + `${i.qtd + ')'} ` + i?.name).join('')
+                ? item?.extra.map(i => i.qtd > 0 ? ' \n(' + 'x' + `${i.qtd + ')'} ` + i?.name + ` -  ${i.price.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}` : '').join('')
                 : '';
 
             return `*x${item.qtd}* ${item.name}....*${item.price.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}*\nAdicionais:${extras} \n*Observações:* ${item?.comment || ''}`;
@@ -278,7 +278,8 @@ export default function Cart() {
                                                             </div>
                                                             <p className=" text-CollorSecondaryDefault lg:text-base text-xs">{items?.price?.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
                                                             {items?.extra.map((i) => {
-                                                                return <p className=" text-CollorDefault text-xs">{i.name} ..... X{i.qtd}</p>
+
+                                                                return i.qtd > 0 && <p className=" text-CollorDefault text-xs">(x{i.qtd}) {i.name} <br /><span className="font-bold text-[11px]">{i?.price?.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</span> </p>
                                                             })
 
                                                             }
@@ -289,7 +290,7 @@ export default function Cart() {
                                                 <div className="flex items-center gap-5">
                                                     <div className="flex items-center rounded-2xl shadow-md">
                                                         <button onClick={() => lessQuantityFood(items)} className={`lg:rounded-l-2xl  rounded-l-xl  flex justify-center items-center border 'border-CollorSecondaryDefault'   lg:w-10 sm:w-7 w-6  lg:h-6 sm:h-7 h-5`}>
-                                                            {items.qtd > 1 ? '-' : <div><p className="lg:flex hidden ">-</p><FaTrash className="text-[10px] lg:hidden flex  text-red-500" /></div>}
+                                                            {items?.qtd > 1 ? '-' : <div><p className="lg:flex hidden ">-</p><FaTrash className="text-[10px] lg:hidden flex  text-red-500" /></div>}
                                                         </button>
                                                         <div id={`qtd_Food-Cart${items?.id}`} className={` border lg:text-base text-xs flex justify-center items-center border-CollorSecondaryDefault'  lg:w-10 sm:w-7 w-6 lg:h-6  sm:h-7 h-5`}>
                                                             {items?.qtd}
@@ -449,7 +450,7 @@ export default function Cart() {
                                                                     </div>
                                                                     <p className=" text-CollorSecondaryDefault lg:text-base text-xs">{items?.price?.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
                                                                     {items?.extra.map((i) => {
-                                                                        return <p className=" text-CollorDefault text-xs">{i.name} ..... X{i.qtd}</p>
+                                                                        return i.qtd > 0 && <p className=" text-CollorDefault text-xs">(x{i.qtd}) {i.name} <br /><span className="font-bold text-[11px]">{i?.price?.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</span> </p>
                                                                     })
 
                                                                     }

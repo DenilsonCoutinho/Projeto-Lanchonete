@@ -153,8 +153,9 @@ export default function ContainerProduct({ items }) {
             originalPrice: item.price,
             qtd: parseInt(qtdHtmlToNumber),
             extra: newArrayExtra,
-            comment: item.comment
+            comment: item?.comment
         }
+        console.log(newArray)
         if (qtdHtmlToNumber > 0) {
             toCartOrder.push(newArray)
         }
@@ -165,7 +166,9 @@ export default function ContainerProduct({ items }) {
         let lastIndex = toCartOrder[toCartOrder.length - 1]
         let qtdHtmlMore = document.getElementById(`qtd_Food-${item.id}`)
         let qtdFoodHtml = document.getElementById(`qtd_order`)
-        lastIndex.comment = comment
+        if(comment){
+            lastIndex.comment = comment
+        }
 
         if (parseInt(qtdHtmlMore.innerHTML) > 0) {
             await new Promise((resolve) => setTimeout(resolve, 100))
@@ -195,17 +198,10 @@ export default function ContainerProduct({ items }) {
     function lessExtra(item) {
         let qtdLessExtra = document.getElementById(`qtdExtra-${item.id}`)
         let qtd = parseInt(qtdLessExtra.innerHTML)
-
-        if (qtd > 0) {
-            qtdLessExtra.innerHTML = qtd - 1
-        } else {
+        qtdLessExtra.innerHTML = qtd -= 1
+        if (qtd < 1) {
             qtd = 0
         }
-    }
-    async function moreExtra(item) {
-        let qtdMoreExtra = document.getElementById(`qtdExtra-${item.id}`)
-        let qtd = parseInt(qtdMoreExtra.innerHTML)
-        qtdMoreExtra.innerHTML = qtd += 1
         let newArrayExtra = {
             ...item,
             price: item.price * qtd,
@@ -213,7 +209,21 @@ export default function ContainerProduct({ items }) {
             qtd: qtd,
         }
         pickItensExtra.push(newArrayExtra)
+        
+    }
+    async function moreExtra(item) {
+        let qtdMoreExtra = document.getElementById(`qtdExtra-${item.id}`)
+        let qtd = parseInt(qtdMoreExtra.innerHTML)
+        qtdMoreExtra.innerHTML = qtd += 1
+        console.log(qtd)
 
+        let newArrayExtra = {
+            ...item,
+            price: item.price * qtd,
+            originalPrice: item.price,
+            qtd: qtd,
+        }
+        pickItensExtra.push(newArrayExtra)
     }
     async function reduceExtra() {
 
