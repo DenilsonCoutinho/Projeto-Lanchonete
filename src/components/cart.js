@@ -222,7 +222,7 @@ export default function Cart() {
             i.innerHTML = 'Em breve, seu pedido estará a caminho!';
             await new Promise(resolve => setTimeout(resolve, 1500));
             i.style.display = 'none'
-            window.location.href = `https://wa.me/+5548991109700?text=${encodeURI(text)}`
+            window.location.href = `https://wa.me/+554799503025?text=${encodeURI(text)}`
             i.style.display = 'flex'
         }
         setLoading(true)
