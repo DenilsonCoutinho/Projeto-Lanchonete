@@ -258,7 +258,7 @@ export default function ContainerProduct({ items }) {
     const toast = useToast()
 
     async function userData() {
-        const regex = /^[A-Za-z]+ [A-Za-z]+$/
+        const regex = /^[A-Za-z]+ [A-Za-z]{2,}(?: .*)?$/;
         if (regex.test(name)) {
             document.getElementById('input_name').style.border = ''
             document.getElementById('obgt_name').style.background = ''
