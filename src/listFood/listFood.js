@@ -33,7 +33,7 @@ const listFood = [
             id: 1,
             name: "Bacon",
             img: extra_1,
-            maxBacon: 5,
+            max: 5,
             price: 3.5,
             qtd: 0
         }
@@ -42,7 +42,7 @@ const listFood = [
             id: 2,
             name: "Ovo ",
             img: extra_2,
-            maxBacon: 5,
+            max: 5,
             price: 2.5,
             qtd: 0
         }
@@ -62,7 +62,7 @@ const listFood = [
             id: 1,
             name: "Bacon",
             img: extra_1,
-            maxBacon: 5,
+            max: 5,
             price: 3.5,
             qtd: 0
         }
@@ -71,7 +71,7 @@ const listFood = [
             id: 2,
             name: "Ovo ",
             img: extra_2,
-            maxBacon: 5,
+            max: 5,
             price: 2.5,
             qtd: 0
         }
@@ -92,7 +92,7 @@ const listFood = [
             id: 1,
             name: "Bacon",
             img: extra_1,
-            maxBacon: 5,
+            max: 5,
             price: 3.5,
             qtd: 0
         }
@@ -101,7 +101,7 @@ const listFood = [
             id: 2,
             name: "Ovo ",
             img: extra_2,
-            maxBacon: 5,
+            max: 5,
             price: 2.5,
             qtd: 0
         }
@@ -122,7 +122,7 @@ const listFood = [
             id: 1,
             name: "Bacon",
             img: extra_1,
-            maxBacon: 5,
+            max: 5,
             price: 3.5,
             qtd: 0
         }
@@ -131,7 +131,7 @@ const listFood = [
             id: 2,
             name: "Ovo ",
             img: extra_2,
-            maxBacon: 5,
+            max: 5,
             price: 2.5,
             qtd: 0
         }
@@ -152,7 +152,7 @@ const listFood = [
             id: 1,
             name: "Bacon",
             img: extra_1,
-            maxBacon: 5,
+            max: 5,
             price: 3.5,
             qtd: 0
         }
@@ -161,7 +161,7 @@ const listFood = [
             id: 2,
             name: "Ovo ",
             img: extra_2,
-            maxBacon: 5,
+            max: 5,
             price: 2.5,
             qtd: 0
         }
@@ -183,7 +183,7 @@ const listFood = [
             id: 1,
             name: "Bacon",
             img: extra_1,
-            maxBacon: 5,
+            max: 5,
             price: 3.5,
             qtd: 0
         }
@@ -192,7 +192,7 @@ const listFood = [
             id: 2,
             name: "Ovo ",
             img: extra_2,
-            maxBacon: 5,
+            max: 5,
             price: 2.5,
             qtd: 0
         }
@@ -213,7 +213,7 @@ const listFood = [
             id: 1,
             name: "Bacon",
             img: extra_1,
-            maxBacon: 5,
+            max: 5,
             price: 3.5,
             qtd: 0
         }
@@ -222,7 +222,7 @@ const listFood = [
             id: 2,
             name: "Ovo ",
             img: extra_2,
-            maxBacon: 5,
+            max: 5,
             price: 2.5,
             qtd: 0
         }
@@ -243,7 +243,7 @@ const listFood = [
             id: 1,
             name: "Bacon",
             img: extra_1,
-            maxBacon: 5,
+            max: 5,
             price: 3.5,
             qtd: 0
         }
@@ -252,7 +252,7 @@ const listFood = [
             id: 2,
             name: "Ovo ",
             img: extra_2,
-            maxBacon: 5,
+            max: 5,
             price: 2.5,
             qtd: 0
         }
@@ -273,7 +273,7 @@ const listFood = [
             id: 1,
             name: "Bacon",
             img: extra_1,
-            maxBacon: 5,
+            max: 5,
             price: 3.5,
             qtd: 0
         }
@@ -282,7 +282,7 @@ const listFood = [
             id: 2,
             name: "Ovo ",
             img: extra_2,
-            maxBacon: 5,
+            max: 5,
             price: 2.5,
             qtd: 0
         }

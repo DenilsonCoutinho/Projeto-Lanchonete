@@ -16,10 +16,15 @@ import { FaIceCream } from "react-icons/fa6"
 import Modal from "./modal"
 import useModalContext from "@/context/modalProvider"
 import OnlyLetter from "@/utils/regex/onlyLetter"
+import ModalPopUp from "./modalPopUp"
+import { maskPhone } from "../utils/regex/phoneMask"
+import maskCpf from "@/utils/regex/maskCpf"
 
 export default function ContainerProduct({ items }) {
     const { setCartActive, itensCart, setItensCart, loading, setLoading, setbody } = useCart()
-    const { modal, setModal } = useModalContext()
+    const { modal, setModal, detectModal, setDetectModal } = useModalContext()
+    const { modalPopUp, setModalPopUp } = useModalContext()
+
     const { screenX, screenY } = useScreenSize()
     const [addCart, setAddCart] = useState()
     const [attCart, setAttCart] = useState([])
@@ -60,11 +65,15 @@ export default function ContainerProduct({ items }) {
     const [moreProductsToView, setMoreProductsToView] = useState(4)
     const [pickItensExtra, setPickItensExtra] = useState([])
 
+    const [name, setName] = useState('')
+    const [number, setNumber] = useState('')
+    const [cpf, setCpf] = useState('')
+
     const foodToFilter = listFood.filter((food) => {
         return identifyProduct?.toFilter ? food.type === identifyProduct.toFilter : food.type === 'burguer'
     })
     useEffect(() => {
-        const itemsLocaStorage = JSON.parse(localStorage.getItem('foodService'))
+        // const itemsLocaStorage = JSON.parse(localStorage.getItem('foodService'))
         localStorage.setItem('foodService', JSON.stringify([]))
         setinternalLoading(true)
     }, [])
@@ -212,16 +221,23 @@ export default function ContainerProduct({ items }) {
 
     }
     async function moreExtra(item) {
+        console.log(item.max)
         let qtdMoreExtra = document.getElementById(`qtdExtra-${item.id}`)
         let qtd = parseInt(qtdMoreExtra.innerHTML)
         qtdMoreExtra.innerHTML = qtd += 1
 
+        if ((parseInt(qtdMoreExtra.innerHTML)) > parseInt(item?.max)) {
+            qtd = 5
+            return qtdMoreExtra.innerHTML = 5
+        }
         let newArrayExtra = {
             ...item,
             price: item.price * qtd,
             originalPrice: item.price,
             qtd: qtd,
         }
+        console.log(newArrayExtra)
+
         pickItensExtra.push(newArrayExtra)
     }
     async function reduceExtra() {
@@ -229,9 +245,96 @@ export default function ContainerProduct({ items }) {
     }
     const toast = useToast()
 
+    async function userData() {
+        const regex = /^[A-Za-z]+ [A-Za-z]+$/
+        if (regex.test(name)) {
+            document.getElementById('input_name').style.border = ''
+            document.getElementById('obgt_name').style.background = ''
+            setCorrectName(true)
+        } else {
+            document.getElementById('input_name').style.border = '1px solid red'
+            document.getElementById('obgt_name').style.background = 'red'
+            return setCorrectName(false)
+        }
+
+        const regexTelefone = /^\d{11}$/
+        if (regexTelefone.test(number.replace(/\D/g, ''))) {
+            document.getElementById('input_number').style.border = ''
+            document.getElementById('obgt_number').style.background = ''
+            setcorrectNumber(true)
+        } else {
+            document.getElementById('input_number').style.border = '1px solid red'
+            document.getElementById('obgt_number').style.background = 'red'
+          return  setcorrectNumber(false)
+
+        }
+        let allDataUsers = []
+
+        let objFormated = {
+            name: name,
+            number: number,
+            cpf: cpf
+        }
+        allDataUsers.push(objFormated)
+        localStorage.setItem('userData', JSON.stringify(allDataUsers))
+        setModalPopUp(false)
+    }
+    const [correctName, setCorrectName] = useState(false)
+    const [correctNumber, setcorrectNumber] = useState(false)
     return (
         <ChakraProvider>
             <Cart />
+            <ModalPopUp maxWidth={500}>
+                <div className=" w-full flex flex-col  gap-5 items-start p-3 overflow-hidden  relative">
+                    <label className="flex flex-col w-full ">
+                        <div className="flex flex-row justify-between items-center ">
+                            Nome e sobrenome
+                            <FaCheckCircle className={`${correctName ? 'md:translate-x-48 translate-x-24' : 'translate-x-36'} text-green-500 delay-100 duration-300`} />
+                            <div id="obgt_name" className={`${correctName ? '-translate-x- opacity-0 ' : 'translate-x-1 '} text-white delay-100 duration-300 p-[2px] rounded-full text-xs bg-gray-400`}>Obrigatório</div>
+                        </div>
+                        <input id="input_name" onChange={(e) => {
+                            setName(e.target.value);
+                            const regex = /^[A-Za-z]+ [A-Za-z]+$/
+                            if (regex.test(e.target.value)) {
+                                document.getElementById('input_name').style.border = ''
+                                document.getElementById('obgt_name').style.background = ''
+                                setCorrectName(true)
+                            } else {
+                                document.getElementById('input_name').style.border = '1px solid red'
+                                document.getElementById('obgt_name').style.background = 'red'
+                                setCorrectName(false)
+                            }
+                        }} value={name} type="text" className="border w-full py-3 px-2 rounded-md" placeholder="Como vamos te chamar" />
+                    </label>
+                    <label className="flex flex-col w-full">
+                        <div className="flex flex-row justify-between items-center">
+                            Número do seu celular
+                            <FaCheckCircle className={`${correctNumber ? 'md:translate-x-[183px] translate-x-[85px]' : 'translate-x-36'} text-green-500 delay-100 duration-300`} />
+                            <div id="obgt_number" className={`${correctNumber ? '-translate-x- opacity-0 ' : 'translate-x-1 '} text-white delay-100 duration-300 p-[2px] rounded-full text-xs bg-gray-400`}>Obrigatório</div>
+                        </div>
+                        <input id="input_number" maxLength={15} onChange={(e) => {
+                            setNumber(maskPhone(e.target.value))
+                            const regexTelefone = /^\d{11}$/
+                            if (regexTelefone.test(e.target.value)) {
+                                document.getElementById('input_number').style.border = ''
+                                document.getElementById('obgt_number').style.background = ''
+                                setcorrectNumber(true)
+                            } else {
+                                document.getElementById('input_number').style.border = '1px solid red'
+                                document.getElementById('obgt_number').style.background = 'red'
+                                setcorrectNumber(false)
+
+                            }
+                        }} value={number} type="text" className="border w-full py-3 px-2 rounded-md" placeholder="(00) 00000-0000" />
+                    </label>
+                    <label className="flex flex-col w-full">
+                        <p className=""> CPF<span className="text-gray-300 pl-2">(opcional)</span></p>
+
+                        <input maxLength={14} onChange={(e) => { setCpf(maskCpf(e.target.value)) }} value={cpf} type="text" className="border w-full py-3 px-2 rounded-md" placeholder="000.000.000-00" />
+                    </label>
+                    <button onClick={() => userData()} className="py-3 bg-gray-700 w-full rounded-md text-white">Enviar</button>
+                </div>
+            </ModalPopUp>
             <div id="menu" className="pt-28 max-w-[1200px] m-auto">
                 <p className="text-CollorSecondaryDefault uppercase tracking-wide text-center font-semibold ">Cardápio</p>
                 <h1 className="text-CollorDefault text-center font-bold text-3xl ">Nosso Cardápio</h1>
@@ -259,7 +362,7 @@ export default function ContainerProduct({ items }) {
                     {
                         foodToFilter?.map((item, i) => {
                             return i < moreProductsToView && <div className="relative ">
-                                {item?.id === addCart?.id && <Modal>
+                                {item?.id === addCart?.id && detectModal === '1' && <Modal maxWidth={1100} isback={true}>
                                     <div className="relative lg:h-full ">
                                         <div className="flex md:flex-row flex-col items-start gap-4 ">
                                             <div className="bg-white rounded-lg md:p-4 md:max-w-[600px] md:h-96 max-w-[400px] w-full lg:max-h-96 max-h-64 overflow-hidden  m-auto">
@@ -356,12 +459,12 @@ export default function ContainerProduct({ items }) {
                                         </div>
                                     </div>
                                 </Modal>}
-                                <div alt={item.id} id={`itemFood-${item.id}`} onClick={() => { setAddCart(item); setModal(true) }} key={item.id} className={`bg-white flex flex-col justify-x items-start select-none rounded-xl p-2 shadow-3xl md:w-[450px] animationToTop  md:h-[190px] `}>
+                                <div alt={item.id} id={`itemFood-${item.id}`} onClick={() => { setAddCart(item); setModal(true); setDetectModal('1') }} key={item.id} className={`bg-white flex flex-col justify-x items-start select-none rounded-xl p-2 shadow-3xl md:w-[450px] animationToTop  md:h-[190px] `}>
                                     <div className="flex md:flex-row flex-col items-start gap-2 cursor-pointer">
-                                        <div className={`relative   overflow-hidden ${item.type === "drink" ? ' w-64' : 'md:w-36 w-full'} bg-white rounded-lg  lg:h-20 h-28  pb-5`}>
-                                            <Image style={{ objectFit: 'cover', width: '100%', height: '160%' }} src={item.img} alt={item.name} className="cursor-pointer   lg:rounded-xl rounded-md  select-none  " />
+                                        <div className={`relative    ${item.type === "drink" ? ' md:w-36 w-72 overflow-hidden' : 'md:w-36 w-full'} bg-white rounded-lg   h-28  pb-5`}>
+                                            <Image style={{ objectFit: 'cover', width: '100%', height: item.type === "drink" ? '160%' : '130%' }} src={item.img} alt={item.name} className="cursor-pointer   lg:rounded-xl rounded-md  select-none  " />
                                         </div>
-                                        <div className="flex flex-col items-start gap-1 ">
+                                        <div className="flex flex-col items-start gap-2 ">
                                             <h1 className="text-sm ">{item.name.substring(0, 25)}</h1>
                                             <h1 className={`text-sm font-bold  ${addCart?.id === item.id ? 'text-CollorSecondaryDefault' : 'text-CollorSecondaryDefault'}`}>{item.price.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</h1>
                                             {

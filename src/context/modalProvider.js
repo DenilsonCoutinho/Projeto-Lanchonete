@@ -6,6 +6,7 @@ const ModalContext = createContext()
 export function ModalContextProvider({ children }) {
 
     const [modal, setModal] = useState(false)
+    const [detectModal, setDetectModal] = useState('')
     const [modalPopUp, setModalPopUp] = useState(false)
 
     return <ModalContext.Provider
@@ -13,7 +14,8 @@ export function ModalContextProvider({ children }) {
             modal,
             setModal,
             modalPopUp,
-            setModalPopUp
+            setModalPopUp,
+            detectModal, setDetectModal
         }}>
         {children}
     </ModalContext.Provider>

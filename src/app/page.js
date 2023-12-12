@@ -12,7 +12,6 @@ export default function Home() {
   return (
     <main className="">
       <InteractiveScroll />
-      <ModalPopUp />
       <Header />
       <Presentation />
       <ServicePage />
