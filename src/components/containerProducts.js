@@ -73,7 +73,10 @@ export default function ContainerProduct({ items }) {
         return identifyProduct?.toFilter ? food.type === identifyProduct.toFilter : food.type === 'burguer'
     })
     useEffect(() => {
-        // const itemsLocaStorage = JSON.parse(localStorage.getItem('foodService'))
+        const itemsLocaStorage = JSON.parse(localStorage.getItem('userData'))
+        itemsLocaStorage?.map((item)=>{
+            return setName(item?.name),setNumber(item?.number),setCpf(item?.cpf)
+        })
         localStorage.setItem('foodService', JSON.stringify([]))
         setinternalLoading(true)
     }, [])
@@ -289,8 +292,8 @@ export default function ContainerProduct({ items }) {
                     <label className="flex flex-col w-full ">
                         <div className="flex flex-row justify-between items-center ">
                             Nome e sobrenome
-                            <FaCheckCircle className={`${correctName ? 'md:translate-x-48 translate-x-24' : 'translate-x-36'} text-green-500 delay-100 duration-300`} />
-                            <div id="obgt_name" className={`${correctName ? '-translate-x- opacity-0 ' : 'translate-x-1 '} text-white delay-100 duration-300 p-[2px] rounded-full text-xs bg-gray-400`}>Obrigatório</div>
+                            <FaCheckCircle className={`${correctName ? 'right-3 absolute ' : 'opacity-0'} text-green-500 delay-100 duration-300`} />
+                            <div id="obgt_name" className={`${correctName ? ' opacity-0 ' : 'right-3 absolute '} text-white delay-100 duration-300 p-[2px] rounded-full text-xs bg-gray-400`}>Obrigatório</div>
                         </div>
                         <input id="input_name" onChange={(e) => {
                             setName(e.target.value);
@@ -309,8 +312,8 @@ export default function ContainerProduct({ items }) {
                     <label className="flex flex-col w-full">
                         <div className="flex flex-row justify-between items-center">
                             Número do seu celular
-                            <FaCheckCircle className={`${correctNumber ? 'md:translate-x-[183px] translate-x-[85px]' : 'translate-x-36'} text-green-500 delay-100 duration-300`} />
-                            <div id="obgt_number" className={`${correctNumber ? '-translate-x- opacity-0 ' : 'translate-x-1 '} text-white delay-100 duration-300 p-[2px] rounded-full text-xs bg-gray-400`}>Obrigatório</div>
+                            <FaCheckCircle className={`${correctNumber ? 'right-3 absolute' : 'opacity-0'} text-green-500 delay-100 duration-300`} />
+                            <div id="obgt_number" className={`${correctNumber ? 'opacity-0' : 'right-3 absolute '} text-white delay-100 duration-300 p-[2px] rounded-full text-xs bg-gray-400`}>Obrigatório</div>
                         </div>
                         <input id="input_number" maxLength={15} onChange={(e) => {
                             setNumber(maskPhone(e.target.value))
@@ -332,7 +335,7 @@ export default function ContainerProduct({ items }) {
 
                         <input maxLength={14} onChange={(e) => { setCpf(maskCpf(e.target.value)) }} value={cpf} type="text" className="border w-full py-3 px-2 rounded-md" placeholder="000.000.000-00" />
                     </label>
-                    <button onClick={() => userData()} className="py-3 bg-gray-700 w-full rounded-md text-white">Enviar</button>
+                    <button onClick={() => userData()} className="py-3 bg-gray-700 w-full rounded-md text-white">Editar</button>
                 </div>
             </ModalPopUp>
             <div id="menu" className="pt-28 max-w-[1200px] m-auto">

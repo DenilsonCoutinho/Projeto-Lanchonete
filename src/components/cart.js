@@ -35,9 +35,12 @@ export default function Cart() {
     const [city, setCity] = useState('')
     const [complement, setComplement] = useState('')
     const [itensToFormat, setItensToFormat] = useState('')
+    const [userData, setUserData] = useState('')
     const [internalLoading, setInternalLoading] = useState(false)
     useEffect(() => {
         const itemsLocaStorage = JSON.parse(localStorage.getItem('foodService'))
+        const itemsLocaStorageUser = JSON.parse(localStorage.getItem('userData'))
+        setUserData(itemsLocaStorageUser)
         localStorage.setItem('foodService', JSON.stringify(itemsLocaStorage))
         setItensCart(itemsLocaStorage)
         setItensToFormat(itemsLocaStorage)
@@ -178,6 +181,11 @@ export default function Cart() {
         },
     })
     async function toWhatsapp() {
+        console.log(userData)
+        let fortmatedUserData = userData.map((i)=>{
+            return `\n*${i.name}*\n${i.number}\n\n*CPF:*`
+        })
+        console.log(fortmatedUserData)
         let text = `Olá! gostaria de fazer um pedido:\n`
         let orders = itensToFormat?.map((item) => {
             const extras = Array?.isArray(item.extra)
@@ -200,7 +208,8 @@ export default function Cart() {
             text += `\n*Total: ${totPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}*`
         }
         text += `\n---------------------------------------\n`
-        text += `\nTempo de entrega: de 30 minutos à 40 minutos\n`
+        text += `\nTempo de entrega: de 30 minutos à 40 minutos`
+        text += `\n${fortmatedUserData}\n`
         if(formartPay === "2"){
             text += `\n*Pagamento:* Pix`
             text += `\n*Nome da conta Pix:* Jhon doe`
@@ -210,7 +219,6 @@ export default function Cart() {
         }else{
             text += `\n*Pagamento:* ${formartPay === "1"?"Dinheiro":formartPay === "3"?"Crédito":"Débito"}`
         }       
-      
         console.log(text)
         return
         setModal(false)
