@@ -297,8 +297,8 @@ export default function ContainerProduct({ items }) {
         <ChakraProvider>
             <Cart />
             <ModalPopUp maxWidth={500}>
-                <h1 className="font-bold mx-2 text-CollorSecondaryDefault border-b border-CollorSecondaryDefault">Esses dados estão corretos?</h1>
                 <div className=" w-full flex flex-col  gap-5 items-start p-3 overflow-hidden  relative">
+                <h1 className="font-bold  text-CollorSecondaryDefault border-b border-CollorSecondaryDefault">Esses dados estão corretos?</h1>
                     <label className="flex flex-col w-full ">
                         <div className="flex flex-row justify-between items-center ">
                             Nome e sobrenome
