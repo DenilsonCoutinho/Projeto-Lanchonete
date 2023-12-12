@@ -182,7 +182,7 @@ export default function Cart() {
     })
     async function toWhatsapp() {
         console.log(userData)
-        let fortmatedUserData = userData.map((i)=>{
+        let fortmatedUserData = userData.map((i) => {
             return `\n*${i.name}*\n${i.number}\n\n*CPF:*`
         })
         console.log(fortmatedUserData)
@@ -210,15 +210,15 @@ export default function Cart() {
         text += `\n---------------------------------------\n`
         text += `\nTempo de entrega: de 30 minutos à 40 minutos`
         text += `\n${fortmatedUserData}\n`
-        if(formartPay === "2"){
+        if (formartPay === "2") {
             text += `\n*Pagamento:* Pix`
             text += `\n*Nome da conta Pix:* Jhon doe`
             text += `\n*Chave Pix:* 47999977646`
             text += `\n\nCopie a chave e faça o pagamento através do Pix. O restaurante irá conferir o pagamento para liberação do seu pedido.
             `
-        }else{
-            text += `\n*Pagamento:* ${formartPay === "1"?"Dinheiro":formartPay === "3"?"Crédito":"Débito"}`
-        }       
+        } else {
+            text += `\n*Pagamento:* ${formartPay === "1" ? "Dinheiro" : formartPay === "3" ? "Crédito" : "Débito"}`
+        }
         console.log(text)
         setModal(false)
         setInternalLoading(true)
@@ -248,7 +248,7 @@ export default function Cart() {
 
     return (
         cartActive && <div className="h-full  fixed z-[99999] right-0 top-0 left-0 bg-white" >
-            {detectModal === '2' && <Modal width={500} isback={false}>
+            {detectModal === '2' && <Modal maxWidth={500} isback={false}>
                 <div className=" p-3 flex w-full justify-center gap-5 flex-col items-center m-auto">
                     <div className="">
                         <h1 className="font-bold focus-in-expand text-gray-400">Ação necessária!</h1>
@@ -296,8 +296,9 @@ export default function Cart() {
                                                             </div>
                                                             <p className=" text-CollorSecondaryDefault lg:text-base text-xs">{items?.price?.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
                                                             <ul className="list-disc pl-4 text-gray-400 font-extralight">
-                                                                {items?.extra.map((i) => (
-                                                                    <li key={i.name} className="text-xs">
+
+                                                                {items?.extra.map((i) => {
+                                                                    return i.qtd > 0 && <li key={i.name} className="text-xs">
                                                                         <span className=" ">
                                                                             (x{i.qtd}) {i.name}
                                                                         </span>{' '}
@@ -305,7 +306,7 @@ export default function Cart() {
                                                                             {i?.price?.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}
                                                                         </span>
                                                                     </li>
-                                                                ))}
+                                                                })}
                                                             </ul>
                                                         </div>
                                                     </div>
@@ -510,16 +511,16 @@ export default function Cart() {
                                                                         </div>
                                                                         <p className=" text-CollorSecondaryDefault lg:text-base text-xs">{items?.price?.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
                                                                         <ul className="list-disc pl-4 text-gray-400 font-extralight">
-                                                                            {items?.extra.map((i) => (
-                                                                                <li key={i.name} className="text-xs">
-                                                                                    <span className=" ">
-                                                                                        (x{i.qtd}) {i.name}
-                                                                                    </span>{' '}
-                                                                                    <span className=" ">
-                                                                                        {i?.price?.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}
-                                                                                    </span>
-                                                                                </li>
-                                                                            ))}
+                                                                        {items?.extra.map((i) => {
+                                                                    return i.qtd > 0 && <li key={i.name} className="text-xs">
+                                                                        <span className=" ">
+                                                                            (x{i.qtd}) {i.name}
+                                                                        </span>{' '}
+                                                                        <span className=" ">
+                                                                            {i?.price?.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}
+                                                                        </span>
+                                                                    </li>
+                                                                })}
                                                                         </ul>
                                                                     </div>
                                                                 </div>

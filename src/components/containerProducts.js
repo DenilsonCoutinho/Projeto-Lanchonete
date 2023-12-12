@@ -74,11 +74,20 @@ export default function ContainerProduct({ items }) {
     })
     useEffect(() => {
         const itemsLocaStorage = JSON.parse(localStorage.getItem('userData'))
-        itemsLocaStorage?.map((item)=>{
-            return setName(item?.name),setNumber(item?.number),setCpf(item?.cpf)
-        })
+        if (itemsLocaStorage) {
+            itemsLocaStorage?.map((item) => {
+                return setName(item?.name), setNumber(item?.number), setCpf(item?.cpf)
+            })
+        }else{
+            setName('Joel Smith')
+            setNumber('(48) 99039-4003')
+        }
+
         localStorage.setItem('foodService', JSON.stringify([]))
         setinternalLoading(true)
+
+
+
     }, [])
     useEffect(() => {
         setPickItensExtra([])
@@ -268,7 +277,7 @@ export default function ContainerProduct({ items }) {
         } else {
             document.getElementById('input_number').style.border = '1px solid red'
             document.getElementById('obgt_number').style.background = 'red'
-          return  setcorrectNumber(false)
+            return setcorrectNumber(false)
 
         }
         let allDataUsers = []
@@ -288,6 +297,7 @@ export default function ContainerProduct({ items }) {
         <ChakraProvider>
             <Cart />
             <ModalPopUp maxWidth={500}>
+                <h1 className="font-bold mx-2 text-CollorSecondaryDefault border-b border-CollorSecondaryDefault">Esses dados estão corretos?</h1>
                 <div className=" w-full flex flex-col  gap-5 items-start p-3 overflow-hidden  relative">
                     <label className="flex flex-col w-full ">
                         <div className="flex flex-row justify-between items-center ">
@@ -297,7 +307,7 @@ export default function ContainerProduct({ items }) {
                         </div>
                         <input id="input_name" onChange={(e) => {
                             setName(e.target.value);
-                            const regex = /^[A-Za-z]+ [A-Za-z]+$/
+                            const regex = /^[A-Za-z]+ [A-Za-z]{2,}(?: .*)?$/;
                             if (regex.test(e.target.value)) {
                                 document.getElementById('input_name').style.border = ''
                                 document.getElementById('obgt_name').style.background = ''
@@ -307,7 +317,7 @@ export default function ContainerProduct({ items }) {
                                 document.getElementById('obgt_name').style.background = 'red'
                                 setCorrectName(false)
                             }
-                        }} value={name} type="text" className="border w-full py-3 px-2 rounded-md" placeholder="Como vamos te chamar" />
+                        }} value={name} type="text" className="border outline-none w-full py-2 px-2 rounded-md" placeholder="Como vamos te chamar" />
                     </label>
                     <label className="flex flex-col w-full">
                         <div className="flex flex-row justify-between items-center">
@@ -328,14 +338,14 @@ export default function ContainerProduct({ items }) {
                                 setcorrectNumber(false)
 
                             }
-                        }} value={number} type="text" className="border w-full py-3 px-2 rounded-md" placeholder="(00) 00000-0000" />
+                        }} value={number} type="text" className="border  w-full py-2 px-2 rounded-md outline-none" placeholder="(00) 00000-0000" />
                     </label>
                     <label className="flex flex-col w-full">
                         <p className=""> CPF<span className="text-gray-300 pl-2">(opcional)</span></p>
 
-                        <input maxLength={14} onChange={(e) => { setCpf(maskCpf(e.target.value)) }} value={cpf} type="text" className="border w-full py-3 px-2 rounded-md" placeholder="000.000.000-00" />
+                        <input maxLength={14} onChange={(e) => { setCpf(maskCpf(e.target.value)) }} value={cpf} type="text" className="border outline-none w-full py-2 px-2 rounded-md" placeholder="000.000.000-00" />
                     </label>
-                    <button onClick={() => userData()} className="py-3 bg-gray-700 w-full rounded-md text-white">Editar</button>
+                    <button onClick={() => userData()} className="py-2 bg-gray-700 w-full rounded-md text-white">Concluir</button>
                 </div>
             </ModalPopUp>
             <div id="menu" className="pt-28 max-w-[1200px] m-auto">
