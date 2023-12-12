@@ -220,7 +220,6 @@ export default function Cart() {
             text += `\n*Pagamento:* ${formartPay === "1"?"Dinheiro":formartPay === "3"?"Crédito":"Débito"}`
         }       
         console.log(text)
-        return
         setModal(false)
         setInternalLoading(true)
         await new Promise(resolve => setTimeout(resolve, 1))
