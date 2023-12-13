@@ -18,7 +18,6 @@ import useModalContext from "@/context/modalProvider"
 import OnlyLetter from "@/utils/regex/onlyLetter"
 import ModalPopUp from "./modalPopUp"
 import { maskPhone } from "../utils/regex/phoneMask"
-import maskCpf from "@/utils/regex/maskCpf"
 
 export default function ContainerProduct({ items }) {
     const { setCartActive, itensCart, setItensCart, loading, setLoading, setbody } = useCart()
@@ -247,7 +246,7 @@ export default function ContainerProduct({ items }) {
     const toast = useToast()
 
     async function userData() {
-        const regex = /^[A-Za-z]+ [A-Za-z]{2,}(?: .*)?$/;
+        const regex = /^[a-zA-ZÀ-ÖØ-öø-ÿ]+ [a-zA-ZÀ-ÖØ-öø-ÿ]{2,}(?: .*)?$/;
         if (regex.test(name)) {
             document.getElementById('input_name').style.border = ''
             document.getElementById('obgt_name').style.background = ''
@@ -301,7 +300,7 @@ export default function ContainerProduct({ items }) {
                             </div>
                             <input id="input_name" onChange={(e) => {
                                 setName(e.target.value);
-                                const regex = /^[A-Za-z]+ [A-Za-z]{2,}(?: .*)?$/;
+                                const regex = /^[a-zA-ZÀ-ÖØ-öø-ÿ]+ [a-zA-ZÀ-ÖØ-öø-ÿ]{2,}(?: .*)?$/;
                                 if (regex.test(e.target.value)) {
                                     document.getElementById('input_name').style.border = ''
                                     document.getElementById('obgt_name').style.background = ''
