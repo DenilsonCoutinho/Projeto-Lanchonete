@@ -20,6 +20,7 @@ import Modal from "./modal";
 import useModalContext from "@/context/modalProvider";
 
 import Whatsapp from "../assets/WhatsApp.png";
+import ModalPopUp from "./modalPopUp";
 export default function Cart() {
 
     const { setCartActive, cartActive, setItensCart, loading, setLoading, itensCart, cartItensAnimate, setbody, body } = useCart()
@@ -181,11 +182,9 @@ export default function Cart() {
         },
     })
     async function toWhatsapp() {
-        console.log(userData)
         let fortmatedUserData = userData.map((i) => {
-            return `\n*${i.name}*\n${i.number}\n\n*CPF:*`
+            return `\n*${i.name}*\n${i.number}\n`
         })
-        console.log(fortmatedUserData)
         let text = `Olá! gostaria de fazer um pedido:\n`
         let orders = itensToFormat?.map((item) => {
             const extras = Array?.isArray(item.extra)
@@ -243,11 +242,13 @@ export default function Cart() {
         setCartActive(false)
         setInternalLoading(false)
         setLoading(false)
+        return
 
     }
 
     return (
         cartActive && <div className="h-full  fixed z-[99999] right-0 top-0 left-0 bg-white" >
+            
             {detectModal === '2' && <Modal maxWidth={500} isback={false}>
                 <div className=" p-3 flex w-full justify-center gap-5 flex-col items-center m-auto">
                     <div className="">

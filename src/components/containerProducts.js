@@ -12,7 +12,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useScreenSize } from "@/context/screenSizeContext"
 import { Box, useToast } from '@chakra-ui/react'
 import { ChakraProvider } from '@chakra-ui/react'
-import { FaIceCream } from "react-icons/fa6"
+import { FaIceCream, FaPhone, FaUser } from "react-icons/fa6"
 import Modal from "./modal"
 import useModalContext from "@/context/modalProvider"
 import OnlyLetter from "@/utils/regex/onlyLetter"
@@ -65,10 +65,6 @@ export default function ContainerProduct({ items }) {
     const [moreProductsToView, setMoreProductsToView] = useState(4)
     const [pickItensExtra, setPickItensExtra] = useState([])
 
-    const [name, setName] = useState('')
-    const [number, setNumber] = useState('')
-    const [cpf, setCpf] = useState('')
-
     const foodToFilter = listFood.filter((food) => {
         return identifyProduct?.toFilter ? food.type === identifyProduct.toFilter : food.type === 'burguer'
     })
@@ -76,18 +72,11 @@ export default function ContainerProduct({ items }) {
         const itemsLocaStorage = JSON.parse(localStorage.getItem('userData'))
         if (itemsLocaStorage) {
             itemsLocaStorage?.map((item) => {
-                return setName(item?.name), setNumber(item?.number), setCpf(item?.cpf)
+                return setName(item?.name), setNumber(item?.number)
             })
-        }else{
-            setName('Joel Smith')
-            setNumber('(48) 99039-4003')
-        }
-
+        } 
         localStorage.setItem('foodService', JSON.stringify([]))
         setinternalLoading(true)
-
-
-
     }, [])
     useEffect(() => {
         setPickItensExtra([])
@@ -285,39 +274,45 @@ export default function ContainerProduct({ items }) {
         let objFormated = {
             name: name,
             number: number,
-            cpf: cpf
         }
         allDataUsers.push(objFormated)
         localStorage.setItem('userData', JSON.stringify(allDataUsers))
         setModalPopUp(false)
     }
+    const [name, setName] = useState('')
+    const [number, setNumber] = useState('')
     const [correctName, setCorrectName] = useState(false)
     const [correctNumber, setcorrectNumber] = useState(false)
     return (
         <ChakraProvider>
             <Cart />
             <ModalPopUp maxWidth={500}>
-                <div className=" w-full flex flex-col  gap-5 items-start p-3 overflow-hidden  relative">
-                <h1 className="font-bold  text-CollorSecondaryDefault border-b border-CollorSecondaryDefault">Esses dados estão corretos?</h1>
+                <div className=" w-full flex flex-col  gap-5 items-center p-3 overflow-hidden  relative">
+                    <h1 className="font-bold  text-gray-700 ">Preencha com seus dados</h1>
                     <label className="flex flex-col w-full ">
                         <div className="flex flex-row justify-between items-center ">
                             Nome e sobrenome
                             <FaCheckCircle className={`${correctName ? 'right-3 absolute ' : 'opacity-0'} text-green-500 delay-100 duration-300`} />
                             <div id="obgt_name" className={`${correctName ? ' opacity-0 ' : 'right-3 absolute '} text-white delay-100 duration-300 p-[2px] rounded-full text-xs bg-gray-400`}>Obrigatório</div>
                         </div>
-                        <input id="input_name" onChange={(e) => {
-                            setName(e.target.value);
-                            const regex = /^[A-Za-z]+ [A-Za-z]{2,}(?: .*)?$/;
-                            if (regex.test(e.target.value)) {
-                                document.getElementById('input_name').style.border = ''
-                                document.getElementById('obgt_name').style.background = ''
-                                setCorrectName(true)
-                            } else {
-                                document.getElementById('input_name').style.border = '1px solid red'
-                                document.getElementById('obgt_name').style.background = 'red'
-                                setCorrectName(false)
-                            }
-                        }} value={name} type="text" className="border outline-none w-full py-2 px-2 rounded-md" placeholder="Como vamos te chamar" />
+                        <div className="flex items-center gap-2">
+                            <div className="bg-gray-300 rounded-full p-3">
+                                <FaUser className="text-white" />
+                            </div>
+                            <input id="input_name" onChange={(e) => {
+                                setName(e.target.value);
+                                const regex = /^[A-Za-z]+ [A-Za-z]{2,}(?: .*)?$/;
+                                if (regex.test(e.target.value)) {
+                                    document.getElementById('input_name').style.border = ''
+                                    document.getElementById('obgt_name').style.background = ''
+                                    setCorrectName(true)
+                                } else {
+                                    document.getElementById('input_name').style.border = '1px solid red'
+                                    document.getElementById('obgt_name').style.background = 'red'
+                                    setCorrectName(false)
+                                }
+                            }} value={name} type="text" className="border outline-none w-full py-2 px-2 rounded-md" placeholder="Como vamos te chamar" />
+                        </div>
                     </label>
                     <label className="flex flex-col w-full">
                         <div className="flex flex-row justify-between items-center">
@@ -325,25 +320,25 @@ export default function ContainerProduct({ items }) {
                             <FaCheckCircle className={`${correctNumber ? 'right-3 absolute' : 'opacity-0'} text-green-500 delay-100 duration-300`} />
                             <div id="obgt_number" className={`${correctNumber ? 'opacity-0' : 'right-3 absolute '} text-white delay-100 duration-300 p-[2px] rounded-full text-xs bg-gray-400`}>Obrigatório</div>
                         </div>
-                        <input id="input_number" maxLength={15} onChange={(e) => {
-                            setNumber(maskPhone(e.target.value))
-                            const regexTelefone = /^\d{11}$/
-                            if (regexTelefone.test(e.target.value)) {
-                                document.getElementById('input_number').style.border = ''
-                                document.getElementById('obgt_number').style.background = ''
-                                setcorrectNumber(true)
-                            } else {
-                                document.getElementById('input_number').style.border = '1px solid red'
-                                document.getElementById('obgt_number').style.background = 'red'
-                                setcorrectNumber(false)
+                        <div className="flex items-center gap-2">
+                            <div className="bg-gray-300 rounded-full p-3">
+                                <FaPhone className="text-white" />
+                            </div>
+                            <input id="input_number" maxLength={15} onChange={(e) => {
+                                setNumber(maskPhone(e.target.value))
+                                const regexTelefone = /^\d{11}$/
+                                if (regexTelefone.test(e.target.value)) {
+                                    document.getElementById('input_number').style.border = ''
+                                    document.getElementById('obgt_number').style.background = ''
+                                    setcorrectNumber(true)
+                                } else {
+                                    document.getElementById('input_number').style.border = '1px solid red'
+                                    document.getElementById('obgt_number').style.background = 'red'
+                                    setcorrectNumber(false)
 
-                            }
-                        }} value={number} type="text" className="border  w-full py-2 px-2 rounded-md outline-none" placeholder="(00) 00000-0000" />
-                    </label>
-                    <label className="flex flex-col w-full">
-                        <p className=""> CPF<span className="text-gray-300 pl-2">(opcional)</span></p>
-
-                        <input maxLength={14} onChange={(e) => { setCpf(maskCpf(e.target.value)) }} value={cpf} type="text" className="border outline-none w-full py-2 px-2 rounded-md" placeholder="000.000.000-00" />
+                                }
+                            }} value={number} type="text" className="border  w-full py-2 px-2 rounded-md outline-none" placeholder="(00) 00000-0000" />
+                        </div>
                     </label>
                     <button onClick={() => userData()} className="py-2 bg-gray-700 w-full rounded-md text-white">Concluir</button>
                 </div>
