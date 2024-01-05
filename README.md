@@ -1,34 +1,44 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<h1>Projeto-Lanchonete</h1>
+<h2>
+Descrição  
+</h2>
+O Projeto Exemplo é uma aplicação web desenvolvida em React que apresenta um cardápio interativo para um serviço de alimentação. Os usuários podem visualizar diferentes categorias de alimentos, adicionar itens ao carrinho e realizar pedidos. O projeto também inclui recursos como modais, seleção de quantidade, e observações personalizadas.
 
-## Getting Started
+<h2>Instalação</h2>
+Certifique-se de ter o Node.js instalado em seu sistema. Clone o repositório e execute os seguintes comandos:
 
-First, run the development server:
-
-```bash
+git clone https://github.com/DenilsonCoutinho/Projeto-Lanchonete
+<br/>
+<br/>
+cd  "Projeto-Lanchonete"
+<br/>
+<br/>
+npm install
+<br/>
+<br/>
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+<br/>
+<br/>
+O aplicativo será iniciado localmente em http://localhost:3000.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+<h2>Como Usar</h2>
+Navegue pelas diferentes categorias no menu superior.
+Clique em um item para ver mais detalhes, incluindo uma imagem, descrição e preço.
+No modal de detalhes do item, você pode ajustar a quantidade desejada, adicionar observações e selecionar extras, se disponíveis.
+Clique no botão "Adicionar ao Carrinho" para incluir o item no carrinho de compras.
+Visualize seu carrinho clicando no ícone de carrinho no canto inferior direito.
+Preencha seus dados no modal de confirmação e conclua o pedido.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+<h2>Contato</h2>
+<br/>
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Se precisar de ajuda ou tiver alguma dúvida, sinta-se à vontade para entrar em contato:
+<br/>
 
-## Learn More
+Email: contact.denilsoncoutinho@gmail.com
+<br/>
 
-To learn more about Next.js, take a look at the following resources:
+Telefone: (48)9 9110-9700
+<br/>
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Esperamos que aproveite o uso do Projeto-Lanchonete!
