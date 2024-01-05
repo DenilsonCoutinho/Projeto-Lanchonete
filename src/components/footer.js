@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import logo from '../assets/logotipo-personalizado-mesa.jpg'
 import { FaFacebook, FaInstagram, FaWhatsapp } from 'react-icons/fa6'
+import Link from 'next/link'
 export default function Footer() {
     return (
         <div className="h-20 pt-28 ">
@@ -12,7 +13,7 @@ export default function Footer() {
                         <div className='bg-white px-1 py-1 flex items-center gap-3'>
                             <FaInstagram />
                             <FaFacebook />
-                            <FaWhatsapp />
+                           <Link href={'/about'}><FaWhatsapp /></Link> 
                         </div>
                     </div>
                 </div>

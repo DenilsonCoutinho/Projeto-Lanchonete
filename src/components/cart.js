@@ -5,7 +5,7 @@ import { useScreenSize } from "@/context/screenSizeContext";
 import { useEffect, useState } from "react"
 import { Box, useToast } from "@chakra-ui/react";
 
-import { FaCreditCard, FaMagnifyingGlass, FaMapLocationDot, FaMotorcycle, FaPen, FaPix, FaTrash } from "react-icons/fa6";
+import { FaCreditCard, FaMagnifyingGlass, FaMapLocationDot, FaMotorcycle,FaPix, FaTrash } from "react-icons/fa6";
 import { TbPaperBag } from "react-icons/tb";
 import { FaCheckCircle, FaHamburger } from "react-icons/fa";
 import { HiCurrencyDollar } from "react-icons/hi2";
@@ -20,7 +20,6 @@ import Modal from "./modal";
 import useModalContext from "@/context/modalProvider";
 
 import Whatsapp from "../assets/WhatsApp.png";
-import ModalPopUp from "./modalPopUp";
 export default function Cart() {
 
     const { setCartActive, cartActive, setItensCart, loading, setLoading, itensCart, cartItensAnimate, setbody, body } = useCart()

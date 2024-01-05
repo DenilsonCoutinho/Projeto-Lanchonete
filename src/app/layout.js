@@ -11,7 +11,7 @@ export const metadata = {
   description: 'Cardápio Online',
 }
 
-export default function RootLayout({ children }) {
+export default function RootLayout(props) {
 
   return (
     <html lang="en">
@@ -20,7 +20,7 @@ export default function RootLayout({ children }) {
           <ScreenSizeContext>
             <CartProvider>
               <body className={`${openSans.className} myScroll`}>
-                {children}
+                {props.children}
               </body>
             </CartProvider>
           </ScreenSizeContext>

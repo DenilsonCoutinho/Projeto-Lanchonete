@@ -240,9 +240,7 @@ export default function ContainerProduct({ items }) {
 
         pickItensExtra.push(newArrayExtra)
     }
-    async function reduceExtra() {
-
-    }
+    
     const toast = useToast()
 
     async function userData() {
@@ -375,7 +373,7 @@ export default function ContainerProduct({ items }) {
                                             <div className="bg-white rounded-lg md:p-4 md:max-w-[600px] md:h-96 max-w-[400px] w-full lg:max-h-96 max-h-64 overflow-hidden  m-auto">
                                                 <Image style={{ backgroundSize: 'cover', width: screenX > 600 ? '600px' : '', height: screenX > 600 ? '350px' : '240px' }} src={item?.img} alt={item.id} className=" lg:rounded-xl select-none " />
                                             </div>
-                                            <div style={{ height: screenX < 1300 && screenX > 600 ? screenY - 290 : screenY - 390 }} className="flex flex-col w-full overflow-hidden overflow-y-auto myScroll px-2">
+                                            <div style={{ height: screenX < 1300 && screenX > 600 ? screenY - 200 :screenX > 1300? screenY - 290:screenY - 390 }} className="flex flex-col w-full overflow-hidden overflow-y-auto myScroll px-2">
                                                 <div className="">
                                                     <div className="flex flex-col items-start ">
                                                         <h1 className="text-CollorDefault">{item?.name}</h1>
@@ -399,7 +397,7 @@ export default function ContainerProduct({ items }) {
                                                                             <div id={`qtdExtra-${i.id}`} className={` bg-white border-l border-r border-gray-300 flex justify-center items-center w-5 h-5`}>
                                                                                 {0}
                                                                             </div>
-                                                                            <button onClick={() => { moreExtra(i); reduceExtra() }} className={`bg-white flex justify-center items-center rounded-r-2xl border-gray-300 w-5 h-5 `}>
+                                                                            <button onClick={() => { moreExtra(i) }} className={`bg-white flex justify-center items-center rounded-r-2xl border-gray-300 w-5 h-5 `}>
                                                                                 +
                                                                             </button>
                                                                         </div>
