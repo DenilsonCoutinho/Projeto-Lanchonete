@@ -19,7 +19,6 @@ export default function Header() {
             document.body.style.overflow = 'hidden';
         } else {
             if (typeof window !== 'undefined') {
-
                 document.body.style.overflow = 'auto';
             }
         }
@@ -64,7 +63,7 @@ export default function Header() {
             <div className='md:hidden flex fixed z-[9999] w-full shadow-2xl'>
                 <div className='bg-white px-3 h-28 flex justify-between items-center w-full'>
                     <div className='shadow-3xl rounded-full w-20 h-20 overflow-hidden'>
-                        <Image src={Logo} />
+                        <Image src={Logo} alt='logo'/>
                     </div>
                     {
                         HeaderActive ?

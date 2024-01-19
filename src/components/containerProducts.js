@@ -1,36 +1,33 @@
 "use client"
 import { useEffect, useState } from "react"
-import listFood from "../listFood/listFood"
-import Cart from "./cart"
 import Image from "next/image"
+
+import Cart from "./cart"
+import listFood from "../listFood/listFood"
+
 import { useCart } from "../context/cartContext.js"
+import { useScreenSize } from "@/context/screenSizeContext"
+
 import { BiSolidDrink } from "react-icons/bi"
 import { FaCheckCircle, FaHamburger, FaShoppingBag } from "react-icons/fa"
+import { FaIceCream, FaPhone, FaUser } from "react-icons/fa6"
 import { MdFastfood } from "react-icons/md";
 import { v4 as uuidv4 } from 'uuid';
 
-import { useScreenSize } from "@/context/screenSizeContext"
 import { Box, useToast } from '@chakra-ui/react'
 import { ChakraProvider } from '@chakra-ui/react'
-import { FaIceCream, FaPhone, FaUser } from "react-icons/fa6"
+
 import Modal from "./modal"
-import useModalContext from "@/context/modalProvider"
-import OnlyLetter from "@/utils/regex/onlyLetter"
 import ModalPopUp from "./modalPopUp"
+
+import useModalContext from "@/context/modalProvider"
+
+import OnlyLetter from "@/utils/regex/onlyLetter"
 import { maskPhone } from "../utils/regex/phoneMask"
+import Menu from "./menu"
+
 
 export default function ContainerProduct({ items }) {
-    const { setCartActive, itensCart, setItensCart, loading, setLoading, setbody } = useCart()
-    const { modal, setModal, detectModal, setDetectModal } = useModalContext()
-    const { modalPopUp, setModalPopUp } = useModalContext()
-
-    const { screenX, screenY } = useScreenSize()
-    const [addCart, setAddCart] = useState()
-    const [attCart, setAttCart] = useState([])
-    const [somaToHTML, setsomaToHTML] = useState()
-    const [validadeInput, setValidadeInput] = useState()
-    const [comment, setComment] = useState('')
-    const [internalLoading, setinternalLoading] = useState(false)
     const menuOptions = [
         {
             id: 1,
@@ -59,21 +56,30 @@ export default function ContainerProduct({ items }) {
         },
 
     ]
-    const [buttonSelected, setButtonSelected] = useState(1)
-    const [identifyProduct, setIdentifyProduct] = useState()
+
+    const { setCartActive, itensCart, setItensCart, loading, setLoading, setbody } = useCart()
+    const { modal, setModal, detectModal, setDetectModal } = useModalContext()
+    const { setModalPopUp } = useModalContext()
+    const { screenX, screenY } = useScreenSize()
+
+    const [addCart, setAddCart] = useState()
+    const [attCart, setAttCart] = useState([])
+    const [somaToHTML, setsomaToHTML] = useState()
+    const [validadeInput, setValidadeInput] = useState()
+    const [comment, setComment] = useState('')
+    const [internalLoading, setinternalLoading] = useState(false)
+
     const [moreProductsToView, setMoreProductsToView] = useState(4)
     const [pickItensExtra, setPickItensExtra] = useState([])
+    const [foodToFilter, setFoodToFilter] = useState()
 
-    const foodToFilter = listFood.filter((food) => {
-        return identifyProduct?.toFilter ? food.type === identifyProduct.toFilter : food.type === 'burguer'
-    })
     useEffect(() => {
         const itemsLocaStorage = JSON.parse(localStorage.getItem('userData'))
         if (itemsLocaStorage) {
             itemsLocaStorage?.map((item) => {
                 return setName(item?.name), setNumber(item?.number)
             })
-        } 
+        }
         localStorage.setItem('foodService', JSON.stringify([]))
         setinternalLoading(true)
     }, [])
@@ -114,7 +120,7 @@ export default function ContainerProduct({ items }) {
 
     }, [internalLoading])
 
-    async function moreQuantityFood(item) {
+    async function incrementQuantityFood(item) {
         let qtdHtmlMore = document.getElementById(`qtd_Food-${item.id}`)
         let qtdHtmlMoreToNumber = parseInt(qtdHtmlMore.innerHTML)
         setinternalLoading(true)
@@ -170,15 +176,14 @@ export default function ContainerProduct({ items }) {
     }
     async function toCart(item) {
         setinternalLoading(true)
-
         let lastIndex = toCartOrder[toCartOrder.length - 1]
-        let qtdHtmlMore = document.getElementById(`qtd_Food-${item.id}`)
-        let qtdFoodHtml = document.getElementById(`qtd_order`)
+        let currentQuantity = document.getElementById(`qtd_Food-${item.id}`)
+        let quantityHtmlElement = document.getElementById(`qtd_order`)
         if (comment) {
             lastIndex.comment = comment
         }
 
-        if (parseInt(qtdHtmlMore.innerHTML) > 0) {
+        if (parseInt(currentQuantity.innerHTML) > 0) {
             await new Promise((resolve) => setTimeout(resolve, 100))
             attCart?.push(lastIndex);
             setLoading(true)
@@ -193,8 +198,8 @@ export default function ContainerProduct({ items }) {
                 return acumulador + valorAtual;
             }, 0);
 
-            qtdFoodHtml.innerHTML = soma
-            qtdHtmlMore.innerHTML = 0
+            quantityHtmlElement.innerHTML = soma
+            currentQuantity.innerHTML = 0
             setComment('')
             setPickItensExtra([])
             setinternalLoading(false)
@@ -203,7 +208,7 @@ export default function ContainerProduct({ items }) {
         }
     }
 
-    function lessExtra(item) {
+    function decrementExtra(item) {
         let qtdLessExtra = document.getElementById(`qtdExtra-${item.id}`)
         let qtd = parseInt(qtdLessExtra.innerHTML)
         if (qtd > 0) {
@@ -240,7 +245,7 @@ export default function ContainerProduct({ items }) {
 
         pickItensExtra.push(newArrayExtra)
     }
-    
+
     const toast = useToast()
 
     async function userData() {
@@ -340,24 +345,7 @@ export default function ContainerProduct({ items }) {
                     <button onClick={() => userData()} className="py-2 bg-gray-700 w-full rounded-md text-white">Concluir</button>
                 </div>
             </ModalPopUp>
-            <div id="menu" className="pt-28 max-w-[1200px] m-auto">
-                <p className="text-CollorSecondaryDefault uppercase tracking-wide text-center font-semibold ">Cardápio</p>
-                <h1 className="text-CollorDefault text-center font-bold text-3xl ">Nosso Cardápio</h1>
-                <div>
-                    <div className="pt-20 max-w-[1000px] flex justify-center m-auto  py-1">
-                        <div id="filter" className="flex flex-row  items-center gap-4 max-w-[1000px] overflow-x-auto bg-[#fdf7e7]  myScroll py-1 px-2">
-                            {
-                                menuOptions?.map((item, i) => {
-                                    return <button key={item.id} onClick={() => { setButtonSelected(item.id); setIdentifyProduct(item) }} className={`select-none flex ${i % 2 === 0 ? 'animatedElementLeft' : 'animatedElementRight'} items-center removeBlue w-28 text-center justify-center py-2 px-2  gap-2 ${buttonSelected === item.id ? 'bg-CollorSecondaryDefault' : 'bg-white'} shadow-xl rounded-2xl`}>
-                                        <p className=" text-black">{item.icon}</p>
-                                        <p className=" text-black">{item.name}</p>
-                                    </button>
-                                })
-                            }
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <Menu setFood={setFoodToFilter} />
             <button onClick={() => { setLoading(true); setCartActive(true); setbody('1') }} className='fixed z-10 select-none md:right-10 right-3 bottom-10 bg-CollorSecondaryDefault border border-white shadow-xl rounded-full p-3'>
                 <FaShoppingBag className='text-CollorDefault lg:text-5xl text-3xl' />
                 <div id="qtd_order" className='bg-red-600 text-white w-6 shadow-3xl -top-2 right-0 h-6 absolute rounded-full'>{somaToHTML || 0}</div>
@@ -366,14 +354,14 @@ export default function ContainerProduct({ items }) {
                 <div className="flex flex-wrap justify-center gap-10 items-center">
                     {
                         foodToFilter?.map((item, i) => {
-                            return i < moreProductsToView && <div className="relative ">
+                            return i < moreProductsToView && <div key={item.id} className="relative ">
                                 {item?.id === addCart?.id && detectModal === '1' && <Modal maxWidth={1100} isback={true}>
                                     <div className="relative lg:h-full ">
                                         <div className="flex md:flex-row flex-col items-start gap-4 ">
                                             <div className="bg-white rounded-lg md:p-4 md:max-w-[600px] md:h-96 max-w-[400px] w-full lg:max-h-96 max-h-64 overflow-hidden  m-auto">
-                                                <Image style={{ backgroundSize: 'cover', width: screenX > 600 ? '600px' : '', height: screenX > 600 ? '350px' : '240px' }} src={item?.img} alt={item.id} className=" lg:rounded-xl select-none " />
+                                                <Image style={{ backgroundSize: 'cover', width: screenX > 600 ? '600px' : '', height: screenX > 600 ? '350px' : '240px' }} src={item?.img} alt={"image Hamburgue-" + item.id} className=" lg:rounded-xl select-none " />
                                             </div>
-                                            <div style={{ height: screenX < 1300 && screenX > 600 ? screenY - 200 :screenX > 1300? screenY - 290:screenY - 390 }} className="flex flex-col w-full overflow-hidden overflow-y-auto myScroll px-2">
+                                            <div style={{ height: screenX < 1300 && screenX > 600 ? screenY - 200 : screenX > 1300 ? screenY - 290 : screenY - 390 }} className="flex flex-col w-full overflow-hidden overflow-y-auto myScroll px-2">
                                                 <div className="">
                                                     <div className="flex flex-col items-start ">
                                                         <h1 className="text-CollorDefault">{item?.name}</h1>
@@ -382,7 +370,7 @@ export default function ContainerProduct({ items }) {
                                                         <h1 className="text-CollorDefault rounded-xl pl-1 my-5 py-3 bg-gray-100 w-full">Adicionais:</h1>
                                                         <div className="flex flex-col gap-4 w-full">
                                                             {item?.extra?.map((i) => {
-                                                                return <div className="flex justify-between w-full items-center">
+                                                                return <div key={i?.id} className="flex justify-between w-full items-center">
                                                                     <div className="flex flex-col">
                                                                         <h1 className="text-CollorDefault">
                                                                             {i?.name}
@@ -391,7 +379,7 @@ export default function ContainerProduct({ items }) {
                                                                     </div>
                                                                     <div className="flex flex-row-reverse gap-3 items-center ">
                                                                         <div className="flex flex-row items-center border rounded-lg">
-                                                                            <button onClick={() => lessExtra(i)} className={`rounded-l-2xl  flex justify-center bg-white items-center border-gray-4  w-5 h-5`}>
+                                                                            <button onClick={() => decrementExtra(i)} className={`rounded-l-2xl  flex justify-center bg-white items-center border-gray-4  w-5 h-5`}>
                                                                                 -
                                                                             </button>
                                                                             <div id={`qtdExtra-${i.id}`} className={` bg-white border-l border-r border-gray-300 flex justify-center items-center w-5 h-5`}>
@@ -401,7 +389,7 @@ export default function ContainerProduct({ items }) {
                                                                                 +
                                                                             </button>
                                                                         </div>
-                                                                        <Image width={100} className=" rounded-md" src={i?.img} />
+                                                                        <Image width={100} className=" rounded-md" src={i?.img} alt={"extra" + i.id} />
                                                                     </div>
                                                                 </div>
                                                             })
@@ -427,7 +415,7 @@ export default function ContainerProduct({ items }) {
                                                         <div id={`qtd_Food-${item.id}`} className={` bg-white border-l border-r border-gray-300 flex justify-center items-center w-10 h-10`}>
                                                             {1}
                                                         </div>
-                                                        <button onClick={() => moreQuantityFood(item)} className={`bg-white flex justify-center items-center rounded-r-2xl border-gray-300 w-10 h-10 `}>
+                                                        <button onClick={() => incrementQuantityFood(item)} className={`bg-white flex justify-center items-center rounded-r-2xl border-gray-300 w-10 h-10 `}>
                                                             +
                                                         </button>
                                                     </div>
@@ -467,7 +455,7 @@ export default function ContainerProduct({ items }) {
                                 <div alt={item.id} id={`itemFood-${item.id}`} onClick={() => { setAddCart(item); setModal(true); setDetectModal('1') }} key={item.id} className={`bg-white flex flex-col justify-x items-start select-none rounded-xl p-2 shadow-3xl md:w-[450px] animationToTop  md:h-[190px] `}>
                                     <div className="flex md:flex-row flex-col items-start gap-2 cursor-pointer">
                                         <div className={`relative    ${item.type === "drink" ? ' md:w-36 w-72 overflow-hidden' : 'md:w-36 w-full'} bg-white rounded-lg   h-28  pb-5`}>
-                                            <Image style={{ objectFit: 'cover', width: '100%', height: item.type === "drink" ? '160%' : '130%' }} src={item.img} alt={item.name} className="cursor-pointer   lg:rounded-xl rounded-md  select-none  " />
+                                            <Image style={{ objectFit: 'cover', width: '100%', height: item.type === "drink" ? '160%' : '130%' }} src={item.img} alt={"hamburguer" + item.name} className="cursor-pointer   lg:rounded-xl rounded-md  select-none  " />
                                         </div>
                                         <div className="flex flex-col items-start gap-2 ">
                                             <h1 className="text-sm ">{item.name.substring(0, 25)}</h1>
@@ -485,7 +473,7 @@ export default function ContainerProduct({ items }) {
                         })
                     }
                 </div>
-                {foodToFilter.length > moreProductsToView ?
+                {foodToFilter?.length > moreProductsToView ?
                     <button onClick={() => setMoreProductsToView((prev) => prev + 1)} className="mt-2 px-5 py-2 bg-white rounded-2xl shadow-lg m-auto flex justify-center text-black">Ver mais</button>
                     :
                     <></>

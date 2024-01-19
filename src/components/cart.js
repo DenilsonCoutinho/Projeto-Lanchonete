@@ -5,7 +5,7 @@ import { useScreenSize } from "@/context/screenSizeContext";
 import { useEffect, useState } from "react"
 import { Box, useToast } from "@chakra-ui/react";
 
-import { FaCreditCard, FaMagnifyingGlass, FaMapLocationDot, FaMotorcycle,FaPix, FaTrash } from "react-icons/fa6";
+import { FaCreditCard, FaMagnifyingGlass, FaMapLocationDot, FaMotorcycle, FaPix, FaTrash } from "react-icons/fa6";
 import { TbPaperBag } from "react-icons/tb";
 import { FaCheckCircle, FaHamburger } from "react-icons/fa";
 import { HiCurrencyDollar } from "react-icons/hi2";
@@ -23,8 +23,9 @@ import Whatsapp from "../assets/WhatsApp.png";
 export default function Cart() {
 
     const { setCartActive, cartActive, setItensCart, loading, setLoading, itensCart, cartItensAnimate, setbody, body } = useCart()
-    const { modal, setModal, detectModal, setDetectModal } = useModalContext()
+    const { setModal, detectModal, setDetectModal } = useModalContext()
     const { screenY, screenX } = useScreenSize()
+
     const [nextStep, setNextStep] = useState(1)
     const [cep, setCep] = useState('')
     const [adress, setAdress] = useState('')
@@ -34,17 +35,20 @@ export default function Cart() {
     const [formartPay, setFormartPay] = useState('')
     const [city, setCity] = useState('')
     const [complement, setComplement] = useState('')
-    const [itensToFormat, setItensToFormat] = useState('')
-    const [userData, setUserData] = useState('')
+
+    const [itensToFormat, setItensToFormat] = useState()
+    const [userData, setUserData] = useState()
     const [internalLoading, setInternalLoading] = useState(false)
+
     useEffect(() => {
-        const itemsLocaStorage = JSON.parse(localStorage.getItem('foodService'))
-        const itemsLocaStorageUser = JSON.parse(localStorage.getItem('userData'))
-        setUserData(itemsLocaStorageUser)
-        localStorage.setItem('foodService', JSON.stringify(itemsLocaStorage))
-        setItensCart(itemsLocaStorage)
-        setItensToFormat(itemsLocaStorage)
+        const locaStorageData = JSON.parse(localStorage.getItem('foodService'))
+        const locaStorageUserData = JSON.parse(localStorage.getItem('userData'))
+        setUserData(locaStorageUserData)
+        localStorage.setItem('foodService', JSON.stringify(locaStorageData))
+        setItensCart(locaStorageData)
+        setItensToFormat(locaStorageData)
     }, [loading])
+
     if (typeof window !== undefined) {
         if (body === '1') {
             document.body.style.overflow = 'hidden';
@@ -53,16 +57,16 @@ export default function Cart() {
         document.body.style.overflow = 'auto';
     }
 
-    let itenStorage = []
+    let storageData = []
     if (typeof window !== 'undefined') {
-        let itensStorage = JSON.parse(localStorage.getItem('foodService'))
-        itenStorage = itensStorage
+        let data = JSON.parse(localStorage.getItem('foodService'))
+        storageData = data
     }
 
-    let Prices = itenStorage?.map((i) => {
+    let Prices = storageData?.map((i) => {
         return i?.price
     })
-    let priceExtraMap = itenStorage?.map((i) => {
+    let priceExtraMap = storageData?.map((i) => {
         return i?.extra
     })
 
@@ -81,25 +85,17 @@ export default function Cart() {
     let sumTotPrice = sumTot + sumTotExtra
     let totPrice = sumTotPrice + delivery
 
-    function filterItensCart() {
-        let filteredItem = itenStorage?.filter((item) => {
-            return item.qtd > 0
-        })
-        localStorage.setItem('foodService', JSON.stringify(filteredItem))
-
-    }
-    async function moreQuantityFood(item) {
-
-        let qtdHtml = document.getElementById(`qtd_Food-Cart${item.id}`)
-        let qtdHtmlToNumber = parseInt(qtdHtml.innerHTML)
-        let q = qtdHtml.innerHTML = qtdHtmlToNumber + 1
-        let objIndex = itenStorage.findIndex((obj => obj.id == item.id))
+    async function incrementFoodQuantity(item) {
+        let quantityHtmlElement = document.getElementById(`qtd_Food-Cart${item.id}`)
+        let currentQuantity = parseInt(quantityHtmlElement.innerHTML)
+        let newQuantity = quantityHtmlElement.innerHTML = currentQuantity + 1
+        let objIndex = storageData.findIndex((obj => obj.id == item.id))
         if (objIndex !== -1) {
-            itenStorage[objIndex].qtd = q;
-            itenStorage[objIndex].price = item.originalPrice * q;
+            storageData[objIndex].qtd = newQuantity;
+            storageData[objIndex].price = item.originalPrice * newQuantity;
             setLoading(true)
             await new Promise((resolve) => setTimeout(resolve, 100))
-            localStorage.setItem('foodService', JSON.stringify(itenStorage))
+            localStorage.setItem('foodService', JSON.stringify(storageData))
             setLoading(false)
             return
 
@@ -107,32 +103,36 @@ export default function Cart() {
 
     }
 
-    async function lessQuantityFood(item) {
-        let qtdHtml = document.getElementById(`qtd_Food-Cart${item.id}`)
-        let qtdHtmlToInt = parseInt(qtdHtml.innerHTML)
-        let qtdScreen = qtdHtml.innerHTML = qtdHtmlToInt - 1
-        let objIndex = itenStorage.findIndex((obj => obj.id == item.id))
-        setLoading(true)
-        if (objIndex !== -1) {
-            itenStorage[objIndex].qtd = qtdScreen;
-            itenStorage[objIndex].price = item.price - item.originalPrice;
-            let filteredItem = itenStorage?.filter((item) => {
-                return item.qtd > 0
-            })
-            await new Promise((resolve) => setTimeout(resolve, 100))
-            localStorage.setItem('foodService', JSON.stringify(filteredItem))
-            return
+    async function decrementFoodQuantity(item) {
+        let quantityHtmlElement = document.getElementById(`qtd_Food-Cart${item.id}`);
+        let currentQuantity = parseInt(quantityHtmlElement.innerHTML);
+        let newQuantity = quantityHtmlElement.innerHTML = currentQuantity - 1;
+        let itemIndex = storageData.findIndex((obj) => obj.id == item.id);
+        setLoading(true);
+        if (itemIndex !== -1) {
+            storageData[itemIndex].qtd = newQuantity;
+            storageData[itemIndex].price = item.price - item.originalPrice;
+            let filteredItems = storageData?.filter((itemStorage) => itemStorage.qtd > 0);
+            await new Promise((resolve) => setTimeout(resolve, 100));
+            localStorage.setItem('foodService', JSON.stringify(filteredItems));
+            return;
         }
-        setLoading(false)
     }
 
+    function filterItensCart() {
+        let filteredItem = storageData?.filter((item) => {
+            return item.qtd > 0
+        })
+        localStorage.setItem('foodService', JSON.stringify(filteredItem))
+
+    }
     async function removeItemCart(item) {
         setLoading(true)
-        let objIndex = itenStorage.findIndex((obj => obj.id == item.id))
+        let objIndex = storageData.findIndex((obj => obj.id == item.id))
         if (objIndex !== -1) {
-            itenStorage[objIndex].qtd = 0
+            storageData[objIndex].qtd = 0
             await new Promise((resolve) => setTimeout(resolve, 100))
-            localStorage.setItem('foodService', JSON.stringify(itenStorage))
+            localStorage.setItem('foodService', JSON.stringify(storageData))
             filterItensCart()
         }
         setLoading(false)
@@ -157,7 +157,7 @@ export default function Cart() {
         }
     }
 
-    function getNextStep() {
+    function nextStepCart() {
         const fieldstoValidate = [
             { "name": 'cep', "value": cep, "required": false, "type": 'string' },
             { "name": 'neighborhood', "value": neighborhood, "required": true, "type": 'string' },
@@ -247,7 +247,6 @@ export default function Cart() {
 
     return (
         cartActive && <div className="h-full  fixed z-[99999] right-0 top-0 left-0 bg-white" >
-            
             {detectModal === '2' && <Modal maxWidth={500} isback={false}>
                 <div className=" p-3 flex w-full justify-center gap-5 flex-col items-center m-auto">
                     <div className="">
@@ -278,16 +277,14 @@ export default function Cart() {
                     {nextStep === 1 ? <div className="">
                         <h1 className="text-black font-semibold pt-5"> Seu carrinho:</h1>
                         <div style={{ height: screenY - 230 }} className={`overflow-hidden  overflow-y-auto myScroll shadow-innerShadow rounded-lg p-2`}>
-                            {itenStorage.length > 0 ?
-                                itenStorage?.map((items) => {
+                            {storageData.length > 0 ?
+                                storageData?.map((items) => {
                                     return (
                                         <div key={items?.id} className="pt-5 focus-in-expand ">
                                             {<div className="flex items-center justify-between">
                                                 <div>
                                                     <div className="flex items-center lg:gap-5 gap-2">
                                                         <div className="relative">
-                                                            {/* <Image src={items?.img} alt={items?.name} width={100} className="rounded-xl lg:w-28 md:w-24 w-20" /> */}
-                                                            {/* <div className="bg-red-500 rounded-lg p-1 absolute -top-2 right-0"><FaPen  className="text-white"/></div> */}
                                                         </div>
                                                         <div className="flex flex-col items-start">
                                                             <div className="flex items-center gap-2">
@@ -296,7 +293,6 @@ export default function Cart() {
                                                             </div>
                                                             <p className=" text-CollorSecondaryDefault lg:text-base text-xs">{items?.price?.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
                                                             <ul className="list-disc pl-4 text-gray-400 font-extralight">
-
                                                                 {items?.extra.map((i) => {
                                                                     return i.qtd > 0 && <li key={i.name} className="text-xs">
                                                                         <span className=" ">
@@ -314,29 +310,27 @@ export default function Cart() {
                                                 </div>
                                                 <div className="flex items-center gap-5">
                                                     <div className="flex items-center rounded-2xl shadow-md">
-                                                        <button onClick={() => lessQuantityFood(items)} className={`lg:rounded-l-2xl  rounded-l-xl  flex justify-center items-center border 'border-CollorSecondaryDefault'   lg:w-10 sm:w-7 w-6  lg:h-6 sm:h-7 h-5`}>
+                                                        <button onClick={() => decrementFoodQuantity(items)} className={`lg:rounded-l-2xl  rounded-l-xl  flex justify-center items-center border 'border-CollorSecondaryDefault'   lg:w-10 sm:w-7 w-6  lg:h-6 sm:h-7 h-5`}>
                                                             {items?.qtd > 1 ? '-' : <div><p className="lg:flex hidden ">-</p><FaTrash className="text-[10px] lg:hidden flex  text-red-500" /></div>}
                                                         </button>
                                                         <div id={`qtd_Food-Cart${items?.id}`} className={` border lg:text-base text-xs flex justify-center items-center border-CollorSecondaryDefault'  lg:w-10 sm:w-7 w-6 lg:h-6  sm:h-7 h-5`}>
                                                             {items?.qtd}
                                                         </div>
-                                                        <button id={`moreItem-${items?.id}`} onClick={() => moreQuantityFood(items)} className={` flex justify-center items-center lg:rounded-r-2xl rounded-r-xl border lg:w-10 sm:w-7 w-6 lg:h-6  sm:h-7 h-5  'border-CollorSecondaryDefault'`}>
+                                                        <button id={`moreItem-${items?.id}`} onClick={() => incrementFoodQuantity(items)} className={` flex justify-center items-center lg:rounded-r-2xl rounded-r-xl border lg:w-10 sm:w-7 w-6 lg:h-6  sm:h-7 h-5  'border-CollorSecondaryDefault'`}>
                                                             +
                                                         </button>
                                                     </div>
-                                                    {
-                                                        <button onClick={() => {
-                                                            removeItemCart(items); toast({
-                                                                position: 'top-right',
-                                                                duration: 2000,
-                                                                render: () => (
-                                                                    <Box className="z-[99999999] lg:translate-y-0 translate-y-28 rounded-md flex items-center gap-3" color='white' p={3} bg='red.400'>
-                                                                        <FaCheckCircle className="text-white" /> Item removido
-                                                                    </Box>
-                                                                ),
-                                                            })
-                                                        }} className="h-5 font-bold px-3 bg-red-500  hidden lg:flex justify-center items-center text-white rounded-lg cursor-pointer">X</button>
-                                                    }
+                                                    <button onClick={() => {
+                                                        removeItemCart(items); toast({
+                                                            position: 'top-right',
+                                                            duration: 2000,
+                                                            render: () => (
+                                                                <Box className=" lg:translate-y-0 translate-y-28 rounded-md flex items-center gap-3" color='white' p={3} bg='red.400'>
+                                                                    <FaCheckCircle className="text-white" /> Item removido
+                                                                </Box>
+                                                            ),
+                                                        })
+                                                    }} className="h-5 relative z-[999999999] font-bold px-3 bg-red-500  hidden lg:flex justify-center items-center text-white rounded-lg cursor-pointer">X</button>
                                                 </div>
                                             </div>
                                             }
@@ -428,7 +422,7 @@ export default function Cart() {
                                                     </div>
                                                 </div>
                                             </div> :
-                                            <></>}
+                                            <> </>}
                                 </div>
                                 }
                                 {deliverOrEstablishment && <div className="flex flex-col lg:items-end items-start lg:gap-0  gap-4">
@@ -444,13 +438,11 @@ export default function Cart() {
                                             deliverOrEstablishment === '1' ?
                                                 <button onClick={() => setNextStep(3)} className="removeBlue bg-CollorSecondaryDefault rounded-2xl text-white py-2 px-3">Revisar pedido</button>
                                                 :
-                                                <button onClick={() => getNextStep()} className="removeBlue bg-CollorSecondaryDefault rounded-2xl text-white py-2 px-3">Revisar pedido</button>
+                                                <button onClick={() => nextStepCart()} className="removeBlue bg-CollorSecondaryDefault rounded-2xl text-white py-2 px-3">Revisar pedido</button>
                                         }
-
                                     </div>
                                 </div>}
                             </div> :
-
                             nextStep === 3 ?
                                 <div className="focus-in-expand">
                                     {<div className="flex flex-col items-start ">
@@ -489,125 +481,116 @@ export default function Cart() {
                                     </div>}
                                 </div> :
                                 nextStep === 4 &&
-                                <>
-                                    {
-                                        <div className="">
-                                            <h1 className="text-CollorDefault font-medium">Resumo do pedido:</h1>
+                                <div className="">
+                                    <h1 className="text-CollorDefault font-medium">Resumo do pedido:</h1>
 
-                                            {<div style={{ height: screenY - 440 }} className={`overflow-hidden  overflow-y-auto myScroll shadow-innerShadow rounded-lg p-2`}>
-                                                {itenStorage.map((items) => {
-
-                                                    return <div key={items.id}>
-                                                        <div className="flex items-center justify-between mt-2 focus-in-expand">
-                                                            <div>
-                                                                <div className="flex items-center lg:gap-5 gap-2">
-                                                                    <div className="relative">
-                                                                        {/* <Image src={items?.img} alt={items?.name} width={100} className="rounded-xl lg:w-28 md:w-24 w-20" /> */}
-                                                                        {/* <div className="bg-red-500 rounded-lg p-1 absolute -top-2 right-0"><FaPen  className="text-white"/></div> */}
-                                                                    </div>
-                                                                    <div className="flex flex-col items-start">
-                                                                        <div className="flex items-center gap-2">
-                                                                            <h1 className="text-CollorDefault md:w-80  lg:text-base text-xs">{items?.name}</h1>
-                                                                        </div>
-                                                                        <p className=" text-CollorSecondaryDefault lg:text-base text-xs">{items?.price?.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
-                                                                        <ul className="list-disc pl-4 text-gray-400 font-extralight">
-                                                                        {items?.extra.map((i) => {
-                                                                    return i.qtd > 0 && <li key={i.name} className="text-xs">
-                                                                        <span className=" ">
-                                                                            (x{i.qtd}) {i.name}
-                                                                        </span>{' '}
-                                                                        <span className=" ">
-                                                                            {i?.price?.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}
-                                                                        </span>
-                                                                    </li>
-                                                                })}
-                                                                        </ul>
-                                                                    </div>
-                                                                </div>
-                                                                {items?.comment !== "" && <h1 className="text-CollorDefault mt-4 text-xs"><strong>Observação:</strong> {items?.comment}</h1>}
-                                                            </div>
-                                                            <div className="flex items-center ">
-                                                                <div className="flex gap-1 items-center rounded-2xl text-gray-600 ">
-                                                                    x  <span className="font-bold md:text-lg ">{items?.qtd}</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <hr className="mt-4" />
-                                                    </div>
-                                                })
-                                                }
-                                            </div>}
-                                            <div className="">
-                                                <div className="flex flex-col h-44  overflow-y-auto overflow-hidden ">
-                                                    {
-                                                        deliverOrEstablishment === '2' ?
-                                                            <h1 h1 className="lg:text-xl font-semibold">Local de entrega:</h1>
-                                                            :
-                                                            <h1 h1 className="lg:text-xl font-semibold">Retirar em:</h1>
-                                                    }
-                                                    <div className="flex flex-row gap-3 items-start  pt-2">
-                                                        <div className="bg-CollorSecondaryDefault pt-1 rounded-xl p-1">
-                                                            <FaMapLocationDot className="lg:text-4xl text-3xl" />
-                                                        </div>
-                                                        {deliverOrEstablishment === '2' ? <div className="flex flex-col">
-                                                            <h1 className="font-semibold text-CollorDefault lg:text-base text-sm">{adress}, {number} ,{neighborhood}</h1>
-                                                            <h1 className="font-medium text-gray-400 text-sm">{city} / {cep}</h1>
-                                                        </div>
-                                                            :
+                                    {<div style={{ height: screenY - 440 }} className={`overflow-hidden  overflow-y-auto myScroll shadow-innerShadow rounded-lg p-2`}>
+                                        {storageData.map((items) => {
+                                            return <div key={items.id}>
+                                                <div className="flex items-center justify-between mt-2 focus-in-expand">
+                                                    <div>
+                                                        <div className="flex items-center lg:gap-5 gap-2">
                                                             <div className="flex flex-col items-start">
-                                                                <h1 className="font-semibold text-CollorDefault lg:text-base text-sm"> R. Blumenau, 202 - Santo Antônio, Joinville - SC, 89204-248</h1>
-                                                                <div className="w-52 h-20   border rounded-xl shadow-xl ove ">
-                                                                    <iframe className="w-52 h-20 focus-in-expand   rounded-xl border-2 border-CollorSecondaryDefault " src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d57242.14100170128!2d-48.92772745136715!3d-26.27354559999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94deaf812df04939%3A0x4f6cf9c0a434da5f!2sBurger%20King%20-%20Drive%20Thru%20II!5e0!3m2!1spt-BR!2sbr!4v1701355942256!5m2!1spt-BR!2sbr" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                                                                <div className="flex items-center gap-2">
+                                                                    <h1 className="text-CollorDefault md:w-80  lg:text-base text-xs">{items?.name}</h1>
                                                                 </div>
+                                                                <p className=" text-CollorSecondaryDefault lg:text-base text-xs">{items?.price?.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
+                                                                <ul className="list-disc pl-4 text-gray-400 font-extralight">
+                                                                    {items?.extra.map((i) => {
+                                                                        return i.qtd > 0 && <li key={i.name} className="text-xs">
+                                                                            <span className=" ">
+                                                                                (x{i.qtd}) {i.name}
+                                                                            </span>{' '}
+                                                                            <span className=" ">
+                                                                                {i?.price?.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}
+                                                                            </span>
+                                                                        </li>
+                                                                    })}
+                                                                </ul>
                                                             </div>
-                                                        }
+                                                        </div>
+                                                        {items?.comment !== "" && <h1 className="text-CollorDefault mt-4 text-xs"><strong>Observação:</strong> {items?.comment}</h1>}
                                                     </div>
-                                                    <div className="mt-4 flex flex-col justify-start">
-                                                        <h1 className="font-semibold text-CollorDefault">Forma de pagamento:</h1>
-                                                        {
-                                                            <div>
-                                                                <div className="flex flex-col lg:items-center items-start lg:gap-4 mt-3 gap-2">
-                                                                    {
-                                                                        formartPay === '1' ?
-                                                                            <div className={`lg:mt-3 w-full ${formartPay === '1' ? 'bg-CollorSecondaryDefault' : 'bg-white'}  duration-150 select-none cursor-pointer px-3 border py-2  rounded-lg`}>
-                                                                                <h1 className="text-black text-center flex items-center flex-row gap-1"><HiCurrencyDollar />Dinheiro</h1>
+                                                    <div className="flex items-center ">
+                                                        <div className="flex gap-1 items-center rounded-2xl text-gray-600 ">
+                                                            x  <span className="font-bold md:text-lg ">{items?.qtd}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <hr className="mt-4" />
+                                            </div>
+                                        })
+                                        }
+                                    </div>}
+                                    <div className="">
+                                        <div className="flex flex-col h-44  overflow-y-auto overflow-hidden ">
+                                            {
+                                                deliverOrEstablishment === '2' ?
+                                                    <h1 h1 className="lg:text-xl font-semibold">Local de entrega:</h1>
+                                                    :
+                                                    <h1 h1 className="lg:text-xl font-semibold">Retirar em:</h1>
+                                            }
+                                            <div className="flex flex-row gap-3 items-start  pt-2">
+                                                <div className="bg-CollorSecondaryDefault pt-1 rounded-xl p-1">
+                                                    <FaMapLocationDot className="lg:text-4xl text-3xl" />
+                                                </div>
+                                                {deliverOrEstablishment === '2' ? <div className="flex flex-col">
+                                                    <h1 className="font-semibold text-CollorDefault lg:text-base text-sm">{adress}, {number} ,{neighborhood}</h1>
+                                                    <h1 className="font-medium text-gray-400 text-sm">{city} / {cep}</h1>
+                                                </div>
+                                                    :
+                                                    <div className="flex flex-col items-start">
+                                                        <h1 className="font-semibold text-CollorDefault lg:text-base text-sm"> R. Blumenau, 202 - Santo Antônio, Joinville - SC, 89204-248</h1>
+                                                        <div className="w-52 h-20   border rounded-xl shadow-xl ove ">
+                                                            <iframe className="w-52 h-20 focus-in-expand   rounded-xl border-2 border-CollorSecondaryDefault " src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d57242.14100170128!2d-48.92772745136715!3d-26.27354559999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94deaf812df04939%3A0x4f6cf9c0a434da5f!2sBurger%20King%20-%20Drive%20Thru%20II!5e0!3m2!1spt-BR!2sbr!4v1701355942256!5m2!1spt-BR!2sbr" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </div>
+                                            <div className="mt-4 flex flex-col justify-start">
+                                                <h1 className="font-semibold text-CollorDefault">Forma de pagamento:</h1>
+                                                {
+                                                    <div>
+                                                        <div className="flex flex-col lg:items-center items-start lg:gap-4 mt-3 gap-2">
+                                                            {
+                                                                formartPay === '1' ?
+                                                                    <div className={`lg:mt-3 w-full ${formartPay === '1' ? 'bg-CollorSecondaryDefault' : 'bg-white'}  duration-150 select-none cursor-pointer px-3 border py-2  rounded-lg`}>
+                                                                        <h1 className="text-black text-center flex items-center flex-row gap-1"><HiCurrencyDollar />Dinheiro</h1>
+                                                                    </div>
+                                                                    : formartPay === '2' ?
+                                                                        <div className={`lg:mt-3 w-full ${formartPay === '2' ? 'bg-CollorSecondaryDefault' : 'bg-white'} duration-150 select-none cursor-pointer px-3 border py-2  rounded-lg`}>
+                                                                            <h1 className="text-black text-center flex items-center flex-row gap-1 "><FaPix /> pix</h1>
+                                                                        </div>
+                                                                        : formartPay === '3' ?
+                                                                            <div className={`lg:mt-3 w-full ${formartPay === '3' ? 'bg-CollorSecondaryDefault' : 'bg-white'}  duration-150 select-none cursor-pointer px-3 border py-2  rounded-lg`}>
+                                                                                <h1 className="text-black text-center flex items-center flex-row gap-1"><FaCreditCard />Crédito</h1>
                                                                             </div>
-                                                                            : formartPay === '2' ?
-                                                                                <div className={`lg:mt-3 w-full ${formartPay === '2' ? 'bg-CollorSecondaryDefault' : 'bg-white'} duration-150 select-none cursor-pointer px-3 border py-2  rounded-lg`}>
-                                                                                    <h1 className="text-black text-center flex items-center flex-row gap-1 "><FaPix /> pix</h1>
-                                                                                </div>
-                                                                                : formartPay === '3' ?
-                                                                                    <div className={`lg:mt-3 w-full ${formartPay === '3' ? 'bg-CollorSecondaryDefault' : 'bg-white'}  duration-150 select-none cursor-pointer px-3 border py-2  rounded-lg`}>
-                                                                                        <h1 className="text-black text-center flex items-center flex-row gap-1"><FaCreditCard />Crédito</h1>
-                                                                                    </div>
-                                                                                    :
-                                                                                    <div className={`lg:mt-3 w-full ${formartPay === '4' ? 'bg-CollorSecondaryDefault' : 'bg-white'}  duration-150 select-none cursor-pointer px-3 border py-2  rounded-lg`}>
-                                                                                        <h1 className="text-black text-center flex items-center flex-row gap-1"><FaCreditCard />Débito</h1>
-                                                                                    </div>
-                                                                    }
-                                                                </div>
-                                                            </div>
-                                                        }
+                                                                            :
+                                                                            <div className={`lg:mt-3 w-full ${formartPay === '4' ? 'bg-CollorSecondaryDefault' : 'bg-white'}  duration-150 select-none cursor-pointer px-3 border py-2  rounded-lg`}>
+                                                                                <h1 className="text-black text-center flex items-center flex-row gap-1"><FaCreditCard />Débito</h1>
+                                                                            </div>
+                                                            }
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div className="border-b w-full py-4"></div>
-                                                <div className="flex flex-col lg:items-end items-start lg:gap-0  gap-4">
-                                                    <div className="flex flex-col lg:items-end items-start">
-                                                        <p className="text-gray-500 text-sm">Subtotal: {sumTot.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
-                                                        <p className="text-gray-500 text-sm">Adicionais: {sumTotExtra.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
-                                                        <p className=" text-gray-400 text-sm flex items-center gap-2"><FaMotorcycle className="text-gray-400 text-base" />Entrega: + {delivery.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
-                                                        <p className="font-medium lg?text-xl text-base pt-2">Total: <span className="font-extrabold text-CollorSecondaryDefault">{totPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</span></p>
-                                                    </div>
-                                                    <div className="flex items-center gap-2">
-                                                        <button onClick={() => setNextStep(3)} className="bg-white shadow-3xl font-medium rounded-2xl text-CollorDefault py-2 px-3">Voltar</button>
-                                                        <button onClick={() => { setModal(true); setDetectModal('2') }} className="bg-CollorSecondaryDefault rounded-2xl text-white py-2 px-3">Enviar pedido</button>
-
-                                                    </div>
-                                                </div>
+                                                }
                                             </div>
                                         </div>
-                                    }
-                                </>
+                                        <div className="border-b w-full py-4"></div>
+                                        <div className="flex flex-col lg:items-end items-start lg:gap-0  gap-4">
+                                            <div className="flex flex-col lg:items-end items-start">
+                                                <p className="text-gray-500 text-sm">Subtotal: {sumTot.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
+                                                <p className="text-gray-500 text-sm">Adicionais: {sumTotExtra.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
+                                                <p className=" text-gray-400 text-sm flex items-center gap-2"><FaMotorcycle className="text-gray-400 text-base" />Entrega: + {delivery.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</p>
+                                                <p className="font-medium lg?text-xl text-base pt-2">Total: <span className="font-extrabold text-CollorSecondaryDefault">{totPrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</span></p>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <button onClick={() => setNextStep(3)} className="bg-white shadow-3xl font-medium rounded-2xl text-CollorDefault py-2 px-3">Voltar</button>
+                                                <button onClick={() => { setModal(true); setDetectModal('2') }} className="bg-CollorSecondaryDefault rounded-2xl text-white py-2 px-3">Enviar pedido</button>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                     }
                 </div>}
         </div >

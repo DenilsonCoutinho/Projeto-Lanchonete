@@ -40,7 +40,7 @@ export default function WhatSayAboutUs() {
                     </div>
                     <div className='flex flex-col lg:items-start justify-center items-center overflow-hidden'>
                         {comments.map((items) => {
-                            return items.id === positionComent && <div className='flex items-start gap-4 focus-in-expand'>
+                            return items.id === positionComent && <div key={items.id} className='flex items-start gap-4 focus-in-expand'>
                                 <div className='w-16 rounded-full md:flex hidden bg-white'>
                                     <Image src={people} className='' />
                                 </div>
