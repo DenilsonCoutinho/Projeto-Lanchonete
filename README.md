@@ -29,6 +29,18 @@ Clique no botão "Adicionar ao Carrinho" para incluir o item no carrinho de comp
 Visualize seu carrinho clicando no ícone de carrinho no canto inferior direito.
 Preencha seus dados no modal de confirmação e conclua o pedido.
 
+
+
+https://github.com/DenilsonCoutinho/Projeto-Lanchonete/assets/94764138/ebd53f95-8063-4b88-8f21-787797401677
+
+<h1>Continuação...</h1>
+
+https://github.com/DenilsonCoutinho/Projeto-Lanchonete/assets/94764138/142bf3a7-e4d6-4e08-b664-1bded6635b0c
+
+
+
+
+<br/>
 <h2>Contato</h2>
 <br/>
 
