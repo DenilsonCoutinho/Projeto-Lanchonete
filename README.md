@@ -2,7 +2,7 @@
 <h2>
 Descrição  
 </h2>
-O Projeto Exemplo é uma aplicação web desenvolvida em React que apresenta um cardápio interativo para um serviço de alimentação. Os usuários podem visualizar diferentes categorias de alimentos, adicionar itens ao carrinho e realizar pedidos. O projeto também inclui recursos como modais, seleção de quantidade, e observações personalizadas.
+O Projeto Exemplo é uma aplicação web desenvolvida em React/NextJs que apresenta um cardápio interativo para um serviço de alimentação. Os usuários podem visualizar diferentes categorias de alimentos, adicionar itens ao carrinho e realizar pedidos. O projeto também inclui recursos como modais, seleção de quantidade, e observações personalizadas.
 
 <h2>Instalação</h2>
 Certifique-se de ter o Node.js instalado em seu sistema. Clone o repositório e execute os seguintes comandos:
